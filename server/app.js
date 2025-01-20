@@ -5,8 +5,7 @@ import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import xss from 'xss';
-import mongoSanitize from 'mongo-sanitize'
+import path from 'path';
 import fileUpload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import reateLimit from 'express-rate-limit';
@@ -55,6 +54,13 @@ app.use(express.static('storage'));
 /*------API ROUTES------*/
 app.use('/api', router);
 
+
+app.use(express.static('client/dist'));
+
+/*-------Add react frontend routing---------- */
+app.use('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+})
 
 
 /*-------------APPLICATION RUNNER-----------*/
