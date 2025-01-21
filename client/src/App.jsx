@@ -1,6 +1,9 @@
  import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
+import Wish from './pages/Wish';
+import Cart from './pages/Cart';
+import Profile from './pages/Profile';
  
  const App = () => {
   return (
@@ -8,6 +11,9 @@ import Home from './pages/Home';
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          <Route path='/wish' element={<Wish/>}/>
+          <Route path='/cart' element={<Cart/>}/>
+          <Route path='/profile' element={<Profile/>}/>
         </Routes>
       </BrowserRouter>
     </>

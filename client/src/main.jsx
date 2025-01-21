@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import './assets/css/index.css'
 import './assets/css/animate.css'
 
