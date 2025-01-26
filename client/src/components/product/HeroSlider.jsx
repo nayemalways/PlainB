@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import monitor from '../../assets/images/Monitor.png';
 
 const HeroSlider = () => {
     return (
