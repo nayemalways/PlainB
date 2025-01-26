@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import SliderSkeleton from '../skeleton/SliderSkeleton';
 import HeroSlider from '../components/product/HeroSlider';
 import FeturesSkeleton from '../skeleton/FeturesSkeleton';
+import CategorySkeleton from '../skeleton/CategorySkeleton';
 
 const Home = () => {
     return (
@@ -10,6 +11,7 @@ const Home = () => {
               {/* <SliderSkeleton/> */}
               <HeroSlider/>
               <FeturesSkeleton/>
+              <CategorySkeleton/>
         </Layout>
     );
 };
