@@ -1,10 +1,12 @@
 import React from 'react';
+
 import Layout from '../components/layout/Layout';
 import SliderSkeleton from '../skeleton/SliderSkeleton';
 import HeroSlider from '../components/product/HeroSlider';
 import FeturesSkeleton from '../skeleton/FeturesSkeleton';
 import CategorySkeleton from '../skeleton/CategorySkeleton';
 import ProductsSkeleton from '../skeleton/ProductsSkeleton';
+import BrandsSkeleton from '../skeleton/BrandsSkeleton';
 
 const Home = () => {
     return (
@@ -14,6 +16,7 @@ const Home = () => {
               <FeturesSkeleton/>
               <CategorySkeleton/>
               <ProductsSkeleton/>
+              <BrandsSkeleton/>
         </Layout>
     );
 };
