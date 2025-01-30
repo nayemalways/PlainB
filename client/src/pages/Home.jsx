@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Layout from '../components/layout/Layout';
 import SliderSkeleton from '../skeleton/SliderSkeleton';
@@ -7,16 +7,27 @@ import FeturesSkeleton from '../skeleton/FeturesSkeleton';
 import CategorySkeleton from '../skeleton/CategorySkeleton';
 import ProductsSkeleton from '../skeleton/ProductsSkeleton';
 import BrandsSkeleton from '../skeleton/BrandsSkeleton';
+import ProductStore from '../store/productStore';
 
 const Home = () => {
+
+    const {BrandListRequest, CategoryListRequest, SliderListRequest, ProductListByProductRequest} = ProductStore();
+    const {FeaturesListRequest} = FeaturesStore();
+
+
+    useEffect( () => {
+
+        (async () => {
+            
+        })()
+
+    })
+
+
     return (
         <Layout>              
-              {/* <SliderSkeleton/> */}
               <HeroSlider/>
-              <FeturesSkeleton/>
-              <CategorySkeleton/>
-              <ProductsSkeleton/>
-              <BrandsSkeleton/>
+               
         </Layout>
     );
 };
