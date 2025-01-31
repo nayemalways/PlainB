@@ -1,28 +1,28 @@
 import React, { useEffect } from 'react';
 
 import Layout from '../components/layout/Layout';
-import SliderSkeleton from '../skeleton/SliderSkeleton';
 import HeroSlider from '../components/product/HeroSlider';
-import FeturesSkeleton from '../skeleton/FeturesSkeleton';
-import CategorySkeleton from '../skeleton/CategorySkeleton';
-import ProductsSkeleton from '../skeleton/ProductsSkeleton';
-import BrandsSkeleton from '../skeleton/BrandsSkeleton';
-import ProductStore from '../store/productStore';
+import ProductStore  from './../store/productStore';
+import FeaturesStore from './../store/feautres';
+ 
 
 const Home = () => {
 
-    const {BrandListRequest, CategoryListRequest, SliderListRequest, ProductListByProductRequest} = ProductStore();
-    const {FeaturesListRequest} = FeaturesStore();
+    let {BrandListRequest, CategoryListRequest, SliderListRequest, ProductListByRemark} = ProductStore();
+    let {FeaturesListRequest} = FeaturesStore();
 
 
     useEffect( () => {
 
         (async () => {
-            
+            await SliderListRequest();
+            await FeaturesListRequest();
+            await CategoryListRequest();
+            await ProductListByRemark("new");
         })()
 
-    })
-
+    }, [])
+    
 
     return (
         <Layout>              
