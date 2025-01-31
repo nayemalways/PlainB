@@ -8,9 +8,13 @@ import mongoose from 'mongoose';
 import path from 'path';
 import fileUpload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
-import reateLimit from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';
 import router from './routes/api.js'
 import {DATABASE_URL, DATABASE_PASSWORD, DATABASE_USERNAME, REQUEST_LIMIT_NUMBER, REQUEST_LIMIT_TIME, WEB_CACHE, URL_ENCODED,MAX_JSON_SIZE, PORT} from './app/config/config.js'
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 
@@ -19,7 +23,9 @@ const app = express();
 
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
-app.use(cors());
+app.use(cors({
+    origin:["http://localhost:5173"]
+}));
 app.use(helmet());
 app.use(hpp());
 app.use(cookieParser());
@@ -28,7 +34,7 @@ app.use(express.urlencoded({extended: URL_ENCODED}));
 app.use(fileUpload());
 
 /*-------------RATE LIMIT-----------*/
-const limitter = reateLimit({windowMs: REQUEST_LIMIT_TIME, max: REQUEST_LIMIT_NUMBER});
+const limitter = rateLimit({windowMs: REQUEST_LIMIT_TIME, max: REQUEST_LIMIT_NUMBER});
 app.use(limitter);
 
 /*---------WEB CACHE-------*/
