@@ -12,10 +12,6 @@ const FeaturesStore = create((set) => ({
 }))
 
 
-async function api() {
-    const res = await axios.get("http://localhost:5000/api/FeaturesList");
-    console.log(res.data.data);
-}
-// api()
+
 
 export default FeaturesStore;

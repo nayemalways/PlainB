@@ -7,7 +7,7 @@ import FeaturesStore from '../store/feautresStore';
 import Brand from '../components/product/Brand';
 import Categories from './../components/product/Categories';
 import Features from './../components/product/Features';
-import Products from '../components/product/Products';
+import Products from './../components/product/Products';
  
 
 const Home = () => {
