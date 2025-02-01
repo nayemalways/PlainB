@@ -38,10 +38,5 @@ const ProductStore = create((set) => ({
     }
 }))
 
-async function api() {
-    const res = await axios.get("http://localhost:5000/api/ProductListByRemark/new");
-    console.log(res.data.status);
-}
-api()
 
 export default ProductStore
