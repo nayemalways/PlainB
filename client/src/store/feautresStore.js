@@ -5,7 +5,7 @@ const FeaturesStore = create((set) => ({
     FeaturesList: null,
     FeaturesListRequest: async () => {
         let res = await axios.get('/api/FeaturesList');
-        if(res.status === 'success') {
+        if(res.status === 'Success') {
             set({FeaturesStore: res.data['data']});
         }
     }

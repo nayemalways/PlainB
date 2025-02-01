@@ -1,8 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ProductStore from '../../store/productStore';
+import SliderSkeleton from './../../skeleton/SliderSkeleton';
 
 
 const HeroSlider = () => {
+    const {SliderList} = ProductStore();
+    console.log(SliderList);
+    
+    if(SliderList === null) {
+        return <SliderSkeleton/>
+    }
+    
+
     return (
         < >
             <div>

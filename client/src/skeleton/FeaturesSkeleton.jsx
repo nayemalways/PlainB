@@ -4,7 +4,7 @@ import Lottie from 'lottie-react';
 import ImagePlaceholder from '../assets/images/image.json';
 
 
-const FeturesSkeleton = () => {
+const FeaturesSkeleton = () => {
     return (
         < >
             <div className="container section">
@@ -31,4 +31,4 @@ const FeturesSkeleton = () => {
     );
 };
 
-export default FeturesSkeleton;
+export default FeaturesSkeleton;
