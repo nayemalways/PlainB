@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 const Brand = () => {
     const {BrandList} = ProductStore();
     
+     // Check has Data fetched ohterwise showing loading skeleton
     if(BrandList === null) {
         return <BrandsSkeleton/>
     }

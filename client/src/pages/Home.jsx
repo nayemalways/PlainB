@@ -32,9 +32,9 @@ const Home = () => {
     return (
         <Layout>              
             <HeroSlider/>
+            <Products/>
             <Categories/>
             <Features/>
-            <Products/>
             <Brand/>
         </Layout>
     );

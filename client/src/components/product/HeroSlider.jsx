@@ -8,7 +8,7 @@ const HeroSlider = () => {
 
     const {SliderList} = ProductStore();
     
-    // Chekc has Data fetched ohterwise showing loading skeleton
+    // Check has Data fetched ohterwise showing loading skeleton
     if(SliderList === null) {
         return <SliderSkeleton/>
     }
