@@ -4,7 +4,6 @@ import FeaturesSkeleton from '../../skeleton/FeaturesSkeleton';
 
 const Features = () => {
     const {FeaturesList} = FeaturesStore();
-    console.log(FeaturesList);
 
      // Check has Data fetched ohterwise showing loading skeleton
     if(FeaturesList === null) {
