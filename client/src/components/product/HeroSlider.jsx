@@ -6,8 +6,7 @@ import SliderSkeleton from './../../skeleton/SliderSkeleton';
 
 const HeroSlider = () => {
 
-    const {SliderList} = ProductStore();
-    console.log(SliderList);
+    const {SliderList} = ProductStore(); // Access data from product Store 
     // Check has Data fetched ohterwise showing loading skeleton
     if(SliderList === null) {
         return <SliderSkeleton/>
