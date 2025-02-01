@@ -34,7 +34,6 @@ const ProductStore = create((set) => ({
         let res = await axios.get(`/api/ProductListByRemark/${remarks}`);
         if(res?.data?.status === 'Success') {
             set({ProductList: res?.data['data']});
-            console.log(res.data.data);
         }
     }
 }))
