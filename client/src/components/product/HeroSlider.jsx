@@ -5,9 +5,11 @@ import SliderSkeleton from './../../skeleton/SliderSkeleton';
 
 
 const HeroSlider = () => {
+
     const {SliderList} = ProductStore();
     console.log(SliderList);
     
+    // Chekc has Data fetched ohterwise showing loading skeleton
     if(SliderList === null) {
         return <SliderSkeleton/>
     }
