@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Categories = () => {
     const {CategoryList} = ProductStore();
-    console.log(CategoryList);
+ 
     
     if(CategoryList === null) {
         return <CategorySkeleton/>
