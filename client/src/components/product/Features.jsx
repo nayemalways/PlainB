@@ -24,7 +24,7 @@ const Features = () => {
                                             <div className="card-body">
                                                 <div className="row">
                                                     <div className="col-3">
-                                                        <img className="w-100" src={item['img']} />
+                                                        <img className="w-100" src="https://placehold.co/600x400/orange/white" />
                                                     </div>
                                                     <div className="col-9">
                                                         <h3 className="bodyXLarge">{item['name']}</h3>
