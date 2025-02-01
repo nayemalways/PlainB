@@ -12,7 +12,7 @@ const HeroSlider = () => {
         return <SliderSkeleton/>
     }
     
-
+console.log(SliderList);
     return (
         <>
                 <div id="carouselExampleDark" className="carousel hero-bg carousel-dark slide">
@@ -53,7 +53,7 @@ const HeroSlider = () => {
                                                     <Link to="" className="btn text-white btn-success px-5">Buy Now</Link>
                                                 </div>
                                                 <div className="col-12 col-lg-5 col-sm-12 col-md-5 p-5">
-                                                    <img src="https://placehold.co/600x400/orange/white" className="w-100" alt="..." />
+                                                    <img src={item['image']} className="w-100" alt="..." />
                                                 </div>
                                             </div>
                                         </div>
