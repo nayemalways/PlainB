@@ -6,6 +6,7 @@ import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import ProductByBrand from './pages/ProductByBrand';
 import ProductByCategory from './pages/ProductByCategory';
+import ProductDetails from './pages/ProductDetails';
  
  const App = () => {
   return (
@@ -18,6 +19,7 @@ import ProductByCategory from './pages/ProductByCategory';
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/brands/:id' element={<ProductByBrand/>}/>
           <Route path='/categories/:id' element={<ProductByCategory/>}/>
+          <Route path='/details/:id' element={<ProductDetails/>}/>
         </Routes>
       </BrowserRouter>
     </>
