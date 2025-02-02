@@ -5,6 +5,7 @@ import Wish from './pages/Wish';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
 import ProductByBrand from './pages/ProductByBrand';
+import ProductByCategory from './pages/ProductByCategory';
  
  const App = () => {
   return (
@@ -16,6 +17,7 @@ import ProductByBrand from './pages/ProductByBrand';
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/brands/:id' element={<ProductByBrand/>}/>
+          <Route path='/categories/:id' element={<ProductByCategory/>}/>
         </Routes>
       </BrowserRouter>
     </>
