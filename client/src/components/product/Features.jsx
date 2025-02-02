@@ -10,7 +10,6 @@ const Features = () => {
         return <FeaturesSkeleton/>
     }
 
-
     return (
         <>
             <div className="container section">
@@ -23,8 +22,8 @@ const Features = () => {
                                         <div className="card shadow-sm">
                                             <div className="card-body">
                                                 <div className="row">
-                                                    <div className="col-3">
-                                                        <img className="w-100" src="https://placehold.co/600x400/orange/white" />
+                                                    <div className="col-3 d-flex align-items-center">
+                                                        <img className="img-fluid" src={item['img']} />
                                                     </div>
                                                     <div className="col-9">
                                                         <h3 className="bodyXLarge">{item['name']}</h3>

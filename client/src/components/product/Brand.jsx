@@ -22,11 +22,10 @@ const Brand = () => {
                             {
                                 BrandList.map((item, index) => {
                                     return (
-                                        <div key={index} className="col-6 col-lg-8r text-center col-md-8r p-2">
-                                            <Link  to="" className="card h-100 rounded-3 bg-white">
+                                        <div key={index} title={item?.brandName} className="col-6 col-lg-8r text-center col-md-8r p-2">
+                                            <Link  to={`/brands/${item['_id']}`} className="card h-500 rounded-3 bg-white">
                                                 <div className="card-body">
-                                                    <img className="w-75" src="https://placehold.co/600x400/orange/white"  />
-                                                    <p className="bodySmal mt-3">{item?.brandName}</p>
+                                                    <img className="w-100" src={item?.brandImg}  />
                                                 </div>
                                             </Link>
                                         </div>
