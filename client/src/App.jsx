@@ -17,7 +17,7 @@ import ProductDetails from './pages/ProductDetails';
           <Route path='/wish' element={<Wish/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/profile' element={<Profile/>}/>
-          <Route path='/brands/:id' element={<ProductByBrand/>}/>
+          <Route path='/brands/:brandId' element={<ProductByBrand/>}/>
           <Route path='/categories/:id' element={<ProductByCategory/>}/>
           <Route path='/details/:id' element={<ProductDetails/>}/>
         </Routes>
