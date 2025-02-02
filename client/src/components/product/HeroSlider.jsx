@@ -12,7 +12,7 @@ const HeroSlider = () => {
         return <SliderSkeleton/>
     }
     
-console.log(SliderList);
+ 
     return (
         <>
                 <div id="carouselExampleDark" className="carousel hero-bg carousel-dark slide">

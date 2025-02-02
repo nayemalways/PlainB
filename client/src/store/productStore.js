@@ -22,6 +22,7 @@ const ProductStore = create((set) => ({
 
     SliderList: null,
     SliderListRequest: async () => {
+        set({SliderList: null});
         let res = await axios.get('/api/ProductSliderList');
         if(res?.data?.status === 'Success') {
             set({SliderList: res?.data['data']});
@@ -29,7 +30,7 @@ const ProductStore = create((set) => ({
     },
 
 
-    ProductList: null,
+    ProductList: [],
     ProductListByRemark: async (remarks) => {
         let res = await axios.get(`/api/ProductListByRemark/${remarks}`);
         if(res?.data?.status === 'Success') {
