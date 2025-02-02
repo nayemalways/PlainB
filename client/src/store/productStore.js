@@ -30,11 +30,30 @@ const ProductStore = create((set) => ({
     },
 
 
-    ProductList: [],
+    ProductList: null,
     ProductListByRemark: async (remarks) => {
         let res = await axios.get(`/api/ProductListByRemark/${remarks}`);
         if(res?.data?.status === 'Success') {
             set({ProductList: res?.data['data']});
+        }
+    },
+
+
+    ProductByBrand: null,
+    ProductListByBrand: async (brandId) => {
+        let res = await axios.get(`/api/ProductListByBrand/${brandId}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductByBrand: res?.data['data']});
+        }
+    },
+
+
+
+    ProductByCategory: null,
+    ProductListByCategory: async (categoryId) => {
+        let res = await axios.get(`/api/ProductListByCategory/${categoryId}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductByCategory: res?.data['data']});
         }
     }
 }))
