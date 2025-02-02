@@ -7,7 +7,10 @@ import Profile from './pages/Profile';
 import ProductByBrand from './pages/ProductByBrand';
 import ProductByCategory from './pages/ProductByCategory';
 import ProductDetails from './pages/ProductDetails';
+import ProductByKeyword from './pages/ProductByKeyword';
  
+
+
  const App = () => {
   return (
     < >
@@ -17,9 +20,10 @@ import ProductDetails from './pages/ProductDetails';
           <Route path='/wish' element={<Wish/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/profile' element={<Profile/>}/>
-          <Route path='/brands/:id' element={<ProductByBrand/>}/>
+          <Route path='/brands/:brandId' element={<ProductByBrand/>}/>
           <Route path='/categories/:id' element={<ProductByCategory/>}/>
           <Route path='/details/:id' element={<ProductDetails/>}/>
+          <Route path='/by-keyword/:keyword' element={<ProductByKeyword/>}/>
         </Routes>
       </BrowserRouter>
     </>

@@ -30,9 +30,42 @@ const ProductStore = create((set) => ({
     },
 
 
-    ProductList: [],
+    ProductList: null,
     ProductListByRemark: async (remarks) => {
+        set({ProductList: null });
         let res = await axios.get(`/api/ProductListByRemark/${remarks}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductList: res?.data['data']});
+        }
+    },
+
+
+   
+    ProductListByBrand: async (brandId) => {
+        set({ProductList: null });
+        let res = await axios.get(`/api/ProductListByBrand/${brandId}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductList: res?.data['data']});
+        }
+    },
+
+
+
+ 
+    ProductListByCategory: async (categoryId) => {
+        set({ProductList: null });
+        let res = await axios.get(`/api/ProductListByCategory/${categoryId}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductList: res?.data['data']});
+        }
+    },
+
+
+
+ 
+    ProductListByKeyword: async (keyword) => {
+        set({ProductList: null });
+        let res = await axios.get(`/api/ProductListByKeyword/${keyword}`);
         if(res?.data?.status === 'Success') {
             set({ProductList: res?.data['data']});
         }
