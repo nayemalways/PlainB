@@ -7,8 +7,7 @@ import ProductsSkeleton from './../../skeleton/ProductsSkeleton';
 
 const Products = () => {
 
-    const {ProductList, ProductListByRemark} = ProductStore();
-    console.log(ProductList);
+    const {ProductList, ProductListByRemark} = ProductStore(); // Import Api function and data
 
     
     return (
