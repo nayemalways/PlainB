@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Wish from './pages/Wish';
 import Cart from './pages/Cart';
 import Profile from './pages/Profile';
+import ProductByBrand from './pages/ProductByBrand';
  
  const App = () => {
   return (
@@ -14,6 +15,7 @@ import Profile from './pages/Profile';
           <Route path='/wish' element={<Wish/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/profile' element={<Profile/>}/>
+          <Route path='/brands/:id' element={<ProductByBrand/>}/>
         </Routes>
       </BrowserRouter>
     </>
