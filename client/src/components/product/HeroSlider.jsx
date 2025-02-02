@@ -50,7 +50,7 @@ const HeroSlider = () => {
                                                     <h1 className="headline-1">{item['title']}</h1>
                                                     <p className="h2 fw-bolder">{item['price']}</p>
                                                     <p>{item['des']}</p>
-                                                    <Link to="" className="btn text-white btn-success px-5">Buy Now</Link>
+                                                    <Link to={`/details/${item['_id']}`} className="btn text-white btn-success px-5">Buy Now</Link>
                                                 </div>
                                                 <div className="col-12 col-lg-5 col-sm-12 col-md-5 p-5">
                                                     <img src={item['image']} className="w-100" alt="..." />
