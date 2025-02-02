@@ -23,10 +23,10 @@ const Categories = () => {
                         {
                             CategoryList.map((item, index) => {
                                 return (
-                                    <div key={index} className="col-6 col-lg-8r text-center col-md-8r p-2">
-                                        <Link to="" className="card h-100 rounded-3 bg-light">
-                                            <div className="card-body">
-                                            <img alt="" className="w-75" src="https://placehold.co/600x400/orange/white" />
+                                    <div key={index} title={item['categoryName']} className="col-6 col-lg-8r text-center col-md-8r p-2">
+                                        <Link to={`/categories/${item['_id']}`} className="card h-100 rounded-3 bg-light">
+                                            <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                                            <img alt={item['categoryName']} className="w-75" src={item['categoryImg']} />
                                             <p className="bodySmal mt-3">{item['categoryName']}</p>
                                             </div>
                                         </Link>
