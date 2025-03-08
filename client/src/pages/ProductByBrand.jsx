@@ -14,7 +14,7 @@ const ProductByBrand = () => {
         (async () => {
             await ProductListByBrand(brandId);
         })()
-    }, []);
+    }, [brandId]);
 
 
     return (
