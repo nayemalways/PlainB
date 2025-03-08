@@ -69,6 +69,12 @@ const ProductStore = create((set) => ({
         if(res?.data?.status === 'Success') {
             set({ProductList: res?.data['data']});
         }
+    },
+
+
+    searchKeyword: "",
+    setSearchKeyword: async (keyword) => {
+        set({searchKeyword: keyword});
     }
 }))
 

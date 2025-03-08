@@ -11,31 +11,24 @@ export const UserOTP = async (req, res) => {
 
 
  export const OTPVerifyLogin = async (req, res) => {
-
     const result = await VerifyOTPService(req);
 
+    // Set cookie
     if(result['status'] === 'Success') {
-
-       // Set cookie
         const cookieOptions = {expires: new Date(Date.now() + 24 * 60 * 60 * 1000), httpOnly: false};
         res.cookie("token", result['Token'], cookieOptions);
-
-        res.json(result)
+        res.json(result);
     }else {
-
         res.json(result);
     }
 } 
 
 
 export const UserLogout = async (req, res) => {
-
      // Remove cookie option by minus (-)
      const cookieOptions = {expires: new Date(Date.now() - 24 * 60 * 60 * 1000), httpOnly: false};
-
      // Set cookie
      res.cookie("token", "", cookieOptions);
-
      res.json({status: "Success", message: "Logout success"});
 
 }

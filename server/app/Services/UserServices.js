@@ -92,14 +92,10 @@ export const UserOTPService = async (req) => {
 
 
         if(OTPSender) {
-
             await UserModel.updateOne({email: email}, {$set: {otp: code}}, {upsert: true});
             return {status: "Success", message: "6 Digit OTP has been sent successfully"};
-
         }else {
-
             return {status: "fail", message: "OTP is not been sent"};
-
         }
 
 

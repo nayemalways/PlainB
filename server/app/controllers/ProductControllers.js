@@ -12,7 +12,8 @@ import {
      ListByRemarkService, 
      DetailsService, 
      ReviewsListService, 
-     ProductReviewCreateService 
+     ProductReviewCreateService, 
+     ProductFilterService
     } from "../Services/ProductServices.js"
 
 
@@ -68,6 +69,11 @@ export const ProductListByKeyword = async (req, res) => {
 
 export const ProductDetails = async (req, res) => {
     const result = await DetailsService(req);
+    res.json(result);
+}
+
+export const ProductFilter = async (req, res) => {
+    const result = await ProductFilterService(req);
     res.json(result);
 }
 
