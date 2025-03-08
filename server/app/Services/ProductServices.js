@@ -266,6 +266,72 @@ export const ListByKeywordService = async (req) => {
     }
 }
 
+export const ProductFilterService = async (req) => {
+    try {
+
+        // Brand and Category matching conditions
+        let matchConditions = {};
+        if(req.body['categoryID']) {
+            matchConditions.categoryID = new ObjectId(req.body['categoryID']);
+        }
+        if(req.body['BrandID']) {
+            matchConditions.brandID = new ObjectId(req.body['brandID']);
+        }
+        let MatchStage = { $match: matchConditions}
+
+
+
+
+        // Price matching conditions
+        let AddFieldsStage = {
+            $addFields: {numericPrice: {$toInt: "$price"}} // String type Number to Number
+        }
+
+        let priceMin = parseInt(req.body['priceMin']);
+        let priceMax = parseInt(req.body['priceMax']);
+        let PriceMatchConditions = {};
+        if(!isNaN(priceMin)) {
+            PriceMatchConditions['numericPrice'] = { $gte: priceMin };
+        }
+        if(!isNaN(priceMax)) {
+            PriceMatchConditions['numericPrice'] = {...(PriceMatchConditions['numericPrice'] || {}), $lte: priceMax};
+        }
+        let PriceMatchStage = { $match: PriceMatchConditions };
+
+
+
+
+
+
+
+        let JoinWithBrandStage = { $lookup: { from:"brands", localField: "brandID", foreignField: "_id", as: "brand" }};
+        let JoinWithCategoryStage = { $lookup: { from:"categories", localField: "categoryID", foreignField: "_id", as: "category" }};
+        let UnwindBrandStage = {$unwind: "$brand"};
+        let UnwindCategoryStage = {$unwind: "$category"};
+        let projectionStage = {$project: {'brand._id': 0, 'category._id': 0, 'brandID': 0}};
+
+
+        let data = await ProductModel.aggregate([
+            MatchStage,
+            AddFieldsStage,
+            PriceMatchStage,
+            JoinWithBrandStage, JoinWithCategoryStage,
+            UnwindBrandStage, UnwindCategoryStage,
+            projectionStage
+        ])
+
+
+
+        return {status: "success", data: data}
+
+
+
+    }catch(e) {
+        console.log(e);
+        return {status: "Error", message: "Internal server error..!"}
+    }
+}
+
 export const ReviewsListService = async (req) => {
     try {
         const productId = new ObjectId( req.params.ProductId);
@@ -286,7 +352,7 @@ export const ReviewsListService = async (req) => {
         return {status: "Success", data: data};
     }catch(e) {
         console.log(e);
-        return {status: "Error", message: "Internal server error..!"}
+        return {status: "Error", message: "Internal server error..!"};
     }
 }
 
