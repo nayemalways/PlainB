@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import ProductList from '../components/product/ProductList';
 
 const ProductStore = create((set) => ({
     BrandList: null,
@@ -66,6 +67,16 @@ const ProductStore = create((set) => ({
     ProductListByKeyword: async (keyword) => {
         set({ProductList: null });
         let res = await axios.get(`/api/ProductListByKeyword/${keyword}`);
+        if(res?.data?.status === 'Success') {
+            set({ProductList: res?.data['data']});
+        }
+    },
+
+    ProductFilter: async (postBody) => {
+        console.log(postBody);
+        set({ProductList: null});
+        let res = await axios.post("/api/ProductFilter", postBody);
+        console.log(res);
         if(res?.data?.status === 'Success') {
             set({ProductList: res?.data['data']});
         }
