@@ -269,12 +269,14 @@ export const ListByKeywordService = async (req) => {
 export const ProductFilterService = async (req) => {
     try {
 
+        
+
         // Brand and Category matching conditions
         let matchConditions = {};
         if(req.body['categoryID']) {
             matchConditions.categoryID = new ObjectId(req.body['categoryID']);
         }
-        if(req.body['BrandID']) {
+        if(req.body['brandID']) {
             matchConditions.brandID = new ObjectId(req.body['brandID']);
         }
         let MatchStage = { $match: matchConditions}
@@ -282,11 +284,15 @@ export const ProductFilterService = async (req) => {
 
 
 
-        // Price matching conditions
+        /* 
+            Add new field named "numericPrice" for comparing with "price" field.
+            The "numericPrice" value is price field. Which is converted string to Integer
+        */
         let AddFieldsStage = {
             $addFields: {numericPrice: {$toInt: "$price"}} // String type Number to Number
         }
 
+         // Price matching conditions
         let priceMin = parseInt(req.body['priceMin']);
         let priceMax = parseInt(req.body['priceMax']);
         let PriceMatchConditions = {};
@@ -299,11 +305,7 @@ export const ProductFilterService = async (req) => {
         let PriceMatchStage = { $match: PriceMatchConditions };
 
 
-
-
-
-
-
+        // Join with "brands", "categoroies" fields. And unwind the unecessary Array sign for a single brand data
         let JoinWithBrandStage = { $lookup: { from:"brands", localField: "brandID", foreignField: "_id", as: "brand" }};
         let JoinWithCategoryStage = { $lookup: { from:"categories", localField: "categoryID", foreignField: "_id", as: "category" }};
         let UnwindBrandStage = {$unwind: "$brand"};
@@ -311,6 +313,7 @@ export const ProductFilterService = async (req) => {
         let projectionStage = {$project: {'brand._id': 0, 'category._id': 0, 'brandID': 0}};
 
 
+        // Aggregation Pipline
         let data = await ProductModel.aggregate([
             MatchStage,
             AddFieldsStage,
@@ -322,7 +325,7 @@ export const ProductFilterService = async (req) => {
 
 
 
-        return {status: "success", data: data}
+        return {status: "Success", data: data}
 
 
 

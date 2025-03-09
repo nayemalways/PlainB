@@ -26,7 +26,7 @@ router.get('/ProductListBySimilar/:categoryID', ProductControllers.ProductListBy
 router.get('/ProductDetails/:ProductID', ProductControllers.ProductDetails);
 router.get('/ProductListByKeyword/:Keyword', ProductControllers.ProductListByKeyword);
 router.get('/ProductReviewsList/:ProductId', ProductControllers.ProductReviewsList);
-router.get('/ProductFilter', ProductControllers.ProductFilter);
+router.post('/ProductFilter', ProductControllers.ProductFilter);
 router.post('/ProductReviewCreate', ProductControllers.ProductReviewCreate);
 
 
