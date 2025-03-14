@@ -1,5 +1,5 @@
 # MERN E-commerce Applications
-##Technology used:
+## Technology used:
 - Frontend: React.js and Bootstrap
-- Backend: Node.js, Express.js and MongoDB
+- Backend: Node.js, Express.js, and MongoDB
 
