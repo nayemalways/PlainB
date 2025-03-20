@@ -1,0 +1,99 @@
+import React from 'react';
+import ProductImages from './ProductImages';
+import ProductStore from '../../store/productStore';
+import DetailsSkeleton from '../../skeleton/DetailsSkeleton';
+
+const Details = () => {
+    const { reviewList, productDetails }= ProductStore();
+         
+   
+
+     if(productDetails === null) {
+       return <DetailsSkeleton/>
+    } else {
+        return (
+            <>
+                <div>
+                    <div className="container mt-2">
+                        <div className="row">
+                            <div className="col-md-7 p-3">
+                                <ProductImages />
+                            </div>
+                            <div className="col-md-5 p-3">
+                                <h4>  {productDetails[0]['title']} </h4>
+                                <p className="text-muted bodySmal my-1">Category:  {productDetails[0]['category']['categoryName']} </p>
+                                <p className="text-muted bodySmal my-1">Brand: {productDetails[0]['brand']['brandName']}</p>
+                                <p className="bodySmal mb-2 mt-1">{productDetails[0]['shortDes']}</p>
+                                <span>
+                                    Price:
+                                    {
+                                        productDetails[0]['discount'] != true ? (<span> {productDetails[0]?.price} </span>)
+                                        : (<strike className="text-secondary"> {productDetails[0]['price']} Tk </strike>)
+                                    }
+                                     
+                                    {productDetails[0]['discountPrice']} Tk 
+                                </span>
+                                <div className="row">
+                                    <div className="col-4 p-2">
+                                        <label className="bodySmal">Size</label>
+                                        <select className="form-control form-select my-2">
+                                            
+                                            <option value="">Size</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-4 p-2">
+                                        <label className="bodySmal">Color</label>
+                                        <select className="form-control form-select my-2">
+                                            <option value="">Color</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-4 p-2">
+                                        <label className="bodySmal">Quantity</label>
+                                        <div className="input-group my-2">
+                                            <button className="btn btn-outline-secondary">-</button>
+                                            <input type="text" className="form-control bg-light text-center" readOnly />
+                                            <button className="btn btn-outline-secondary">+</button>
+                                        </div>
+                                    </div>
+                                    <div className="col-4 p-2">
+                                        <button className="btn btn-success w-100">Add to Cart</button>
+                                    </div>
+                                    <div className="col-4 p-2">
+                                        <button className="btn btn-success w-100">Add to Wish</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <ul className="nav nav-tabs" id="myTab" role="tablist">
+                                <li className="nav-item" role="presentation">
+                                    <button className="nav-link active" id="Speci-tab" data-bs-toggle="tab" data-bs-target="#Speci-tab-
+                                        pane" type="button" role="tab" aria-controls="Speci-tab-pane" aria-selected="true">Specifications</button>
+                                </li>
+                                <li className="nav-item" role="presentation">
+                                    <button className="nav-link" id="Review-tab" data-bs-toggle="tab" data-bs-target="#Review-tab-pane"
+                                type="button" role="tab" aria-controls="Review-tab-pane" aria-selected="false">Review</button>
+                                </li>
+                            </ul>
+                            <div className="tab-content" id="myTabContent">
+                                <div className="active fade show tab-pane" id="Speci-tab-pane" role="tabpanel" aria-labelledby="Speci-
+                                    tab" tabIndex="0">
+    
+                                </div>
+                                <div className="fade tab-pane" id="Review-tab-pane" role="tabpanel" aria-labelledby="Review-tab"
+                                tabIndex="0">
+                                    <ul className="list-group list-group-flush">
+    
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+            </>
+        );
+    }
+    
+};
+
+export default Details;

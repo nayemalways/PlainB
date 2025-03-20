@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import StarRatings from 'react-star-ratings/build/star-ratings.js'
 
@@ -40,7 +40,7 @@ const ProductList = () => {
             <div className="container mt-2">
                 <div className="row">
                     <div className="col-md-3 p-3">
-                        <div className="card vh-100 p-3 shadow-sm ">
+                        <div className="card p-3 shadow-sm vh-100">
                             <label className="form-label mt-3">Brands</label>
                             <select 
                                 value={Filter.brandID} onChange={async (e) => await inputOnchange( "brandID"  , e.target.value)} className="form-control form-select"
@@ -107,16 +107,16 @@ const ProductList = () => {
                                                         (
                                                             ProductList.map((item,i)=>{
 
-                                                                let price=<p className="bodyMedium  text-dark my-1">Price: ${item['price']} </p>
+                                                                let price=<p className="text-dark bodyMedium my-1">Price: ${item['price']} </p>
                                                                 if(item['discount']===true){
-                                                                    price=<p className="bodyMedium  text-dark my-1">Price:<strike> ${item['price']} </strike> ${item['discountPrice']} </p>
+                                                                    price=<p className="text-dark bodyMedium my-1">Price:<strike> ${item['price']} </strike> ${item['discountPrice']} </p>
                                                                 }
                                                                 return(
-                                                                    <div key={i} className="col-md-3 p-2 col-lg-3 col-sm-6 col-12">
-                                                                        <Link to={`/details/${item['_id']}`} className="card shadow-sm h-100 rounded-3 bg-white">
-                                                                            <img className="w-100 rounded-top-2" src={item['image']} />
+                                                                    <div key={i} className="col-12 col-lg-3 col-md-3 col-sm-6 p-2">
+                                                                        <Link to={`/details/${item['_id']}`} className="card bg-white h-100 rounded-3 shadow-sm">
+                                                                            <img className="rounded-top-2 w-100" src={item['image']} />
                                                                             <div className="card-body">
-                                                                                <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                                                                <p className="text-secondary bodySmal my-1">{item['title']}</p>
                                                                                 {price}
                                                                                 <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
                                                                             </div>
