@@ -73,7 +73,6 @@ const ProductStore = create((set) => ({
     },
 
     ProductFilter: async (postBody) => {
-        console.log(postBody);
         set({ProductList: null});
         let res = await axios.post("/api/ProductFilter", postBody);
         console.log(res);
@@ -82,11 +81,28 @@ const ProductStore = create((set) => ({
         }
     },
 
-
     searchKeyword: "",
     setSearchKeyword: async (keyword) => {
         set({searchKeyword: keyword});
-    }
+    },
+
+
+    productDetails: null,
+    detailsRequest: async (id) => {
+        set({productDetails: null});
+        let res = await axios.get(`/api/ProductDetails/${id}`);
+        if(res?.data?.status === 'Success') {
+            set({productDetails: res?.data['data']});
+        }},
+
+
+    reviewList: null,
+    reviewListRequest: async (id) => {
+        set({productDetails: null});
+        let res = await axios.get(`/api/ProductReviewsList/${id}`);
+        if(res?.data?.status === 'Success') {
+            set({productDetails: res?.data['data']});
+        }}
 }))
 
 
