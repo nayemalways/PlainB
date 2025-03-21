@@ -21,9 +21,9 @@ const Details = () => {
                             </div>
                             <div className="col-md-5 p-3">
                                 <h4>  {productDetails[0]['title']} </h4>
-                                <p className="text-muted bodySmal my-1 fw-bold">Category:  {productDetails[0]['category']['categoryName']} </p>
-                                <p className="text-muted bodySmal my-1 fw-bold">Brand: {productDetails[0]['brand']['brandName']}</p>
-                                <p className="bodySmal mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
+                                <p className="text-body-secondary my-1 fw-bold">Category:  {productDetails[0]['category']['categoryName']} </p>
+                                <p className="text-body-secondary my-1 fw-bold">Brand: {productDetails[0]['brand']['brandName']}</p>
+                                <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
                                  {
                                     productDetails[0]['discount'] ? (
                                         <span className='fs-5'>
@@ -41,12 +41,24 @@ const Details = () => {
                                         <select className="form-control form-select my-2">
                                             
                                             <option value="">Size</option>
+                                            {
+                                                productDetails[0]['ProductDetails']['size'].split(',').map((size, i) => {
+                                                    return <option key={i} value={size}> {size} </option>
+                                                })
+                                                 
+                                            }
                                         </select>
                                     </div>
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Color</label>
                                         <select className="form-control form-select my-2">
                                             <option value="">Color</option>
+                                            {
+                                                productDetails[0]['ProductDetails']['color'].split(',').map((color, i) => {
+                                                    return <option key={i} value={color}> {color} </option>
+                                                })
+                                                 
+                                            }
                                         </select>
                                     </div>
                                     <div className="col-4 p-2">
