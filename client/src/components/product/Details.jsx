@@ -21,18 +21,20 @@ const Details = () => {
                             </div>
                             <div className="col-md-5 p-3">
                                 <h4>  {productDetails[0]['title']} </h4>
-                                <p className="text-muted bodySmal my-1">Category:  {productDetails[0]['category']['categoryName']} </p>
-                                <p className="text-muted bodySmal my-1">Brand: {productDetails[0]['brand']['brandName']}</p>
-                                <p className="bodySmal mb-2 mt-1">{productDetails[0]['shortDes']}</p>
-                                <span>
-                                    Price:
-                                    {
-                                        productDetails[0]['discount'] != true ? (<span> {productDetails[0]?.price} </span>)
-                                        : (<strike className="text-secondary"> {productDetails[0]['price']} Tk </strike>)
-                                    }
-                                     
-                                    {productDetails[0]['discountPrice']} Tk 
-                                </span>
+                                <p className="text-muted bodySmal my-1 fw-bold">Category:  {productDetails[0]['category']['categoryName']} </p>
+                                <p className="text-muted bodySmal my-1 fw-bold">Brand: {productDetails[0]['brand']['brandName']}</p>
+                                <p className="bodySmal mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
+                                 {
+                                    productDetails[0]['discount'] ? (
+                                        <span className='fs-5'>
+                                             Price: ৳ 
+                                            <strike>{productDetails[0]?.price} </strike> 
+                                            ৳{productDetails[0]?.discountPrice} 
+                                        </span>
+                                    ) : (
+                                        <span>{productDetails[0]?.price}</span>
+                                    )
+                                 }
                                 <div className="row">
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Size</label>
