@@ -126,7 +126,7 @@ const Details = () => {
                                 <div className="fade tab-pane" id="Review-tab-pane" role="tabpanel" aria-labelledby="Review-tab"
                                 tabIndex="0">
                                     <ul className="list-group list-group-flush">
-    
+                                        
                                     </ul>
                                 </div>
                             </div>
