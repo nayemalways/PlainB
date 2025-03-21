@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProductImages from './ProductImages';
 import ProductStore from '../../store/productStore';
 import DetailsSkeleton from '../../skeleton/DetailsSkeleton';
+import parser from 'html-react-parser';
 
 const Details = () => {
     const { reviewList, productDetails }= ProductStore();
+    const [quantity, setQuantity] = useState(1);
+
+    const incrementQty = () => {
+        setQuantity(qty => qty + 1);
+    }
+    const decrementQty = () => {
+        setQuantity(qty => qty - 1);
+    }
          
    
 
@@ -64,9 +73,9 @@ const Details = () => {
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Quantity</label>
                                         <div className="input-group my-2">
-                                            <button className="btn btn-outline-secondary">-</button>
-                                            <input type="text" className="form-control bg-light text-center" readOnly />
-                                            <button className="btn btn-outline-secondary">+</button>
+                                            <button onClick={decrementQty} disabled={quantity === 1} className="btn btn-outline-secondary">-</button>
+                                            <input value={quantity} type="text" className="form-control bg-light text-center" readOnly />
+                                            <button onClick={incrementQty} className="btn btn-outline-secondary">+</button>
                                         </div>
                                     </div>
                                     <div className="col-4 p-2">
@@ -81,18 +90,38 @@ const Details = () => {
                         <div className="row mt-3">
                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                 <li className="nav-item" role="presentation">
-                                    <button className="nav-link active" id="Speci-tab" data-bs-toggle="tab" data-bs-target="#Speci-tab-
-                                        pane" type="button" role="tab" aria-controls="Speci-tab-pane" aria-selected="true">Specifications</button>
+                                    <button 
+                                        className="nav-link active" 
+                                        id="Speci-tab" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#Speci-tab-pane" 
+                                        type="button" 
+                                        role="tab" 
+                                        aria-controls="Speci-tab-pane" 
+                                        aria-selected="true">
+                                            Specifications
+                                    </button>
                                 </li>
                                 <li className="nav-item" role="presentation">
-                                    <button className="nav-link" id="Review-tab" data-bs-toggle="tab" data-bs-target="#Review-tab-pane"
-                                type="button" role="tab" aria-controls="Review-tab-pane" aria-selected="false">Review</button>
+                                    <button 
+                                        className="nav-link" 
+                                        id="Review-tab" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#Review-tab-pane"
+                                        type="button" 
+                                        role="tab" 
+                                        aria-controls="Review-tab-pane" 
+                                        aria-selected="false">
+                                        Review
+                                    </button>
                                 </li>
                             </ul>
                             <div className="tab-content" id="myTabContent">
                                 <div className="active fade show tab-pane" id="Speci-tab-pane" role="tabpanel" aria-labelledby="Speci-
                                     tab" tabIndex="0">
-    
+                                        {
+                                            parser(productDetails[0]['ProductDetails']['des'])
+                                        }
                                 </div>
                                 <div className="fade tab-pane" id="Review-tab-pane" role="tabpanel" aria-labelledby="Review-tab"
                                 tabIndex="0">
