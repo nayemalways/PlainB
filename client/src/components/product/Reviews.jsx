@@ -12,7 +12,7 @@ const Reviews = () => {
                     reviewList !== null ? (
                          reviewList.map((item, i) => {
                             return <li key={i} className='mt-4 list-group-item bg-transparent'>
-                                <h6 className='text-primary d-flex gap-2'>
+                                <h6 className='text-primary d-flex gap-2 m-0 p-0'>
                                     <i className="bi bi-person text-black"></i>
                                     {item?.profile?.cus_name}
                                 </h6>

@@ -27,7 +27,7 @@ router.get('/ProductDetails/:ProductID', ProductControllers.ProductDetails);
 router.get('/ProductListByKeyword/:Keyword', ProductControllers.ProductListByKeyword);
 router.get('/ProductReviewsList/:ProductId', ProductControllers.ProductReviewsList);
 router.post('/ProductFilter', ProductControllers.ProductFilter);
-router.post('/ProductReviewCreate', ProductControllers.ProductReviewCreate);
+router.post('/ProductReviewCreate', UserAuthentication, ProductControllers.ProductReviewCreate);
 
 
 
