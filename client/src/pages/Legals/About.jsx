@@ -14,6 +14,7 @@ const About = () => {
         })()
 
     }, [])
+    
     return (
         <Layout>
             <LegalContents />
