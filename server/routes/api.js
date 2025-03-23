@@ -72,6 +72,7 @@ router.post('/PaymentIPN/:trxID', UserAuthentication, InvoiceControllers.Payment
 
 /*----------------------------FEATURES API ENDPOINT---------------------------*/
 router.get('/FeaturesList', FeaturesControllers.FeaturesList);
+router.get('/legalDetails/:type', FeaturesControllers.LegalDetails);
 
 
 
