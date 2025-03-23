@@ -15,6 +15,7 @@ const Contact = lazy(() => import("./pages/Legals/Contact.jsx"));
 const HotToBuy = lazy(() => import("./pages/Legals/HotToBuy.jsx")); 
 const Privacy = lazy(() => import("./pages/Legals/Privacy.jsx")); 
 const Refund = lazy(() => import("./pages/Legals/Refund.jsx")); 
+const Terms = lazy(() => import("./pages/Legals/Terms.jsx")); 
   
 
 
@@ -38,6 +39,7 @@ const Refund = lazy(() => import("./pages/Legals/Refund.jsx"));
           <Route path='/how-to-buy' element={<HotToBuy/>}/>
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='/refund' element={<Refund/>}/>
+          <Route path='/terms' element={<Terms/>}/>
         </Routes>
       </BrowserRouter>
     </>
