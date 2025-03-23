@@ -18,7 +18,7 @@ const Reviews = () => {
                                 </h6>
                                  <StarRatings 
                                     rating={parseFloat(item['rating'])} 
-                                    starRatedColor="dark" 
+                                    starRatedColor='rgb(255, 153, 0)' 
                                     starDimension="15px" 
                                     starSpacing="2px" 
                                  />
