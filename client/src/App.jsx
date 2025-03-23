@@ -13,7 +13,8 @@ const About = lazy(() => import("./pages/Legals/About.jsx"));
 const Complain = lazy(() => import("./pages/Legals/Complain.jsx")); 
 const Contact = lazy(() => import("./pages/Legals/Contact.jsx")); 
 const HotToBuy = lazy(() => import("./pages/Legals/HotToBuy.jsx")); 
-
+const Privacy = lazy(() => import("./pages/Legals/Privacy.jsx")); 
+ 
 
 
 
@@ -34,6 +35,7 @@ const HotToBuy = lazy(() => import("./pages/Legals/HotToBuy.jsx"));
           <Route path='/complain' element={<Complain/>}/>
           <Route path='/contact' element={<Contact/>}/>
           <Route path='/how-to-buy' element={<HotToBuy/>}/>
+          <Route path='/privacy' element={<Privacy/>}/>
         </Routes>
       </BrowserRouter>
     </>
