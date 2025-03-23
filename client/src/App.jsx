@@ -12,6 +12,7 @@ const ProductByKeyword = lazy(() => import("./pages/ProductByKeyword.jsx"));
 const About = lazy(() => import("./pages/Legals/About.jsx")); 
 const Complain = lazy(() => import("./pages/Legals/Complain.jsx")); 
 const Contact = lazy(() => import("./pages/Legals/Contact.jsx")); 
+const HotToBuy = lazy(() => import("./pages/Legals/HotToBuy.jsx")); 
 
 
 
@@ -32,6 +33,7 @@ const Contact = lazy(() => import("./pages/Legals/Contact.jsx"));
           <Route path='/about' element={<About/>}/>
           <Route path='/complain' element={<Complain/>}/>
           <Route path='/contact' element={<Contact/>}/>
+          <Route path='/how-to-buy' element={<HotToBuy/>}/>
         </Routes>
       </BrowserRouter>
     </>
