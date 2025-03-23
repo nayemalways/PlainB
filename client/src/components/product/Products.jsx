@@ -57,7 +57,12 @@ const Products = () => {
                                                                         <div className="card-body">
                                                                             <p className="bodySmal text-secondary my-1">{item['title']}</p>
                                                                             {price}
-                                                                            <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
+                                                                            <StarRatings 
+                                                                                rating={parseFloat(item['star'])} 
+                                                                                starRatedColor='rgb(255, 153, 0)' 
+                                                                                starDimension="15px" 
+                                                                                starSpacing="2px" 
+                                                                            />
                                                                         </div>
                                                                     </Link>
                                                                 </div>
@@ -92,7 +97,12 @@ const Products = () => {
                                                                         <div className="card-body">
                                                                             <p className="bodySmal text-secondary my-1">{item['title']}</p>
                                                                             {price}
-                                                                            <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
+                                                                            <StarRatings 
+                                                                                rating={parseFloat(item['star'])} 
+                                                                                starRatedColor='rgb(255, 153, 0)' 
+                                                                                starDimension="15px" 
+                                                                                starSpacing="2px" 
+                                                                            />
                                                                         </div>
                                                                     </Link>
                                                                 </div>
@@ -125,7 +135,12 @@ const Products = () => {
                                                                         <div className="card-body">
                                                                             <p className="bodySmal text-secondary my-1">{item['title']}</p>
                                                                             {price}
-                                                                            <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
+                                                                            <StarRatings 
+                                                                                rating={parseFloat(item['star'])} 
+                                                                                starRatedColor='rgb(255, 153, 0)' 
+                                                                                starDimension="15px" 
+                                                                                starSpacing="2px" 
+                                                                            />
                                                                         </div>
                                                                     </Link>
                                                                 </div>
@@ -158,7 +173,12 @@ const Products = () => {
                                                                         <div className="card-body">
                                                                             <p className="bodySmal text-secondary my-1">{item['title']}</p>
                                                                             {price}
-                                                                            <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
+                                                                            <StarRatings 
+                                                                                rating={parseFloat(item['star'])} 
+                                                                                starRatedColor='rgb(255, 153, 0)' 
+                                                                                starDimension="15px" 
+                                                                                starSpacing="2px" 
+                                                                            />
                                                                         </div>
                                                                     </Link>
                                                                 </div>
@@ -191,7 +211,12 @@ const Products = () => {
                                                                         <div className="card-body">
                                                                             <p className="bodySmal text-secondary my-1">{item['title']}</p>
                                                                             {price}
-                                                                            <StarRatings rating={parseFloat(item['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />
+                                                                            <StarRatings 
+                                                                                rating={parseFloat(item['star'])} 
+                                                                                starRatedColor='rgb(255, 153, 0)' 
+                                                                                starDimension="15px" 
+                                                                                starSpacing="2px" 
+                                                                            />
                                                                         </div>
                                                                     </Link>
                                                                 </div>

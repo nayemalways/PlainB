@@ -45,7 +45,6 @@ const ProductImages = () => {
     return (
         < >
             <ImageGallery autoPlay={true} items={images} />
-             
         </>
     );
 };
