@@ -1,14 +1,14 @@
- import React from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Wish from './pages/Wish';
-import Cart from './pages/Cart';
-import Profile from './pages/Profile';
-import ProductByBrand from './pages/ProductByBrand';
-import ProductByCategory from './pages/ProductByCategory';
-import ProductDetails from './pages/ProductDetails';
-import ProductByKeyword from './pages/ProductByKeyword';
- 
+
+const Home = lazy(() => import("./pages/Home.jsx"));
+const Wish = lazy(() => import("./pages/Wish.jsx"));
+const Cart = lazy(() => import("./pages/Cart.jsx"));
+const Profile = lazy(() => import("./pages/Profile.jsx"));
+const ProductByBrand = lazy(() => import("./pages/ProductByBrand.jsx"));
+const ProductByCategory = lazy(() => import("./pages/ProductByCategory.jsx"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails.jsx"));
+const ProductByKeyword = lazy(() => import("./pages/ProductByKeyword.jsx")); 
 
 
  const App = () => {
