@@ -9,6 +9,7 @@ const ProductByBrand = lazy(() => import("./pages/ProductByBrand.jsx"));
 const ProductByCategory = lazy(() => import("./pages/ProductByCategory.jsx"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails.jsx"));
 const ProductByKeyword = lazy(() => import("./pages/ProductByKeyword.jsx")); 
+const About = lazy(() => import("./pages/Legals/About.jsx")); 
 
 
  const App = () => {
@@ -24,6 +25,7 @@ const ProductByKeyword = lazy(() => import("./pages/ProductByKeyword.jsx"));
           <Route path='/categories/:id' element={<ProductByCategory/>}/>
           <Route path='/details/:id' element={<ProductDetails/>}/>
           <Route path='/by-keyword/:keyword' element={<ProductByKeyword/>}/>
+          <Route path='/about' element={<About/>}/>
         </Routes>
       </BrowserRouter>
     </>
