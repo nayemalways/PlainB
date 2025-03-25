@@ -3,8 +3,11 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ProductStore from '../../store/productStore';
 
+
 const ProductImages = () => {
     const { productDetails } = ProductStore();
+
+    // createing image data for showing product Image gallery
     const images = [
         {
             original:  productDetails[0]['ProductDetails']['img1'],
