@@ -5,7 +5,7 @@ import FeaturesSkeleton from '../../skeleton/FeaturesSkeleton';
 const Features = () => {
     const {FeaturesList} = FeaturesStore();
 
-     // Check has Data fetched ohterwise showing loading skeleton
+    // Check has Data fetched ohterwise showing loading skeleton
     if(FeaturesList === null) {
         return <FeaturesSkeleton/>
     }
