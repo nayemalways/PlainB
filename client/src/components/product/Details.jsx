@@ -17,8 +17,8 @@ const Details = () => {
     }
          
    
-
-     if(productDetails === null) {
+    // Showing Skeleton until the productDetails is null
+    if(productDetails === null) {
        return <DetailsSkeleton/>
     } else {
         return (
