@@ -1,14 +1,14 @@
 import React, { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-const Home = lazy(() => import("./pages/Home.jsx"));
+const Home = lazy(() => import("./pages/Products/Home.jsx"));
 const Wish = lazy(() => import("./pages/Wish.jsx"));
 const Cart = lazy(() => import("./pages/Cart.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
-const ProductByBrand = lazy(() => import("./pages/ProductByBrand.jsx"));
-const ProductByCategory = lazy(() => import("./pages/ProductByCategory.jsx"));
-const ProductDetails = lazy(() => import("./pages/ProductDetails.jsx"));
-const ProductByKeyword = lazy(() => import("./pages/ProductByKeyword.jsx")); 
+const ProductByBrand = lazy(() => import("./pages/Products/ProductByBrand.jsx"));
+const ProductByCategory = lazy(() => import("./pages/Products/ProductByCategory.jsx"));
+const ProductDetails = lazy(() => import("./pages/Products/ProductDetails.jsx"));
+const ProductByKeyword = lazy(() => import("./pages/Products/ProductByKeyword.jsx")); 
 const About = lazy(() => import("./pages/Legals/About.jsx")); 
 const Complain = lazy(() => import("./pages/Legals/Complain.jsx")); 
 const Contact = lazy(() => import("./pages/Legals/Contact.jsx")); 
@@ -16,6 +16,8 @@ const HotToBuy = lazy(() => import("./pages/Legals/HotToBuy.jsx"));
 const Privacy = lazy(() => import("./pages/Legals/Privacy.jsx")); 
 const Refund = lazy(() => import("./pages/Legals/Refund.jsx")); 
 const Terms = lazy(() => import("./pages/Legals/Terms.jsx")); 
+const Login = lazy(() => import("./pages/User/Login.jsx")); 
+const OTP = lazy(() => import("./pages/User/Otp.jsx")); 
   
 
 
@@ -40,6 +42,8 @@ const Terms = lazy(() => import("./pages/Legals/Terms.jsx"));
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='/refund' element={<Refund/>}/>
           <Route path='/terms' element={<Terms/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/otp-verify' element={<OTP/>}/>
         </Routes>
       </BrowserRouter>
     </>

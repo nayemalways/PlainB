@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Layout from '../components/layout/Layout';
-import Brand from '../components/product/Brand';
-import ProductStore from '../store/productStore';
-import Details from '../components/product/Details';
+import Layout from '../../components/layout/Layout';
+import Brand from '../../components/product/Brand';
+import ProductStore from '../../store/productStore';
+import Details from '../../components/product/Details';
 
 
 
