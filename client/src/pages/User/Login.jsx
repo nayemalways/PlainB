@@ -4,15 +4,15 @@ import Layout from '../../components/layout/Layout';
 import UserStore from '../../store/userStore';
 
 const Login = () => {
-    const { userRequest } = UserStore();
+    const { userOtpRequest } = UserStore();
 
     useEffect(() => {
 
         (async () => {
-            await userRequest();
+            await userOtpRequest();
         })()
     }, [])
-    
+
     return (
         <Layout>
            <LoginFrom /> 

@@ -1,15 +1,23 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { getEmail, setEmail } from '../utility/utility';
 
 const UserStore = create((set) => ({
-    refreshToken: null,
-    userRequest: async (email) => {
+    userOtpRequest: async (email) => {
         try {
-            set( {refreshToken: null });
             let res = await axios.get(`/api/UserOTP/${email}`);
-            if(res?.data?.status === 'Success') {
-                set( {refreshToken: res?.data['data']['token']});
-            }
+            setEmail(email) // Set user email inside sessionStorage
+            return res?.data?.status === 'Success';
+        }catch(error) {
+            console.error('Error fetching login credentials:', error);
+        }
+    },
+
+    OtpVerifyRequest: async (code) => {
+        try {
+            const email = getEmail(); // Get user email from sessionStorage
+            let res = await axios.get(`/api/OTPVerifyLogin/${email}/${code}`);
+            return res?.data?.status === 'Success';
         }catch(error) {
             console.error('Error fetching login credentials:', error);
         }
