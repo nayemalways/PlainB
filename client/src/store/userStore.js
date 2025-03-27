@@ -3,6 +3,7 @@ import axios from 'axios';
 import { getEmail, setEmail } from '../utility/utility';
 
 const UserStore = create((set) => ({
+    
     userOtpRequest: async (email) => {
         try {
             let res = await axios.get(`/api/UserOTP/${email}`);
