@@ -17,7 +17,7 @@ const LoginFrom = () => {
                             <h4>Enter Your Email</h4>
                             <p>A verification code will be sent to the email address you provide</p>
                             <input onChange={(e) => setEmail(e.target.value )} placeholder="Email Address" type="email" className="form-control"/>
-                            <SubmitButton onClick={handleSubmit} submit={false} className="btn mt-3 btn-success" text="Next"/>
+                            <SubmitButton onClick={handleSubmit} className="btn mt-3 btn-success" text="Next"/>
                         </div>
                     </div>
                 </div>
