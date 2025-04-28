@@ -6,7 +6,8 @@ const Layout = ({children}) => {
     return (
         <>
             <Navbar/>
-            {children}
+                {children}
+                <Toaster position="bottom-right"/>
             <Footer/>
         </>
     );
