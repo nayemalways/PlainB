@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import logo from '../../assets/images/plainb-logo.svg';
 import ProductStore from '../../store/productStore';
+import UserStore from '../../store/userStore';
 
 const Navbar = () => {
-    const { searchKeyword , setSearchKeyword  } = ProductStore();
+     const { searchKeyword , setSearchKeyword  } = ProductStore();
+    const { logoutRequest } = UserStore();
+    const { isLogin } = UserStore();
+    const logoutHanle = async () => {
+        const res = await logoutRequest();
+        res ? ( location.reload()) : (toast.error("Something went wrong"))
+    }
 
 
     return (
@@ -85,8 +93,16 @@ const Navbar = () => {
                             <i className="bi text-dark bi-heart"></i>
                         </Link>
 
-                        <Link type="button" className="btn ms-3 btn-success d-flex" to="/profile">Profile</Link>
-                        <Link type="button" className="btn ms-3 btn-success d-flex" to="/profile">Logout</Link>
+                        {
+                            isLogin() ? (
+                                <>
+                                    <Link type="button" className="btn ms-3 btn-success d-flex" to="/profile">Profile</Link>
+                                    <Link type="button" onClick={logoutHanle} className="btn ms-3 btn-success d-flex" to="/">Logout</Link>
+                                </>
+                            ) : (
+                                <Link type="button" className="btn ms-3 btn-success d-flex" to="/login">Login</Link>
+                            )
+                        }
                     </div>
                 </div>
             </nav>

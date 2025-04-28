@@ -1,9 +1,30 @@
-import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
 import SubmitButton from './SubmitButton';
+import ValidationHelper from '../../utility/validationHelper';
 import UserStore from '../../store/userStore';
 
+
 const LoginFrom = () => {
-    const {LoginFormData, inputOnchange } = UserStore();
+    const {LoginFormData, inputOnchange , userOtpRequest} = UserStore();
+    const navigate = useNavigate();
+ 
+    const onFormSubmit = async () => {
+         // API Request
+        if(!ValidationHelper.isEmail(LoginFormData.email)) {
+            toast.error("Valid email required!")
+        }else {
+            const res = await userOtpRequest(LoginFormData.email);
+            if(res) {
+                toast.success("6 digit OTP sent!");
+                navigate("/otp-verify")
+            }else {
+                toast.error("Something went wrong")
+            }
+        }
+    }
+
 
     return (
         <>
@@ -23,6 +44,7 @@ const LoginFrom = () => {
                             <SubmitButton 
                                 className="btn mt-3 btn-success" 
                                 text="Next"
+                                onClick={onFormSubmit}
                             />
                         </div>
                     </div>

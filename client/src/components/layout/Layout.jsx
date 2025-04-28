@@ -8,7 +8,7 @@ const Layout = ({children}) => {
         <>
             <Navbar/>
                 {children}
-                <Toaster position="bottom-right"/>
+                <Toaster position="bottom-center"/>
             <Footer/>
         </>
     );
