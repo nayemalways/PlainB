@@ -3,8 +3,17 @@ import { create } from 'zustand';
 import { getEmail, setEmail } from '../utility/utility';
 
 const UserStore = create((set) => ({
+
+    LoginFormData: {email: "ddd"},
+    inputOnchange: (name, value) => {
+        set((LoginFormData) => ({
+            ...LoginFormData,
+            [name]: value
+        }))
+    },
+
+
     isSubmitForm: false, // Form submit state
-    
     userOtpRequest: async (email) => {
         try {
             set( {isSubmitForm: true });
