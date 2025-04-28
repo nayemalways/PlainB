@@ -12,7 +12,7 @@ export const UserOTPService = async (req) => {
 
         const email = req.params.email;
         const code = Math.floor(100000 + Math.random() * 900000);
-        const EmailSub = `MERN-SHOP User Login OTP Verification`
+        const EmailSub = `User Login OTP Verification`
         const EmailText = ``
         const EmailHTML = `<!DOCTYPE html>
 <html lang="en">
