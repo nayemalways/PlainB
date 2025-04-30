@@ -5,15 +5,21 @@ import ProfileSkeleton from '../../skeleton/ProfileSkeleton';
 
 const ProfileForm = () => {
     
-    const { profileDetails, profileDetailsRequest, profileSaveRequest, profileFormOnChange, profileForm } = UserStore();
+    const { 
+        profileDetails, 
+        profileDetailsRequest, 
+        profileSaveRequest, 
+        profileFormOnChange, 
+        profileForm } = UserStore();
 
+        
     useEffect( () => {
         (async () => {
             await profileDetailsRequest();
         })();
     }, []);
 
-
+    // Profile Save Handler
     const save = async () => {
         let res = await profileSaveRequest(profileForm);
         if(res) {
