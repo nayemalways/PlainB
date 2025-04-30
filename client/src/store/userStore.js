@@ -111,7 +111,6 @@ const UserStore = create((set) => ({
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Access refresh token
             let res = await axios.get(`/api/ReadProfile`, config); // Api Call
-            // console.log(res['data'] || res['data']['data'].length > 0);
             if(res['data'] || res['data']['data'].length > 0) {
                 set( {profileDetails: res['data']['data']});
                 set( {profileForm: res['data']['data']});
@@ -121,6 +120,7 @@ const UserStore = create((set) => ({
          }catch(error) {
             toast.error( "Something went wrong");
             console.error( error.toString() );
+            unauthorized(error.response.status);
         }
     },
 
@@ -133,7 +133,7 @@ const UserStore = create((set) => ({
         }catch(error) {
             toast.error( "Something went wrong");
             console.error( error.toString() );
-            // unauthorized(error.response.status);
+            unauthorized(error.response.status);
         }
     }
 }))
