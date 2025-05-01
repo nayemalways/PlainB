@@ -1,18 +1,32 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import logo from '../../assets/images/plainb-logo.svg';
 import ProductStore from '../../store/productStore';
 import UserStore from '../../store/userStore';
+import CartStore from '../../store/cartStore';
 
 const Navbar = () => {
-     const { searchKeyword , setSearchKeyword  } = ProductStore();
+    const { searchKeyword , setSearchKeyword  } = ProductStore();
     const { logoutRequest } = UserStore();
     const { isLogin } = UserStore();
-    const logoutHanle = async () => {
+    const { CartCount, CartListRequest } = CartStore();
+
+    // Logout handle
+    const logoutHandle = async () => {
         const res = await logoutRequest();
         res ? ( location.reload()) : (toast.error("Something went wrong"))
     }
+
+    useEffect(() => {
+        let isLogin = !!Cookies.get("token");
+        if(isLogin) {
+            (async () => {
+                await CartListRequest();
+            })()
+        }
+    }, [])
 
 
     return (
@@ -87,6 +101,10 @@ const Navbar = () => {
 
                         <Link to="/cart" type="button" className="btn ms-2 btn-light position-relative">
                             <i className="bi text-dark bi-bag"></i>
+                            <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
+                                {CartCount}
+                                <span className='visually-hidden'>Unread message</span>
+                            </span>
                         </Link>
 
                         <Link to="/wish" type="button" className="btn ms-2 btn-light d-flex">
@@ -97,7 +115,7 @@ const Navbar = () => {
                             isLogin() ? (
                                 <>
                                     <Link type="button" className="btn ms-3 btn-success d-flex" to="/profile">Profile</Link>
-                                    <Link type="button" onClick={logoutHanle} className="btn ms-3 btn-success d-flex" to="/">Logout</Link>
+                                    <Link type="button" onClick={logoutHandle} className="btn ms-3 btn-success d-flex" to="/">Logout</Link>
                                 </>
                             ) : (
                                 <Link type="button" className="btn ms-3 btn-success d-flex" to="/login">Login</Link>
