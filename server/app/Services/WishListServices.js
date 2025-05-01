@@ -90,18 +90,19 @@ export const SaveWishListService = async (req) => {
         const reqBody = req.body;
         reqBody.userID = userID;
 
+        const alreadyExist = await WishListModel({productID: reqBody.productID});
+        if(alreadyExist.length != 0) {
+            throw new Error("Already exists");
+        }
+
 
         /*-------------------SAVE PRODUCT IN THE WISH LIST DB------------------*/
-        await WishListModel.updateOne(reqBody, {$set: reqBody}, {upsert: true})
-
-
-        /*---------------------RETURN DATA---------------------------*/
+        await WishListModel.create(reqBody);
         return {status: "Success", message: "Wish list save success"};
 
 
     }catch(e) {
-        console.log(e);
-        return {status: "Error", message: "Internal Server error..!"}
+        return {status: "Error", message: e._message || e.toString()};
     }
 }
 

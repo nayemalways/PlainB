@@ -14,16 +14,19 @@ export const SaveProductToCartService = async (req) => {
 
         const userID = new ObjectId( req.headers.user_id);
         const reqBody = req.body;
-        /*-----INJECT USERID TO CART LIST-----*/
         reqBody.userID = userID;
+
+        /*--------Check product already exist------*/
+        const alreadyExist = await CartModel.find({productID: reqBody.productID});
+        if(alreadyExist.length != 0) {
+            throw new Error("Product already exists");
+        }
 
         /*--------ADD PRODUCT TO CART--------*/
         await CartModel.create(reqBody);
-        /*---------------------RETURN STATUS--------------------*/
         return {status: "Success", message: "Item added to cart!"};
 
     }catch(e) {
-        console.log(e.toString());
         return {status: "Error", message:  e._message || e.toString()}
     }
 }
@@ -32,8 +35,6 @@ export const SaveProductToCartService = async (req) => {
 export const UpdateProductOfCartService = async (req) => {
     
     try {
-
-
         const userID = req.headers.user_id;
         const CartID = req.params.CartID;
         const reqBody = req.body;
@@ -46,31 +47,23 @@ export const UpdateProductOfCartService = async (req) => {
 
 
     }catch(e) {
-        console.log(e);
-        return {status: "Error", message: "Internal server error"}
+        return {status: "Error", message: e._message || e.toString()};
     }
 }
 
 
 export const RemoveProductFromCartService = async (req) => {
     try {
-        
         const userID = new ObjectId( req.headers.user_id);
         const reqBody = req.body;
-
-        /*-----INJECT USERID TO CART LIST-----*/
         reqBody.userID = userID;
 
-
-         /*---REMOVE CART LIST PRODUCT----*/
+        /*---REMOVE CART LIST PRODUCT----*/
         await CartModel.deleteOne(reqBody);
-
-         /*---------------------RETURN STATUS--------------------*/
         return {status: "Success", message: "Product Removed form Cart-List"}
 
     }catch(e) {
-        console.log(e);
-        return {status: "Error", message: "Internal server error"}
+        return {status: "Error", message: e._message || e.toString()};
     }
 }
 
