@@ -5,7 +5,7 @@ import  Cookies  from 'js-cookie';
 
 const CartStore = create((set) => ({
     isCartSubmit : false,
-    cartForm: {productID: "", color: "", qty: 1, size: ""},
+    cartForm: {productID: "", color: "", size: ""},
     cartFormOnchange: (name, value) => {
         set(state => ({
             cartForm: {
@@ -16,13 +16,15 @@ const CartStore = create((set) => ({
     },
 
     // Add to Cart Request
-    SaveCartRequest: async (postbody, productID) => {
+    SaveCartRequest: async (postbody, productID, quantity) => {
         try {
             set({isCartSubmit : true});
             postbody.productID = productID; // added product id into postbody
+            postbody.qty = quantity;
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
             let res = await axios.post(`/api/SaveProductToCart`, postbody, config); // Api call
-            return res.data["status"] === "Success";
+
+            return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
             unauthorized(e.response.status);
             console.log(e.toString());
@@ -38,8 +40,10 @@ const CartStore = create((set) => ({
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
             let res = await axios.get(`/api/SelectCartListProduct`, config);
+
             set({ CartList: res.data["data"]});
             set({CartCount: res.data['data'].length});
+            return;
         }catch(e) {
             unauthorized(e.response.status);
             console.log(e.toString());

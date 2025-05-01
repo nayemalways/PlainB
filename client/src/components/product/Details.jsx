@@ -13,26 +13,36 @@ const Details = () => {
     const [quantity, setQuantity] = useState(1);
     const {SaveCartRequest, cartForm, cartFormOnchange, CartListRequest} = CartStore();
 
-    console.log(cartForm);
 
+    console.log(quantity);
     // Qty increment and decrement
     const incrementQty = () => {
         setQuantity(qty => qty + 1);
-        cartFormOnchange("qty", quantity);
-    }
+     }
     const decrementQty = () => {
         setQuantity(qty => qty - 1);
-        cartFormOnchange("qty", quantity);
     }
 
     // Add to cart 
     const AddCart = async (productID) => {
-        const res = await SaveCartRequest(cartForm, productID);
-        if(res) {
+        const res = await SaveCartRequest(cartForm, productID, quantity); // Api Call
+
+        if(res === true) {
             toast.success("Item added to cart");
             await CartListRequest();
         }else {
-            toast.error("Something went wrong");
+
+            if(res === "carts validation failed") {
+                for (const item in cartForm) {
+                     if( cartForm[item].length === 0) {
+                        toast.error(`Select ${item}`);
+                     }
+                }
+                
+            }else {
+                toast.error(res);
+            }
+
         }
     }
          
@@ -101,7 +111,7 @@ const Details = () => {
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Quantity</label>
                                         <div className="input-group my-2">
-                                            <button onClick={decrementQty} disabled={quantity === 1} className="btn btn-outline-secondary">-</button>
+                                            <button onClick={decrementQty} disabled={quantity <= 1} className="btn btn-outline-secondary">-</button>
                                             <input 
                                                 value={quantity} 
                                                 type="text" 
