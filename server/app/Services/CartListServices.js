@@ -14,20 +14,17 @@ export const SaveProductToCartService = async (req) => {
 
         const userID = new ObjectId( req.headers.user_id);
         const reqBody = req.body;
-
         /*-----INJECT USERID TO CART LIST-----*/
         reqBody.userID = userID;
 
         /*--------ADD PRODUCT TO CART--------*/
         await CartModel.create(reqBody);
-
-
         /*---------------------RETURN STATUS--------------------*/
-        return {status: "Success", message: "Product added to cart suuccessful!"};
+        return {status: "Success", message: "Item added to cart!"};
 
     }catch(e) {
-        console.log(e);
-        return {status: "Error", message: "Internal server error"}
+        console.log(e.toString());
+        return {status: "Error", message:  e._message || e.toString()}
     }
 }
 
