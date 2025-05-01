@@ -70,7 +70,7 @@ const UserStore = create((set) => ({
             set( {isSubmitForm: true });
             let res = await axios.get(`/api/OTPVerifyLogin/${email}/${code}`);
             set( {isSubmitForm: false });
-            return res?.data?.status === 'Success';
+            return res?.data?.status === 'Success' ? true : res.data["message"];
         }catch(error) {
             toast.error( "Something went wrong");
             console.error( error.toString() );
