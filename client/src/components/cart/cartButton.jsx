@@ -1,10 +1,12 @@
 import React from 'react';
 import CartStore from '../../store/cartStore';
+import WishStore from '../../store/wishStore';
 
-const CartButton = ({onClick, className, text}) => {
+const CartButton = ({onClick, className, text, isSubmit}) => {
     let { isCartSubmit } = CartStore();
+    let { isWishSubmit } =  WishStore();
 
-    if(isCartSubmit === false) {
+    if(isSubmit === false) {
         return <button onClick={onClick} className={className} > {text} </button>
     }else {
         return (

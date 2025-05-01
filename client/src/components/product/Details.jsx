@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const Details = () => {
     const { productDetails }= ProductStore();
     const [quantity, setQuantity] = useState(1);
-    const {SaveCartRequest, cartForm, cartFormOnchange, CartListRequest} = CartStore();
+    const {SaveCartRequest, cartForm, cartFormOnchange, CartListRequest, isCartSubmit} = CartStore();
     const { SaveWishRequest, isWishSubmit, WishListRequest } = WishStore();
 
 
@@ -44,7 +44,7 @@ const Details = () => {
                 }
                 
             }else {
-                toast.error(res);
+                toast.error(res.slice(6, 30)); 
             }
 
         }
@@ -59,7 +59,7 @@ const Details = () => {
             toast.success("Added to Wish");
             await WishListRequest();
         }else {
-            toast.error(res);
+            toast.error(res.slice(6, 30)); 
         }
     }
          
@@ -139,10 +139,10 @@ const Details = () => {
                                         </div>
                                     </div>
                                     <div className="col-4 p-2">
-                                        <CartButton className="btn btn-success w-100" text="Add to Cart" onClick={async () => AddCart(productDetails[0]["_id"])} />
+                                        <CartButton isSubmit={isCartSubmit} className="btn btn-success w-100" text="Add to Cart" onClick={async () => AddCart(productDetails[0]["_id"])} />
                                     </div>
                                     <div className="col-4 p-2">
-                                    <CartButton className="btn btn-success w-100" text="Add to Wish" onClick={async () => AddWish(productDetails[0]["_id"])} />
+                                    <CartButton isSubmit={isWishSubmit} className="btn btn-success w-100" text="Add to Wish" onClick={async () => AddWish(productDetails[0]["_id"])} />
                                     </div>
                                 </div>
                             </div>
