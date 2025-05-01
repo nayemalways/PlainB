@@ -4,16 +4,36 @@ import ProductStore from '../../store/productStore';
 import DetailsSkeleton from '../../skeleton/DetailsSkeleton';
 import parser from 'html-react-parser';
 import Reviews from './Reviews';
+import CartButton from '../cart/CartButton';
+import CartStore from '../../store/cartStore';
+import toast from 'react-hot-toast';
 
 const Details = () => {
     const { productDetails }= ProductStore();
     const [quantity, setQuantity] = useState(1);
+    const {SaveCartRequest, cartForm, cartFormOnchange, CartListRequest} = CartStore();
 
+    console.log(cartForm);
+
+    // Qty increment and decrement
     const incrementQty = () => {
         setQuantity(qty => qty + 1);
+        cartFormOnchange("qty", quantity);
     }
     const decrementQty = () => {
         setQuantity(qty => qty - 1);
+        cartFormOnchange("qty", quantity);
+    }
+
+    // Add to cart 
+    const AddCart = async (productID) => {
+        const res = await SaveCartRequest(cartForm, productID);
+        if(res) {
+            toast.success("Item added to cart");
+            await CartListRequest();
+        }else {
+            toast.error("Something went wrong");
+        }
     }
          
    
@@ -48,8 +68,11 @@ const Details = () => {
                                 <div className="row">
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Size</label>
-                                        <select className="form-control form-select my-2">
-                                            
+                                        <select 
+                                            value={cartForm.size} 
+                                            onChange={(e) => cartFormOnchange("size", e.target.value)} 
+                                            className="form-control form-select my-2"
+                                        >  
                                             <option value="">Size</option>
                                             {
                                                 productDetails[0]['ProductDetails']['size'].split(',').map((size, i) => {
@@ -61,7 +84,11 @@ const Details = () => {
                                     </div>
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Color</label>
-                                        <select className="form-control form-select my-2">
+                                        <select  
+                                            value={cartForm.color} 
+                                            onChange={(e) => cartFormOnchange("color", e.target.value)}
+                                            className="form-control form-select my-2"
+                                        >
                                             <option value="">Color</option>
                                             {
                                                 productDetails[0]['ProductDetails']['color'].split(',').map((color, i) => {
@@ -75,12 +102,17 @@ const Details = () => {
                                         <label className="bodySmal">Quantity</label>
                                         <div className="input-group my-2">
                                             <button onClick={decrementQty} disabled={quantity === 1} className="btn btn-outline-secondary">-</button>
-                                            <input value={quantity} type="text" className="form-control bg-light text-center" readOnly />
+                                            <input 
+                                                value={quantity} 
+                                                type="text" 
+                                                className="form-control bg-light text-center" 
+                                                readOnly 
+                                            />
                                             <button onClick={incrementQty} className="btn btn-outline-secondary">+</button>
                                         </div>
                                     </div>
                                     <div className="col-4 p-2">
-                                        <button className="btn btn-success w-100">Add to Cart</button>
+                                        <CartButton className="btn btn-success w-100" text="Add to Cart" onClick={async () => AddCart(productDetails[0]["_id"])} />
                                     </div>
                                     <div className="col-4 p-2">
                                         <button className="btn btn-success w-100">Add to Wish</button>

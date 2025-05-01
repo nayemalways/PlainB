@@ -1,7 +1,7 @@
 import React from 'react';
 import CartStore from '../../store/cartStore';
 
-const cartButton = ({onClick, className, text}) => {
+const CartButton = ({onClick, className, text}) => {
     let { isCartSubmit } = CartStore();
 
     if(isCartSubmit === false) {
@@ -16,4 +16,4 @@ const cartButton = ({onClick, className, text}) => {
      }
 };
 
-export default cartButton;
+export default CartButton;
