@@ -6,12 +6,14 @@ import logo from '../../assets/images/plainb-logo.svg';
 import ProductStore from '../../store/productStore';
 import UserStore from '../../store/userStore';
 import CartStore from '../../store/cartStore';
+import WishStore from '../../store/wishStore';
 
 const Navbar = () => {
     const { searchKeyword , setSearchKeyword  } = ProductStore();
     const { logoutRequest } = UserStore();
     const { isLogin } = UserStore();
     const { CartCount, CartListRequest } = CartStore();
+    const { WishCount, WishListRequest } = WishStore();
 
     // Logout handle
     const logoutHandle = async () => {
@@ -24,6 +26,7 @@ const Navbar = () => {
         if(isLogin) {
             (async () => {
                 await CartListRequest();
+                await WishListRequest();
             })()
         }
     }, [])
@@ -32,7 +35,7 @@ const Navbar = () => {
     return (
         <>
             {/* Top Nav  */}
-            <div className="container-fluid text-white p-2 bg-success">
+            <div className="container-fluid text-white p-2 bg-danger">
                 <div className="container">
                     <div className="row justify-content-around">
                         <div className="col-md-6">
@@ -99,17 +102,33 @@ const Navbar = () => {
                             </Link>
                         </div>
 
-                        <Link to="/cart" type="button" className="btn ms-2 btn-light position-relative">
-                            <i className="bi text-dark bi-bag"></i>
-                            <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
-                                {CartCount}
-                                <span className='visually-hidden'>Unread message</span>
-                            </span>
-                        </Link>
 
-                        <Link to="/wish" type="button" className="btn ms-2 btn-light d-flex">
-                            <i className="bi text-dark bi-heart"></i>
-                        </Link>
+
+                        {
+                            isLogin() ? (
+                               <>
+                               <Link to="/cart" type="button" className="btn ms-2 btn-light position-relative">
+                                    <i className="bi text-dark bi-bag"></i>
+                                    <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
+                                        {CartCount}
+                                        <span className='visually-hidden'>Unread message</span>
+                                    </span>
+                                </Link>
+
+                                <Link to="/wish" type="button" className="btn ms-2 btn-light d-flex position-relative">
+                                    <i className="bi text-dark bi-heart"></i>
+                                    <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning'>
+                                        {WishCount}
+                                        <span className='visually-hidden'>Unread message</span>
+                                    </span>
+                                    
+                                    
+                                </Link>
+                               </> 
+                            ) : ("")
+                        }
+
+                        
 
                         {
                             isLogin() ? (

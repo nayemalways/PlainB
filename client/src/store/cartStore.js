@@ -48,7 +48,10 @@ const CartStore = create((set) => ({
             unauthorized(e.response.status);
             console.log(e.toString());
         }
-    }
+    },
+
+
+    
 
 }));
 
