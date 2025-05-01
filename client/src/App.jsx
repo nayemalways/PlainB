@@ -2,9 +2,9 @@ import React, { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const Home = lazy(() => import("./pages/Products/Home.jsx"));
-const Wish = lazy(() => import("./pages/Wish.jsx"));
-const Cart = lazy(() => import("./pages/Cart.jsx"));
-const Profile = lazy(() => import("./pages/Profile.jsx"));
+const Wish = lazy(() => import("./pages/User/Wish.jsx"));
+const Cart = lazy(() => import("./pages/User/Cart.jsx"));
+const Profile = lazy(() => import("./pages/User/Profile.jsx"));
 const ProductByBrand = lazy(() => import("./pages/Products/ProductByBrand.jsx"));
 const ProductByCategory = lazy(() => import("./pages/Products/ProductByCategory.jsx"));
 const ProductDetails = lazy(() => import("./pages/Products/ProductDetails.jsx"));
