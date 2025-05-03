@@ -119,12 +119,7 @@ export const WishListRemoveService = async (req) => {
 
         /*-----REMOVE PRODUCT FROM THE WISHLIST DB--------*/
         await WishListModel.deleteOne(reqBody)
-
-
-        /*----------RETURN DATA-----------*/
         return {status: "Success", message: "Wish list delete success"};
-
-
     }catch(e) {
         console.log(e);
         return {status: "Error", message: "Internal Server error..!"}
