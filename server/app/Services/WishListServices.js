@@ -95,7 +95,6 @@ export const SaveWishListService = async (req) => {
             throw new Error("Already exists");
         }
 
-
         /*-------------------SAVE PRODUCT IN THE WISH LIST DB------------------*/
         await WishListModel.create(reqBody);
         return {status: "Success", message: "Wish list save success"};
