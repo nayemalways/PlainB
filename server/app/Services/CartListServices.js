@@ -41,8 +41,6 @@ export const UpdateProductOfCartService = async (req) => {
 
         /*----------------CART LIST PRUDUCT UPDATE-----------------*/
         await CartModel.updateOne({_id: CartID, userID}, {$set: reqBody});
-
-        /*----------------RETURN STATUS-----------------*/
         return {status: "Success", message: "Cart updated successful!"};
 
 
