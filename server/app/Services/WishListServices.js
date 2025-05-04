@@ -82,24 +82,19 @@ export const WishListService = async (req) => {
 
 export const SaveWishListService = async (req) => {
     try {
-
         const userID = req.headers.user_id;
-
-
         /*----DATABASE QUERY----*/
         const reqBody = req.body;
         reqBody.userID = userID;
 
         const alreadyExist = await WishListModel({productID: reqBody.productID});
         if(alreadyExist.length != 0) {
-            throw new Error("Already exists");
+            throw new Error("Already in whishlist");
         }
 
-        /*-------------------SAVE PRODUCT IN THE WISH LIST DB------------------*/
+        /*-------SAVE PRODUCT IN THE WISH LIST DB---------*/
         await WishListModel.create(reqBody);
         return {status: "Success", message: "Wish list save success"};
-
-
     }catch(e) {
         return {status: "Error", message: e._message || e.toString()};
     }
