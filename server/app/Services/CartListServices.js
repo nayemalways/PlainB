@@ -11,8 +11,8 @@ export const SaveProductToCartService = async (req) => {
         const reqBody = req.body;
         reqBody.userID = userID;
 
-        /*--------Check product already exist------*/
-        const alreadyExist = await CartModel.find({productID: reqBody.productID});
+        /*------If product already exist------*/
+        const alreadyExist = await CartModel.find({userID: userID , productID: reqBody.productID});
         if(alreadyExist.length != 0) {
             throw new Error("Already in the cart");
         }
