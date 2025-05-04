@@ -3,7 +3,7 @@ import axios from 'axios';
 import { unauthorized } from '../utility/utility';
 import  Cookies  from 'js-cookie';
 
-const CartStore = create((set) => ({
+const wishStore = create((set) => ({
 
     isWishSubmit : false,
     // Add to Cart Request
@@ -12,7 +12,6 @@ const CartStore = create((set) => ({
             set({isWishSubmit : true});
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
             let res = await axios.post(`/api/SaveWishList`,  {productID}, config); // Api call
-
             return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
             // unauthorized(e.response.status);
@@ -36,12 +35,23 @@ const CartStore = create((set) => ({
         }catch(e) {
             unauthorized(e.response.status);
             console.log(e.toString());
-        }
+        } 
     },
 
 
+    removeFromWish: async (productID) => {
+        try {
+            let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
+            let postBody = {productID};
+            let res = await axios.post(`/api/RemoveWishList`, postBody, config);
+            return res.data["status"] === "Success" ? true : res.data["message"];
+        }catch(e) {
+            unauthorized(e.response.status);
+            console.log(e.toString());
+        }
+    } 
     
 
 }));
 
-export default CartStore;
+export default wishStore;

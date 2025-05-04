@@ -12,7 +12,7 @@ const Products = () => {
     
     return (
         <>
-            <div className="section">
+        <div className="section">
             <div className="container-fluid py-5 bg-white">
                 <div className="row">
                     <h1 className="headline-4 text-center my-2 p-0">Our Products</h1>
@@ -45,7 +45,6 @@ const Products = () => {
                                                 <div className="row">
                                                     {
                                                         ProductList.map((item,i)=>{
-
                                                             let price=<p className="bodyMedium  text-dark my-1">Price: ${item['price']} </p>
                                                             if(item['discount']===true){
                                                                 price=<p className="bodyMedium  text-dark my-1">Price:<strike> ${item['price']} </strike> ${item['discountPrice']} </p>
