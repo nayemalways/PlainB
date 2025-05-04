@@ -5,13 +5,8 @@ import mongoose from "mongoose";
 const ObjectId = mongoose.Types.ObjectId;
 
 
-
-
-
-
 export const SaveProductToCartService = async (req) => {
     try {
-
         const userID = new ObjectId( req.headers.user_id);
         const reqBody = req.body;
         reqBody.userID = userID;
@@ -25,7 +20,6 @@ export const SaveProductToCartService = async (req) => {
         /*--------ADD PRODUCT TO CART--------*/
         await CartModel.create(reqBody);
         return {status: "Success", message: "Item added to cart!"};
-
     }catch(e) {
         return {status: "Error", message:  e._message || e.toString()}
     }
@@ -33,7 +27,6 @@ export const SaveProductToCartService = async (req) => {
 
 
 export const UpdateProductOfCartService = async (req) => {
-    
     try {
         const userID = req.headers.user_id;
         const CartID = req.params.CartID;
@@ -70,12 +63,10 @@ export const RemoveProductFromCartService = async (req) => {
 
 export const SelectCartListProductService = async (req) => {
     try {
-
         const userId = new ObjectId(req.headers.user_id);
-
         /*----------------- DATABASE QUERY--------------------*/
         const matchStage = {$match:{userID: userId}};
-        
+
         const JoinWithProductStage = {$lookup: {from: "products", localField: "productID", foreignField: "_id", as: "product"}};
         const UnwindProductStage = {$unwind: "$product"};
 
