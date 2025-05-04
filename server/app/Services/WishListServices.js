@@ -67,8 +67,8 @@ export const SaveWishListService = async (req) => {
         const reqBody = req.body;
         reqBody.userID = userID;
 
-        const alreadyExist = await WishListModel({productID: reqBody.productID});
-        if(alreadyExist.length != 0) {
+        const alreadyExist = await WishListModel.find({productID: reqBody.productID, userID: userID});
+        if(alreadyExist.length > 0) {
             throw new Error("Already in the whishlist");
         }
 
