@@ -59,7 +59,7 @@ const Details = () => {
             toast.success("Added to Wish");
             await WishListRequest();
         }else {
-            toast.error(res.slice(6, 30)); 
+            toast.error(res.slice(6, res.length)); 
         }
     }
          
