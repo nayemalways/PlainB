@@ -1,19 +1,8 @@
-
 /*------------------DEPENDENCIES------------------*/
 import WishListModel from '../models/UsersModel/WishesModel.js';
 import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
-
-
-
-/* 
----------------------------------------------------------------------------------
-*** WISH LIST LOGIC BUILD ***
-THIS IS THE HELPER FILE FOR THE WISHLISTCONTROLLERS.JS FILE.
-ALL THE CONTROLLER LOGIC IS BUILT HERE!
-----------------------------------------------------------------------------------
-*/
 
 
 export const WishListService = async (req) => {
@@ -48,11 +37,7 @@ export const WishListService = async (req) => {
             "category.updatedAt": 0,
             "category.createdAt": 0, 
 
-        }}
-
-
-
-      
+        }};
         /*--------JOIN PRODUCT WITH WISH LIST MODEL AND SELECT DATA----------*/
         const data = await WishListModel.aggregate([
             matchStage,
@@ -65,17 +50,12 @@ export const WishListService = async (req) => {
             projectionStage
         ]);
 
-
-        
         /*----------RETURN DATA-----------*/
         return {status: "Success", data: data};
-
     }catch(e) {
         console.log(e);
         return {status: "Error", message: "Internal server error..!"}
     }
-
-
 }
 
 
@@ -89,7 +69,7 @@ export const SaveWishListService = async (req) => {
 
         const alreadyExist = await WishListModel({productID: reqBody.productID});
         if(alreadyExist.length != 0) {
-            throw new Error("Already in whishlist");
+            throw new Error("Already in the whishlist");
         }
 
         /*-------SAVE PRODUCT IN THE WISH LIST DB---------*/

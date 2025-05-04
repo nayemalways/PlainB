@@ -14,12 +14,12 @@ export const SaveProductToCartService = async (req) => {
         /*--------Check product already exist------*/
         const alreadyExist = await CartModel.find({productID: reqBody.productID});
         if(alreadyExist.length != 0) {
-            throw new Error("Already in cart");
+            throw new Error("Already in the cart");
         }
 
         /*--------ADD PRODUCT TO CART--------*/
         await CartModel.create(reqBody);
-        return {status: "Success", message: "Item added to cart!"};
+        return {status: "Success", message: "Added to cart!"};
     }catch(e) {
         return {status: "Error", message:  e._message || e.toString()}
     }
