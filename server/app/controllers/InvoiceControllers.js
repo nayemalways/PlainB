@@ -1,14 +1,5 @@
 import { CreateInvoiceService, PaymentFailService, PaymentCancelService, PaymentIPNService, PaymentSuccessService, InvoiceListService, InvoiceProductListService } from "../Services/InvoiceServices.js"
-import InvoiceModel from "../models/InvoiceAndPayment/InvoiceModel.js";
-
-
-
-
-
-
-
-
-
+ 
 
 // INVOICE CONTROLLER FUNCTION
 export const CreateInvoice = async (req, res) => {

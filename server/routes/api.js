@@ -53,13 +53,13 @@ router.post('/RemoveWishList', UserAuthentication, WishListController.RemoveWish
 /*----------------------------CARTLIST API ENDPOINT---------------------------*/
 router.post('/SaveProductToCart', UserAuthentication, CartListController.SaveProductToCart);
 router.post('/UpdateProductOfCart/:CartID', UserAuthentication, CartListController.UpdateProductOfCart);
-router.get('/RemoveProductFromCart', UserAuthentication, CartListController.RemoveProductFromCart);
+router.post('/RemoveProductFromCart', UserAuthentication, CartListController.RemoveProductFromCart);
 router.get('/SelectCartListProduct', UserAuthentication, CartListController.SelectCartListProduct);
 
 
 
 /*----------------------------INVOICE AND PAYMENT API ENDPOINT---------------------------*/
-router.get('/CreateInvoice', UserAuthentication, InvoiceControllers.CreateInvoice);
+router.post('/CreateInvoice', UserAuthentication, InvoiceControllers.CreateInvoice);
 router.get('/InvoiceList', UserAuthentication, InvoiceControllers.InvoiceList);
 router.get('/InvoiceProductList/:invoice_id', UserAuthentication, InvoiceControllers.InvoiceProductList);
 router.post('/PaymentSuccess/:trxID', UserAuthentication, InvoiceControllers.PaymentSuccess);

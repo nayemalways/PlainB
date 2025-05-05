@@ -46,12 +46,12 @@ export const UpdateProductOfCartService = async (req) => {
 export const RemoveProductFromCartService = async (req) => {
     try {
         const userID = new ObjectId( req.headers.user_id);
-        const reqBody = req.body;
-        reqBody.userID = userID;
+        const productID = new ObjectId(req.body.productID);
 
         /*---REMOVE CART LIST PRODUCT----*/
-        await CartModel.deleteOne(reqBody);
-        return {status: "Success", message: "Product Removed form Cart-List"}
+        let res = await CartModel.deleteOne({productID, userID});
+        if(res.deletedCount === 0) throw new Error("Failed to remove");
+        return {status: "Success", message: "Removed success!", d: res}
 
     }catch(e) {
         return {status: "Error", message: e._message || e.toString()};
