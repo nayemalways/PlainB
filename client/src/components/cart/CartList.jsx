@@ -5,8 +5,9 @@ import NoDataFound from '../product/NoDataFound';
 import  toast  from 'react-hot-toast';
 
 const CartList = () => {
-    const { CartListRequest, CartList, CartTotal, CartVatTotal, CartPayable, removeCartProduct, createInvoice } = CartStore();
+    const { CartListRequest, CartList, CartTotal, CartVatTotal, CartPayable, removeCartProduct, createInvoice, isChekout } = CartStore();
 
+    // Invoked CatList
     useEffect(() => {
          (async () => {
             await CartListRequest();
@@ -24,8 +25,9 @@ const CartList = () => {
             toast.error(res.slice(6, res.length));
         }
     }
-    console.log( CartList);
 
+
+    // UI
     if(CartList === null) {
         return <h1>loading...</h1>
     }else if(CartList.length === 0) {
@@ -37,7 +39,7 @@ const CartList = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="card p-4">
-                                <ul className="list-group list-group-flush"> 
+                                <ul className="list-group list-group-flush d-flex gap-4"> 
                                     { CartList.map((item,i)=>{ 
                                         return( 
                                         <li key={i} className="list-
@@ -52,7 +54,6 @@ const CartList = () => {
                                                         item["product"]["discount"] ? 
                                                         parseFloat(item["product"]["discountPrice"]) * parseFloat(item["qty"]): 
                                                         parseFloat(item["product"]["price"]) * parseFloat(item["qty"])
-                                                        // parseFloat(item["product"]["price"]) * parseFloat(item["qty"])
                                                     } Tk
                                                 </p>
                                             </div>
@@ -64,26 +65,27 @@ const CartList = () => {
                                 </ul>
                             <div className="my-4">
                                 <ul className="list-group bg-transparent list-group-flush">
-                                <li className="list-group-item bg-transparent h6 m-0 text-dark">
-                                    <span className="float-end">Total: ৳ {CartTotal} Tk </span>
-                                </li>
-                                <li className="list-group-item bg-transparent h6 m-0 text-dark">
-                                    <span className="float-end"> Vat(5%): ৳ {CartVatTotal} Tk
-                                    </span>
-                                </li>
-                                <li className="list-group-item bg-transparent h6 m-0 text-dark">
-                                    <span className="float-end"> Payable: ৳ {CartPayable} Tk
-                                    </span>
-                                </li>
-                                <li className="list-group-item bg-transparent ">
-                                    <span className="float-end">
-                                    <CartButton 
-                                        text="Check Out " 
-                                        onClick={async ()=> {await CreateInvoiceRequest()}}
-                                        className="btn px-5 mt-2 btn-success"
-                                    />
-                                    </span>
-                                </li>
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end">Total: ৳ {CartTotal} Tk </span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end"> Vat(5%): ৳ {CartVatTotal} Tk
+                                        </span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end"> Payable: ৳ {CartPayable} Tk
+                                        </span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent ">
+                                        <span className="float-end">
+                                        <CartButton 
+                                            text="Check Out "
+                                            isSubmit={isChekout} 
+                                            onClick={ ()=> createInvoice()}
+                                            className="btn px-5 mt-2 btn-success"
+                                        />
+                                        </span>
+                                    </li>
                                 </ul>
                             </div>
                             </div>
