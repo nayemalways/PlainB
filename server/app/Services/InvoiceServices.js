@@ -20,7 +20,7 @@ export const CreateInvoiceService = async (req) => {
 
         const userID = new ObjectID(req.headers.user_id);
         const userEamil = req.headers.email;
-
+ 
         /*====^=============^==============<>Step 01: Calculate Total Payable & Vat<>================^=================^========*/
         const matchStage = {$match: {userID}};
         const JoinWithProduct = {$lookup: {from: "products", localField: "productID", foreignField: "_id", as: "product"}}
@@ -50,28 +50,17 @@ export const CreateInvoiceService = async (req) => {
         const vat = totalAmount * 0.05; // 5% Vat
         const payable = totalAmount + vat; // 
 
-      
-
-
-
+    
         /*====^=============^==============<>Step 02: Prepare Customer Details & Shipping Details<>==^================^=========*/
         const profile = await ProfileModel.aggregate([matchStage]);
         const cus_details = `Name: ${profile[0]['cus_name']}, Email: ${userEamil}, Address: ${profile[0]['cus_address']}, Phone: ${profile[0]['cus_phone']}, City: ${profile[0]['cus_city']}, Country: ${profile[0]['cus_country']}` ;
         const ship_details = `Name: ${profile[0]['ship_name']}, Address: ${profile[0]['ship_address']}, Phone: ${profile[0]['ship_phone']}, City: ${profile[0]['ship_city']}, Country: ${profile[0]['ship_country']}` ;
-
-
-
-
 
         /*====^=============^==============<>Step 03: Transection & Other's ID<>=====================^=================^========*/
         const tran_id = Math.floor(10000000 + Math.random() * 90000000);
         const val_id = 0;
         const delivery_status = "pending";
         const payment_status = "pending";
-
-
-
-
 
         /*====^=============^==============<>Step 04: Create Invoice<>===============================^=================^========*/
         const createInvoice = await InvoiceModel.create({
@@ -86,10 +75,6 @@ export const CreateInvoiceService = async (req) => {
                 total: totalAmount,
                 vat: vat
         })
-
-
-
-
 
 
         /*====^=============^==============<>Step 05: Create Invoice Product<>=======================^=================^========*/
@@ -109,12 +94,9 @@ export const CreateInvoiceService = async (req) => {
 
         
 
-
          /*====^=============^==============<>Step 06: Remove Cart List<>=======================^=================^===========*/
          await CartModel.deleteMany({userID});
          
-
-
 
         /*====^=============^==============<>Step 07: Prepare SSL payment<>=======================^=================^========*/
         const PaymentSettings = await PaymentSettingModel.find();
@@ -166,8 +148,6 @@ export const CreateInvoiceService = async (req) => {
 
         // REQUESTED TO SSL ECOMMERZ FOR PAYMENT
         const SSL_Response = await axios.post(PaymentSettings[0]["init_url"], form);
-
-
         return {status: "Success",  data: SSL_Response.data }
 
     }catch(e) {
@@ -180,10 +160,9 @@ export const CreateInvoiceService = async (req) => {
 
 export const PaymentSuccessService = async (req) => {
     try {
-
         const tran_id = req.params.trxID;
-        await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "success"});
-        return {status: "Success", message: "Payment Successful"};
+        let res = await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "success"});
+        return {status: "Success", tran_id:tran_id, payment_status: "Payment-success"};
 
     }catch(e) {
         console.log(e);
@@ -195,10 +174,9 @@ export const PaymentSuccessService = async (req) => {
 
 export const PaymentFailService = async (req) => {
     try {
-
         const tran_id = req.params.trxID;
         await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "failed"});
-        return {status: "Success", message: "Payment failed"};
+        return {status: "Success", tran_id:tran_id, payment_status: "Payment-fail"};
 
     }catch(e) {
         console.log(e);
@@ -213,7 +191,7 @@ export const PaymentCancelService = async (req) => {
 
         const tran_id = req.params.trxID;
         await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "cancel"});
-        return {status: "Success", message: "Payment cancel"}
+        return {status: "Success", tran_id:tran_id, payment_status: "Payment-fail"}
 
     }catch(e) {
         console.log(e);

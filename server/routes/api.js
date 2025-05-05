@@ -39,16 +39,10 @@ router.get('/UserLogout', UserAuthentication , UserControllers.UserLogout);
 router.post('/SaveProfile', UserAuthentication , UserControllers.SaveProfile);
 router.get('/ReadProfile', UserAuthentication , UserControllers.ReadProfile);
 
-
-
-
 /*----------------------------WISHLIST API ENDPOINT---------------------------*/
 router.get('/ReadWishListProducts', UserAuthentication, WishListController.ReadWishListProducts);
 router.post('/SaveWishList', UserAuthentication, WishListController.SaveWishList);
 router.post('/RemoveWishList', UserAuthentication, WishListController.RemoveWishList);
-
-
-
 
 /*----------------------------CARTLIST API ENDPOINT---------------------------*/
 router.post('/SaveProductToCart', UserAuthentication, CartListController.SaveProductToCart);
@@ -56,18 +50,14 @@ router.post('/UpdateProductOfCart/:CartID', UserAuthentication, CartListControll
 router.post('/RemoveProductFromCart', UserAuthentication, CartListController.RemoveProductFromCart);
 router.get('/SelectCartListProduct', UserAuthentication, CartListController.SelectCartListProduct);
 
-
-
 /*----------------------------INVOICE AND PAYMENT API ENDPOINT---------------------------*/
-router.post('/CreateInvoice', UserAuthentication, InvoiceControllers.CreateInvoice);
+router.get('/CreateInvoice', UserAuthentication, InvoiceControllers.CreateInvoice);
 router.get('/InvoiceList', UserAuthentication, InvoiceControllers.InvoiceList);
 router.get('/InvoiceProductList/:invoice_id', UserAuthentication, InvoiceControllers.InvoiceProductList);
-router.post('/PaymentSuccess/:trxID', UserAuthentication, InvoiceControllers.PaymentSuccess);
-router.post('/PaymentCancel/:trxID', UserAuthentication, InvoiceControllers.PaymentCancel);
-router.post('/PaymentFail/:trxID', UserAuthentication, InvoiceControllers.PaymentFail);
-router.post('/PaymentIPN/:trxID', UserAuthentication, InvoiceControllers.PaymentIPN);
-
-
+router.post('/PaymentSuccess/:trxID',   InvoiceControllers.PaymentSuccess);
+router.post('/PaymentCancel/:trxID',   InvoiceControllers.PaymentCancel);
+router.post('/PaymentFail/:trxID',   InvoiceControllers.PaymentFail);
+router.post('/PaymentIPN/:trxID',   InvoiceControllers.PaymentIPN);
 
 
 /*----------------------------FEATURES API ENDPOINT---------------------------*/

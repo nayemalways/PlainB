@@ -10,6 +10,7 @@ export const CreateInvoice = async (req, res) => {
 
 export const InvoiceList = async (req, res) => {
     const result = await InvoiceListService(req);
+    res.redirect("/order");
     res.json(result);
 }
 
@@ -26,26 +27,34 @@ export const InvoiceProductList = async (req, res) => {
 // PAYMENT CONTROLLER FUNCTION
 
 export const PaymentSuccess = async (req, res) => {
-    const result = await PaymentSuccessService(req);
-    res.json(result);
+  const result = await PaymentSuccessService(req);
+  if (result.status === "Success") {
+    res.redirect(`http://localhost:5173/order/${result.payment_status}/${result.tran_id}`);
+  } else {
+    res.status(500).json(result);
+  }
 }
 
 
 export const PaymentFail = async (req, res) => {
     const result = await PaymentFailService(req);
-    res.json(result);
+    if (result.status === "Success") {
+        res.redirect(`http://localhost:5173/order/${result.payment_status}/${result.tran_id}`);
+      } else {
+        res.status(500).json(result);
+      }
 }
 
 
 export const PaymentCancel = async (req, res) => {
     const result = await PaymentCancelService(req);
-    res.json(result);
+    if(result.status === "Success")  res.redirect("/order");
 }
 
 
 export const PaymentIPN = async (req, res) => {
     const result = await PaymentIPNService(req);
-    res.json(result);
+    if(result.status === "Success")  res.redirect("/order");
 }
 
 
