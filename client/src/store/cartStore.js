@@ -36,6 +36,9 @@ const CartStore = create((set) => ({
 
     CartList: null,
     CartCount: 0,
+    CartTotal: 0,
+    CartVatTotal: 0,
+    CartPayable: 0,
     CartListRequest: async () => {
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
@@ -43,12 +46,60 @@ const CartStore = create((set) => ({
 
             set({ CartList: res.data["data"]});
             set({CartCount: res.data['data'].length});
+
+            // Calculating
+            let total = 0;
+            let vat = 0;
+            let payable = 0;
+
+            res?.data["data"].forEach((item) => {
+                if(item["product"]["discount"] === false) {
+                    total += parseFloat(item?.product["price"]) * parseFloat(item["qty"]);
+                }else {
+                    total += parseFloat(item?.product["discountPrice"]) * parseFloat(item["qty"]);
+                }
+            });
+
+            vat = total * 0.05;
+            payable = vat + total;
+            set({CartTotal: total});
+            set({CartVatTotal: vat});
+            set({CartPayable: payable});
+
             return;
         }catch(e) {
             unauthorized(e.response.status);
             console.log(e.toString());
         }
     },
+
+
+
+    removeCartProduct: async (productID) => {
+        try {
+            console.log(productID);
+            let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
+            let postBody = {productID};
+            let res = await axios.post(`/api/RemoveProductFromCart`, postBody, config);
+            return res.data["status"] === "Success" ? true : res.data["message"];
+        }catch(e) {
+            unauthorized(e.response.status);
+            console.log(e.toString());
+        }
+    },
+
+    createInvoice: async () => {
+        try {
+            set({isCartSubmit: true});
+            let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
+            let res = await axios.post(`/api/CreateInvoice`, config);
+            window.location.href = res["data"]["GetwayPageURL"];
+         }catch(e) {
+            unauthorized(e.response.status);
+            set({isCartSubmit: true});
+            console.log(e.toString());
+        }
+    }
 
 
     
