@@ -74,7 +74,7 @@ const CartStore = create((set) => ({
     },
 
 
-
+    // Product remove from cartlist
     removeCartProduct: async (productID) => {
         try {
             console.log(productID);
@@ -88,17 +88,19 @@ const CartStore = create((set) => ({
         }
     },
 
+    // Checkout to payment page 
+    isChekout: false,
     createInvoice: async () => {
         try {
-            set({isCartSubmit: true});
+            set({isChekout: true});
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.post(`/api/CreateInvoice`, config);
-            window.location.href = res["data"]["GetwayPageURL"];
+            let res = await axios.get(`/api/CreateInvoice`, config);
+            set({isChekout: true});
+            window.location.href = res["data"]["data"]["GatewayPageURL"];
          }catch(e) {
-            unauthorized(e.response.status);
-            set({isCartSubmit: true});
+            // unauthorized(e.response.status);
             console.log(e.toString());
-        }
+         }
     }
 
 
