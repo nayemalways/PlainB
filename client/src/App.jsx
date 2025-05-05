@@ -18,6 +18,7 @@ const Refund = lazy(() => import("./pages/Legals/Refund.jsx"));
 const Terms = lazy(() => import("./pages/Legals/Terms.jsx")); 
 const Login = lazy(() => import("./pages/User/Login.jsx")); 
 const OTP = lazy(() => import("./pages/User/Otp.jsx")); 
+const Order = lazy(() => import("./pages/User/Order.jsx")); 
   
 
 
@@ -44,6 +45,7 @@ const OTP = lazy(() => import("./pages/User/Otp.jsx"));
           <Route path='/terms' element={<Terms/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/otp-verify' element={<OTP/>}/>
+          <Route path='/order/:payment_status/:trn_id' element={<Order/>}/>
         </Routes>
       </BrowserRouter>
     </>
