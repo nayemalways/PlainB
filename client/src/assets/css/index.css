@@ -255,3 +255,34 @@ body {
         max-width: 1160px;
     }
 }
+
+
+/* Navbar profile side  */
+.profile {
+    width: 40px;
+    height: 40px;
+    img{
+        width: 40px;
+        height: 40px;
+      }
+}
+
+
+/* Bootstrap class */
+.input-group {
+    width: 30%;
+}
+
+/* Nav link  */
+.nav-link  {
+    padding: 2px 12px;
+    border-radius: 4px;
+    &:hover {
+        background:  #00000012;
+    }
+    a {
+        &:hover {
+            color: #050000 !important;
+        }
+    }
+}
