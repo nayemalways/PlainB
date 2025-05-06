@@ -161,8 +161,8 @@ export const CreateInvoiceService = async (req) => {
 export const PaymentSuccessService = async (req) => {
     try {
         const tran_id = req.params.trxID;
-        let res = await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "success"});
-        return {status: "Success", tran_id:tran_id, payment_status: "Payment-success"};
+        await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "success"});
+        return {status: "Success", tran_id:tran_id, payment_status: "success"};
 
     }catch(e) {
         console.log(e);
@@ -176,7 +176,7 @@ export const PaymentFailService = async (req) => {
     try {
         const tran_id = req.params.trxID;
         await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "failed"});
-        return {status: "Success", tran_id:tran_id, payment_status: "Payment-fail"};
+        return {status: "Success", tran_id:tran_id, payment_status: "fail"};
 
     }catch(e) {
         console.log(e);
@@ -191,7 +191,7 @@ export const PaymentCancelService = async (req) => {
 
         const tran_id = req.params.trxID;
         await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "cancel"});
-        return {status: "Success", tran_id:tran_id, payment_status: "Payment-fail"}
+        return {status: "Success", tran_id:tran_id, payment_status: "cancel"}
 
     }catch(e) {
         console.log(e);

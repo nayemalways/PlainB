@@ -28,7 +28,7 @@ export const InvoiceProductList = async (req, res) => {
 
 export const PaymentSuccess = async (req, res) => {
   const result = await PaymentSuccessService(req);
-  if (result.status === "Success") {
+  if (result.payment_status === "success") {
     res.redirect(`http://localhost:5173/order/${result.payment_status}/${result.tran_id}`);
   } else {
     res.status(500).json(result);
@@ -38,7 +38,7 @@ export const PaymentSuccess = async (req, res) => {
 
 export const PaymentFail = async (req, res) => {
     const result = await PaymentFailService(req);
-    if (result.status === "Success") {
+    if (result.payment_status === "fail") {
         res.redirect(`http://localhost:5173/order/${result.payment_status}/${result.tran_id}`);
       } else {
         res.status(500).json(result);
