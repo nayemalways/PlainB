@@ -183,7 +183,7 @@ const Navbar = () => {
                                                         </Link>
                                                     </li>
                                                     
-                                                    <li><hr class="dropdown-divider"/></li>
+                                                    <li><hr className="dropdown-divider"/></li>
                                                     <li>
                                                         <Link type="button" onClick={logoutHandle} className="text-center d-block text-danger" to="/">Logout</Link>
                                                     </li>

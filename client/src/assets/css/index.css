@@ -286,3 +286,25 @@ body {
         }
     }
 }
+
+/* Payment Card  */
+.success-card {
+    max-width: 500px;
+    margin: 50px auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+.success-icon {
+    font-size: 5rem;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+.btn-continue {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 30px;
+}
+.btn-continue:hover {
+    background-color: #218838;
+}

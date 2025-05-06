@@ -1,15 +1,20 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
+import Fail from '../../components/user/payment/Fail';
+import Success from '../../components/user/payment/Success';
 
 const Order = () => {
-
     let {trn_id , payment_status} = useParams();
+    
 
     return (
         <Layout>
-            <h1>Your Order status: {payment_status}</h1>
-            <p>Order id: {trn_id}</p>
+            {
+                payment_status == "success" ? <Success tran_id={ trn_id } /> : 
+                payment_status == "fail" ? <Fail /> : 
+                <p className='text-danger fs-3'>Something went wrong</p>
+            }
         </Layout>
     );
 };
