@@ -8,6 +8,7 @@ import NoDataFound from '../product/NoDataFound';
 
 const WishList = () => {
     const { WishListRequest, WishList, removeFromWish } = wishStore();
+    console.log(WishList);
 
     useEffect(() => {
         (async () => {
@@ -16,8 +17,8 @@ const WishList = () => {
     }, []);
 
     // Remove from wishlist
-    const removeProduct = async () => {
-        let res = await removeFromWish();
+    const removeProduct = async (productId) => {
+        let res = await removeFromWish(productId);
         if(res) {
             toast.success("Item removed!");
             await WishListRequest();
@@ -47,7 +48,19 @@ const WishList = () => {
                                                     <img className="w-100 rounded-top-2" src={item?.products['image']} />
                                                     <div className="card-body">
                                                         <p className="bodySmal text-secondary">{item?.products['title']}</p>
-                                                        {item?.products['price']}
+                                                        <p className='fw-bold'> Price: 
+                                                            {
+                                                              item.products["discount"] ?
+                                                              (
+                                                                <>
+                                                                    <span><strike> {item?.products["price"]} </strike></span>
+                                                                    <span>{item?.products["discountPrice"]}</span>
+                                                                </>
+                                                              ) : (
+                                                                <span>{item?.products["price"]}</span>
+                                                              )
+                                                            }
+                                                        </p>
                                                         <StarRatings 
                                                             rating={parseFloat(item?.products['star'])} 
                                                             starRatedColor='rgb(255, 153, 0)' 
