@@ -48,7 +48,11 @@ export const PaymentFail = async (req, res) => {
 
 export const PaymentCancel = async (req, res) => {
     const result = await PaymentCancelService(req);
-    if(result.status === "Success")  res.redirect("/order");
+    if (result.payment_status === "cancel") {
+      res.redirect(`http://localhost:5173/order/${result.payment_status}/${result.tran_id}`);
+    } else {
+      res.status(500).json(result);
+    }
 }
 
 
