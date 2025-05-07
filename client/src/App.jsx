@@ -18,7 +18,7 @@ const Refund = lazy(() => import("./pages/Legals/Refund.jsx"));
 const Terms = lazy(() => import("./pages/Legals/Terms.jsx")); 
 const Login = lazy(() => import("./pages/User/Login.jsx")); 
 const OTP = lazy(() => import("./pages/User/Otp.jsx")); 
-const Payment = lazy(() => import("./pages/User/Order.jsx")); 
+const Payment = lazy(() => import("./pages/User/Payment.jsx")); 
   
 
 

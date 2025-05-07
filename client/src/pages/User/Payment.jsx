@@ -4,7 +4,7 @@ import Layout from '../../components/layout/Layout';
 import Fail from '../../components/user/payment/Fail';
 import Success from '../../components/user/payment/Success';
 
-const Order = () => {
+const Payment = () => {
     let {trn_id , payment_status} = useParams();
     
 
@@ -20,4 +20,4 @@ const Order = () => {
     );
 };
 
-export default Order;
+export default Payment;
