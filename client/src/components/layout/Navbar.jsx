@@ -148,7 +148,7 @@ const Navbar = () => {
                                             <div class="btn-group">
                                                 <button 
                                                     type="button" 
-                                                    class="profile border-success rounded-circle position-relative
+                                                    class="profile-button border-success rounded-circle position-relative
                                                     d-flex justify-content-center align-content-center" 
                                                     data-bs-toggle="dropdown" 
                                                     aria-expanded="false"
@@ -156,7 +156,7 @@ const Navbar = () => {
                                                     <img className='position-absolute rounded-circle' 
                                                     src="https://avatars.githubusercontent.com/u/124289808?v=4" alt="" />
                                                 </button>
-                                                <ul class="dropdown-menu">
+                                                <ul class="dropdown-menu profile-dropdown">
                                                     <li className=''>
                                                         <Link type="button" className="d-flex justify-content-around gap-2 text-center" to="/profile">
                                                             <i class="bi text-dark bi-person"></i>
@@ -164,18 +164,18 @@ const Navbar = () => {
                                                             <span></span>
                                                         </Link>
                                                     </li>
-                                                    <li>
-                                                        <Link type="button" className="d-flex justify-content-around gap-2 text-center" to="/profile">
+                                                    <li  className=''>
+                                                        <Link type="button" className="position-relative d-flex justify-content-around gap-2 text-center" to="/wish">
                                                             <i className="bi text-dark bi-heart"></i>
                                                             <span className='text-success'>Wishlist</span>
                                                             <span></span>
-                                                            {/* <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning'>
+                                                            <span className='position-absolute top-50 end-0 translate-middle badge rounded-pill bg-warning'>
                                                                 {WishCount}
                                                                 <span className='visually-hidden'>Unread message</span>
-                                                            </span> */}
+                                                            </span>
                                                         </Link>
                                                     </li>
-                                                    <li>
+                                                    <li  className=''>
                                                         <Link type="button" className="d-flex justify-content-around gap-2 text-center" to="/order">
                                                             <i className="bi text-dark bi-truck"></i>
                                                             <span className='text-success'>Your Order</span>
@@ -183,10 +183,10 @@ const Navbar = () => {
                                                         </Link>
                                                     </li>
                                                     
-                                                    <li><hr className="dropdown-divider"/></li>
-                                                    <li>
+                                                    <><hr className="dropdown-divider"/></>
+                                                    <span>
                                                         <Link type="button" onClick={logoutHandle} className="text-center d-block text-danger" to="/">Logout</Link>
-                                                    </li>
+                                                    </span>
                                                 </ul>
                                             </div>
                                         </>

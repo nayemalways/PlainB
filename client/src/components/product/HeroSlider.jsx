@@ -23,8 +23,14 @@ const HeroSlider = () => {
                         {
                             SliderList.map((item, index) => {
                                 return (
-                                    <button key={index} type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to={index} className="active bg-white"
-                                    aria-current="true" aria-label=""></button>
+                                    <button 
+                                    key={index} 
+                                    type="button" 
+                                    data-bs-target="#carouselExampleDark" 
+                                    data-bs-slide-to={index} 
+                                    className="active bg-white"
+                                    aria-current="true" 
+                                    aria-label=""></button>
                                 )
                             })
                         }

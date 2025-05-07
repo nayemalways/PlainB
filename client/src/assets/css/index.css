@@ -258,13 +258,27 @@ body {
 
 
 /* Navbar profile side  */
-.profile {
+.profile-button {
     width: 40px;
     height: 40px;
     img{
         width: 40px;
         height: 40px;
       }
+}
+
+.profile-dropdown{
+        li {
+            padding: 7px 0;
+        }
+        li:hover {
+                background: var(--themeColor);
+        }
+
+        li:hover a span{
+            color: var(--lightDeepColor-2) !important
+        }
+      
 }
 
 
