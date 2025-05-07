@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Fail = () => {
+const Fail = ({payment_text}) => {
     const date = new Date();
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const shortDate = date.toLocaleDateString('en-US', options);
@@ -12,7 +12,7 @@ const Fail = () => {
                         <div className="fail-icon">
                             <i className="bi bi-x-lg fs-4 text-danger"></i>
                         </div>
-                        <h2 className="card-title text-danger mb-3">Payment Failed </h2>
+                        <h2 className="card-title text-danger mb-3"> {payment_text} </h2>
                         <p className="card-text text-muted mb-4">
                             We couldn't process your payment. Please check your payment details and try again.
                         </p>

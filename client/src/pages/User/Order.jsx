@@ -12,7 +12,8 @@ const Order = () => {
         <Layout>
             {
                 payment_status == "success" ? <Success tran_id={ trn_id } /> : 
-                payment_status == "fail" ? <Fail /> : 
+                payment_status == "fail" ? <Fail payment_text="Payment Failed"/> : 
+                payment_status == "cancel" ? <Fail payment_text="Payment Cancel" /> :
                 <p className='text-danger fs-3'>Something went wrong</p>
             }
         </Layout>
