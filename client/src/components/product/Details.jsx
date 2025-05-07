@@ -127,7 +127,7 @@ const Details = () => {
                                     </div>
                                     <div className="col-4 p-2">
                                         <label className="bodySmal">Quantity</label>
-                                        <div className="input-group my-2">
+                                        <div className="input-group w-100 my-2">
                                             <button onClick={decrementQty} disabled={quantity <= 1} className="btn btn-outline-secondary">-</button>
                                             <input 
                                                 value={quantity} 
