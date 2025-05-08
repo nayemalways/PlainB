@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const Home = lazy(() => import("./pages/Products/Home.jsx"));
@@ -27,26 +27,28 @@ const Payment = lazy(() => import("./pages/User/Payment.jsx"));
   return (
     < >
       <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/wish' element={<Wish/>}/>
-          <Route path='/cart' element={<Cart/>}/>
-          <Route path='/profile' element={<Profile/>}/>
-          <Route path='/brands/:brandId' element={<ProductByBrand/>}/>
-          <Route path='/categories/:id' element={<ProductByCategory/>}/>
-          <Route path='/details/:id' element={<ProductDetails/>}/>
-          <Route path='/by-keyword/:keyword' element={<ProductByKeyword/>}/>
-          <Route path='/about' element={<About/>}/>
-          <Route path='/complain' element={<Complain/>}/>
-          <Route path='/contact' element={<Contact/>}/>
-          <Route path='/how-to-buy' element={<HotToBuy/>}/>
-          <Route path='/privacy' element={<Privacy/>}/>
-          <Route path='/refund' element={<Refund/>}/>
-          <Route path='/terms' element={<Terms/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/otp-verify' element={<OTP/>}/>
-          <Route path='/order/:payment_status/:trn_id' element={<Payment/>}/>
-        </Routes>
+        <Suspense fallback={<div className='loader-container'><div className='loader'>Loading...</div></div>}>
+          <Routes>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/wish' element={<Wish/>}/>
+            <Route path='/cart' element={<Cart/>}/>
+            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/brands/:brandId' element={<ProductByBrand/>}/>
+            <Route path='/categories/:id' element={<ProductByCategory/>}/>
+            <Route path='/details/:id' element={<ProductDetails/>}/>
+            <Route path='/by-keyword/:keyword' element={<ProductByKeyword/>}/>
+            <Route path='/about' element={<About/>}/>
+            <Route path='/complain' element={<Complain/>}/>
+            <Route path='/contact' element={<Contact/>}/>
+            <Route path='/how-to-buy' element={<HotToBuy/>}/>
+            <Route path='/privacy' element={<Privacy/>}/>
+            <Route path='/refund' element={<Refund/>}/>
+            <Route path='/terms' element={<Terms/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/otp-verify' element={<OTP/>}/>
+            <Route path='/payment/:payment_status/:trn_id' element={<Payment/>}/>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );
