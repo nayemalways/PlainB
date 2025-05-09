@@ -35,7 +35,7 @@ const Success = ({tran_id}) => {
                             </div>
                         </div>
                         
-                        <a href="#" className="btn btn-continue btn-lg rounded-pill mt-3">
+                        <a href="/" className="btn btn-continue btn-lg rounded-pill mt-3">
                             Continue Shopping <i className="fas fa-arrow-right ms-2"></i>
                         </a>
                         
