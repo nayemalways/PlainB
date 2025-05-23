@@ -161,7 +161,9 @@ export const CreateInvoiceService = async (req) => {
 export const PaymentSuccessService = async (req) => {
     try {
         const tran_id = req.params.trxID;
+        // Update invoice status
         await InvoiceModel.updateOne({tran_id: tran_id}, {payment_status: "success"});
+        // const getInvoiceData = await InvoiceModel.aggregate[]
         return {status: "Success", tran_id:tran_id, payment_status: "success"};
 
     }catch(e) {
