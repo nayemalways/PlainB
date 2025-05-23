@@ -8,6 +8,7 @@ import CartButton from '../cart/CartButton';
 import CartStore from '../../store/cartStore';
 import WishStore from '../../store/wishStore';
 import toast from 'react-hot-toast';
+import NoDataFound from './NoDataFound';
 
 
 
@@ -30,7 +31,6 @@ const Details = () => {
     // Add to cartlist 
     const AddCart = async (productID) => {
         const res = await SaveCartRequest(cartForm, productID, quantity); // Api Call
-
         if(res === true) {
             toast.success("Added to cart");
             await CartListRequest();
@@ -62,11 +62,14 @@ const Details = () => {
             toast.error(res.slice(6, res.length)); 
         }
     }
-         
-   
+            
     // Showing Skeleton until the productDetails is null
-    if(productDetails === null) {
+    if(productDetails === null ) {
        return <DetailsSkeleton/>
+    }else if(productDetails.length === 0) {
+        return <div className='vh-100 w-100'>
+            <NoDataFound />
+        </div>
     } else {
         return (
             <>
@@ -77,7 +80,7 @@ const Details = () => {
                                 <ProductImages />
                             </div>
                             <div className="col-md-5 p-3">
-                                <h4>  {productDetails[0]['title']} </h4>
+                                <h4>  { productDetails[0]['title']} </h4>
                                 <p className="text-body-secondary my-1 fw-bold">Category:  {productDetails[0]['category']['categoryName']} </p>
                                 <p className="text-body-secondary my-1 fw-bold">Brand: {productDetails[0]['brand']['brandName']}</p>
                                 <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
