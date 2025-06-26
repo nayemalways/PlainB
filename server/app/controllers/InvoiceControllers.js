@@ -29,7 +29,7 @@ export const InvoiceProductList = async (req, res) => {
 export const PaymentSuccess = async (req, res) => {
   const result = await PaymentSuccessService(req);
   if (result.payment_status === "success") {
-    res.redirect(`https://plainb.onrender.com/payment/${result.payment_status}/${result.tran_id}`);
+    res.redirect(`http://localhost:5173/payment/${result.payment_status}/${result.tran_id}`);
   } else {
     res.status(500).json(result);
   }
@@ -39,7 +39,7 @@ export const PaymentSuccess = async (req, res) => {
 export const PaymentFail = async (req, res) => {
     const result = await PaymentFailService(req);
     if (result.payment_status === "fail") {
-        res.redirect(`https://plainb.onrender.com/payment/${result.payment_status}/${result.tran_id}`);
+        res.redirect(`http://localhost:5173/payment/${result.payment_status}/${result.tran_id}`);
       } else {
         res.status(500).json(result);
       }
@@ -49,7 +49,7 @@ export const PaymentFail = async (req, res) => {
 export const PaymentCancel = async (req, res) => {
     const result = await PaymentCancelService(req);
     if (result.payment_status === "cancel") {
-      res.redirect(`https://plainb.onrender.com/payment/${result.payment_status}/${result.tran_id}`);
+      res.redirect(`http://localhost:5173/payment/${result.payment_status}/${result.tran_id}`);
     } else {
       res.status(500).json(result);
     }
@@ -61,4 +61,11 @@ export const PaymentIPN = async (req, res) => {
     if(result.status === "Success")  res.redirect("/payment");
 }
 
+
+
+
+
+
+
+ 
 
