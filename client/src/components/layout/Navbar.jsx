@@ -145,10 +145,10 @@ const Navbar = () => {
                                     isLogin() ? (
                                         <>
                                             {/* Profile section  */}
-                                            <div class="btn-group">
+                                            <div className="btn-group">
                                                 <button 
                                                     type="button" 
-                                                    class="profile-button border-success rounded-circle position-relative
+                                                    className="profile-button border-success rounded-circle position-relative
                                                     d-flex justify-content-center align-content-center" 
                                                     data-bs-toggle="dropdown" 
                                                     aria-expanded="false"
@@ -156,10 +156,10 @@ const Navbar = () => {
                                                     <img className='position-absolute rounded-circle' 
                                                     src="https://avatars.githubusercontent.com/u/124289808?v=4" alt="" />
                                                 </button>
-                                                <ul class="dropdown-menu profile-dropdown">
+                                                <ul className="dropdown-menu profile-dropdown">
                                                     <li className=''>
                                                         <Link type="button" className="d-flex justify-content-around gap-2 text-center" to="/profile">
-                                                            <i class="bi text-dark bi-person"></i>
+                                                            <i className="bi text-dark bi-person"></i>
                                                             <span className='text-success'>Profile</span>
                                                             <span></span>
                                                         </Link>
