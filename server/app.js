@@ -24,7 +24,7 @@ const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
 app.use(cors({
-    origin:["http://localhost:5173"]
+    origin:["https://plainb.netlify.app"]
 }));
 app.use(helmet());
 app.use(hpp());
