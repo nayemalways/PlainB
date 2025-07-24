@@ -1,1 +1,0 @@
-import{j as s}from"./index-CikZvOA1.js";const i=({onClick:r,className:e,text:t,isSubmit:n})=>n===!1?s.jsxs("button",{onClick:r,className:e,children:[" ",t," "]}):s.jsxs("button",{disabled:!1,onClick:r,className:e,children:[s.jsx("div",{className:"spinner-border spinner-border-sm me-1",role:"status"}),"Processing..."]});export{i as C};

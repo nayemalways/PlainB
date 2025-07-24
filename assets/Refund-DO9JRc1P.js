@@ -1,0 +1,1 @@
+import{r,j as e}from"./index-Bxy9o637.js";import{L as s}from"./Layout-BL8AecP6.js";import{F as a}from"./feautresStore-C2BbOquo.js";const m=()=>{const{LegalRequest:t}=a();return r.useEffect(()=>{(async()=>await t("refund"))()},[]),e.jsx(s,{})};export{m as default};
