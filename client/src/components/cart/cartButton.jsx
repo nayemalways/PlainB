@@ -1,6 +1,4 @@
-import React from 'react';
-import CartStore from '../../store/cartStore';
-import WishStore from '../../store/wishStore';
+ 
 
 const CartButton = ({onClick, className, text, isSubmit}) => {
      

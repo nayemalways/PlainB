@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import CartStore from '../../store/cartStore';
 import CartButton from './CartButton';
 import NoDataFound from '../product/NoDataFound';
