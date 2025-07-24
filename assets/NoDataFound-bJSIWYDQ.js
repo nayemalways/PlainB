@@ -1,0 +1,1 @@
+import{j as a}from"./index-CikZvOA1.js";const t="/assets/no-data-IMIaNdoX.png",e=()=>a.jsx("div",{className:"d-flex vh-100 justify-content-center align-items-center",children:a.jsx("img",{className:"w-25",src:t,alt:"No Data"})});export{e as N};
