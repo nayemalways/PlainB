@@ -57,6 +57,10 @@ mongoose.connect(DATABASE_URL, options)
 /*--------PUBLIC STORAGE---------*/
 app.use(express.static('storage'));
 
+app.get('/', (req, res) => {
+    res.send("Welcome to the show")
+})
+
 /*------API ROUTES------*/
 app.use('/api', router);
 
