@@ -5,13 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/', // 👈 IMPORTANT for GitHub Pages
   plugins: [react()],
-  server: {
-    proxy: {
-      "/api/": {
-        target: "https://plainb.onrender.com",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     "/api/": {
+  //       target: "https://plainb.onrender.com",
+  //       changeOrigin: true,
+  //       secure: false,
+  //     },
+  //   },
+  // },
 })
