@@ -24,7 +24,7 @@ const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
 app.use(cors({
-    origin:["https://plainb.netlify.app"]
+    origin:["https://plain-b.vercel.app", "http://localhost:5173/"]
 }));
 app.use(helmet());
 app.use(hpp());
