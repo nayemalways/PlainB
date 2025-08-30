@@ -73,7 +73,7 @@ const UserStore = create((set) => ({
             
 
 
-            Cookies.set("token", res?.Token, {
+            Cookies.set("token", res?.data?.Token, {
             expires: 30,    
             sameSite: "Strict",
             secure: true       
