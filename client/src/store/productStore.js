@@ -30,7 +30,7 @@ const ProductStore = create((set) => ({
     SliderListRequest: async () => {
         try {
             set(state => ({ SliderList: null }));  // Reset before fetching
-            const res = await axios.get('/api/ProductSliderList');
+            const res = await axios.get('https://plainb.onrender.com/api/ProductSliderList');
             if (res?.data?.status === 'Success') {
                 set(state => ({ SliderList: res.data.data }));
             }
