@@ -5,7 +5,7 @@ const ProductStore = create((set) => ({
     BrandList: null,
     BrandListRequest: async () => {
         try {
-            const res = await axios.get('/api/ProductBrandList');
+            const res = await axios.get('https://plainb.onrender.com/api/ProductBrandList');
             if (res?.data?.status === 'Success') {
                 set(state => ({ BrandList: res.data.data }));
             }
@@ -17,7 +17,7 @@ const ProductStore = create((set) => ({
     CategoryList: null,
     CategoryListRequest: async () => {
         try {
-            const res = await axios.get('/api/ProductCategoryList');
+            const res = await axios.get('https://plainb.onrender.com/api/ProductCategoryList');
             if (res?.data?.status === 'Success') {
                 set(state => ({ CategoryList: res.data.data }));
             }
@@ -43,7 +43,7 @@ const ProductStore = create((set) => ({
     ProductListByRemark: async (remarks) => {
         try {
             set(state => ({ ProductList: null }));  // Reset before fetching
-            const res = await axios.get(`/api/ProductListByRemark/${remarks}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductListByRemark/${remarks}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ ProductList: res.data.data }));
             }
@@ -55,7 +55,7 @@ const ProductStore = create((set) => ({
     ProductListByBrand: async (brandId) => {
         try {
             set(state => ({ ProductList: null }));
-            const res = await axios.get(`/api/ProductListByBrand/${brandId}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductListByBrand/${brandId}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ ProductList: res.data.data }));
             }
@@ -67,7 +67,7 @@ const ProductStore = create((set) => ({
     ProductListByCategory: async (categoryId) => {
         try {
             set(state => ({ ProductList: null }));
-            const res = await axios.get(`/api/ProductListByCategory/${categoryId}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductListByCategory/${categoryId}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ ProductList: res.data.data }));
             }
@@ -79,7 +79,7 @@ const ProductStore = create((set) => ({
     ProductListByKeyword: async (keyword) => {
         try {
             set(state => ({ ProductList: null }));
-            const res = await axios.get(`/api/ProductListByKeyword/${keyword}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductListByKeyword/${keyword}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ ProductList: res.data.data }));
             }
@@ -91,7 +91,7 @@ const ProductStore = create((set) => ({
     ProductFilter: async (postBody) => {
         try {
             set(state => ({ ProductList: null }));
-            const res = await axios.post("/api/ProductFilter", postBody);
+            const res = await axios.post("https://plainb.onrender.com/api/ProductFilter", postBody);
             if (res?.data?.status === 'Success') {
                 set(state => ({ ProductList: res.data.data }));
             }
@@ -109,7 +109,7 @@ const ProductStore = create((set) => ({
     detailsRequest: async (id) => {
         try {
             set(state => ({ productDetails: null }));
-            const res = await axios.get(`/api/ProductDetails/${id}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductDetails/${id}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ productDetails: res.data.data }));
             }
@@ -122,7 +122,7 @@ const ProductStore = create((set) => ({
     reviewListRequest: async (id) => {
         try {
             set(state => ({ reviewList: null }));
-            const res = await axios.get(`/api/ProductReviewsList/${id}`);
+            const res = await axios.get(`https://plainb.onrender.com/api/ProductReviewsList/${id}`);
             if (res?.data?.status === 'Success') {
                 set(state => ({ reviewList: res.data.data }));
             }

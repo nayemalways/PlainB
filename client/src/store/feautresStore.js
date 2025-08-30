@@ -6,7 +6,7 @@ const FeaturesStore = create((set) => ({
     FeaturesListRequest: async () => {
         try {
             set( {FeaturesList: null });
-            let res = await axios.get('/api/FeaturesList');
+            let res = await axios.get('https://plainb.onrender.com/api/FeaturesList');
             if(res?.data?.status === 'Success') {
                 set( {FeaturesList: res?.data['data']});
             }
@@ -19,7 +19,7 @@ const FeaturesStore = create((set) => ({
         LegalRequest: async (type) => {
             try {
                 set({ legalList: null });
-                const res = await axios.get(`/api/legalDetails/${type}`);
+                const res = await axios.get(`https://plainb.onrender.com/api/legalDetails/${type}`);
                 if (res?.data?.status === 'Success') {
                     set({ legalList: res?.data?.data });
                 }

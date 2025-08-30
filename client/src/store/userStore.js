@@ -38,7 +38,7 @@ const UserStore = create((set) => ({
     logoutRequest: async ( ) => {
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Access refresh token
-            let res = await axios.get(`/api/UserLogout`, config); // Send request to server
+            let res = await axios.get(`https://plainb.onrender.com/api/UserLogout`, config); // Send request to server
             sessionStorage.clear();
             localStorage.clear();
             return res?.data?.status === 'Success';
@@ -54,7 +54,7 @@ const UserStore = create((set) => ({
     userOtpRequest: async (email) => {
         try {
             set( { isSubmitForm: true });
-            let res = await axios.get(`/api/UserOTP/${email}`);
+            let res = await axios.get(`https://plainb.onrender.com/api/UserOTP/${email}`);
             set({ isSubmitForm: false });
             setEmail(email) // Set user email inside sessionStorage
             return res?.data?.status === 'Success';
@@ -68,7 +68,7 @@ const UserStore = create((set) => ({
         try {
             const email = getEmail(); // Get user email from sessionStorage
             set( {isSubmitForm: true });
-            let res = await axios.get(`/api/OTPVerifyLogin/${email}/${code}`);
+            let res = await axios.get(`https://plainb.onrender.com/api/OTPVerifyLogin/${email}/${code}`);
             set( {isSubmitForm: false });
             return res?.data?.status === 'Success' ? true : res.data["message"];
         }catch(error) {
@@ -110,7 +110,7 @@ const UserStore = create((set) => ({
     profileDetailsRequest: async () => {
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Access refresh token
-            let res = await axios.get(`/api/ReadProfile`, config); // Api Call
+            let res = await axios.get(`https://plainb.onrender.com/api/ReadProfile`, config); // Api Call
             if(res['data'] || res['data']['data'].length > 0) {
                 set( {profileDetails: res['data']['data']});
                 set( {profileForm: res['data']['data']});
@@ -128,7 +128,7 @@ const UserStore = create((set) => ({
         try {
             set( {profileDetails: null});
             let config = { headers: { token: Cookies.get('token')}}; // Access refresh token
-            let res = await axios.post(`api/SaveProfile`, postbody, config);
+            let res = await axios.post(`https://plainb.onrender.comapi/SaveProfile`, postbody, config);
             return res.data['status'] === "Success";
         }catch(error) {
             toast.error( "Something went wrong");

@@ -42,7 +42,7 @@ const CartStore = create((set) => ({
     CartListRequest: async () => {
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.get(`/api/SelectCartListProduct`, config);
+            let res = await axios.get(`https://plainb.onrender.com/api/SelectCartListProduct`, config);
 
             set({ CartList: res.data["data"]});
             set({CartCount: res.data['data'].length});
@@ -80,7 +80,7 @@ const CartStore = create((set) => ({
             console.log(productID);
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
             let postBody = {productID};
-            let res = await axios.post(`/api/RemoveProductFromCart`, postBody, config);
+            let res = await axios.post(`https://plainb.onrender.com/api/RemoveProductFromCart`, postBody, config);
             return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
             unauthorized(e.response.status);
@@ -94,7 +94,7 @@ const CartStore = create((set) => ({
         try {
             set({isChekout: true});
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.get(`/api/CreateInvoice`, config);
+            let res = await axios.get(`https://plainb.onrender.com/api/CreateInvoice`, config);
             set({isChekout: true});
             window.location.href = res["data"]["data"]["GatewayPageURL"];
          }catch(e) {
