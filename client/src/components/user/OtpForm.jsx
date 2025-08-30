@@ -1,4 +1,3 @@
-import React from 'react';
 import UserStore from '../../store/userStore';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -8,14 +7,11 @@ const OtpForm = () => {
     const { OtpVerifyRequest, OTPOnchange, OTPFormData } = UserStore();
     const navigate = useNavigate();
 
-  
-  
-
     const onFormSubmit = async () => {
          // API Request
         if(OTPFormData.otp.length === 6) {
             const res = await OtpVerifyRequest(OTPFormData.otp);
-
+            console.log(res);
             if (res === true) {
                 toast.success("Login success!");
                 navigate("/");
