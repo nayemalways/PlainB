@@ -71,6 +71,15 @@ const UserStore = create((set) => ({
             let res = await axios.get(`https://plainb.onrender.com/api/OTPVerifyLogin/${email}/${code}`);
             set( {isSubmitForm: false });
             
+
+
+            Cookies.set("token", res?.Token, {
+            expires: 30,    
+            sameSite: "Strict",
+            secure: true       
+            });
+
+
             return res?.data?.status === 'Success' ? true : res.data["message"];
         }catch(error) {
             toast.error( "Something went wrong");
