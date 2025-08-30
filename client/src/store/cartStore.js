@@ -22,7 +22,7 @@ const CartStore = create((set) => ({
             postbody.productID = productID; // added product id into postbody
             postbody.qty = quantity;
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.post(`/api/SaveProductToCart`, postbody, config); // Api call
+            let res = await axios.post(`https://plainb.onrender.com/api/SaveProductToCart`, postbody, config); // Api call
 
             return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
