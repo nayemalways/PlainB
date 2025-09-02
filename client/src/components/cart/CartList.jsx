@@ -3,7 +3,7 @@ import CartStore from '../../store/cartStore';
 import NoDataFound from '../product/NoDataFound';
 import  toast  from 'react-hot-toast';
 import CartButton from './CartButton';
-
+ 
 
 const CartList = () => {
     const { CartListRequest, CartList, CartTotal, CartVatTotal, CartPayable, removeCartProduct, createInvoice, isChekout } = CartStore();
@@ -79,12 +79,18 @@ const CartList = () => {
                                     </li>
                                     <li className="list-group-item bg-transparent ">
                                         <span className="float-end">
-                                        <CartButton 
+                                            <CartButton
+                                             text="Check Out "
+                                            isSubmit={isChekout} 
+                                            onClick={ ()=> createInvoice()}
+                                            className="btn px-5 mt-2 btn-success"
+                                            />
+                                        {/* <CartButtonn 
                                             text="Check Out "
                                             isSubmit={isChekout} 
                                             onClick={ ()=> createInvoice()}
                                             className="btn px-5 mt-2 btn-success"
-                                        />
+                                        /> */}
                                         </span>
                                     </li>
                                 </ul>

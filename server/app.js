@@ -24,7 +24,7 @@ const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
 app.use(cors({
-    origin:["https://plain-b.vercel.app", "http://localhost:5173/"]
+    origin:["https://plainb.vercel.app", "http://localhost:5173/"]
 }));
 app.use(helmet());
 app.use(hpp());

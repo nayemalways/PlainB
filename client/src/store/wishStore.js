@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { unauthorized } from '../utility/utility';
+import { BaseServerUrl, unauthorized } from '../utility/utility';
 import  Cookies  from 'js-cookie';
 
 const wishStore = create((set) => ({
@@ -11,7 +11,7 @@ const wishStore = create((set) => ({
         try {
             set({isWishSubmit : true});
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.post(`https://plainb.onrender.com/api/SaveWishList`,  {productID}, config); // Api call
+            let res = await axios.post(`${BaseServerUrl}/api/SaveWishList`,  {productID}, config); // Api call
             return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
             // unauthorized(e.response.status);
@@ -27,7 +27,7 @@ const wishStore = create((set) => ({
     WishListRequest: async () => {
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
-            let res = await axios.get(`https://plainb.onrender.com/api/ReadWishListProducts`, config);
+            let res = await axios.get(`${BaseServerUrl}/api/ReadWishListProducts`, config);
 
             set({ WishList: res.data["data"]});
             set({ WishCount: res.data['data'].length});
@@ -43,7 +43,7 @@ const wishStore = create((set) => ({
         try {
             let config = { headers: { token: Cookies.get('token')}}; // Ensure user logged in
             let postBody = {productID};
-            let res = await axios.post(`https://plainb.onrender.com/api/RemoveWishList`, postBody, config);
+            let res = await axios.post(`${BaseServerUrl}/api/RemoveWishList`, postBody, config);
             return res.data["status"] === "Success" ? true : res.data["message"];
         }catch(e) {
             unauthorized(e.response.status);

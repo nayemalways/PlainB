@@ -16,4 +16,7 @@ export const unauthorized = (code) => {
     }
 }
 
+
+export const BaseServerUrl = "https://plainb-server.vercel.app";
+
  
