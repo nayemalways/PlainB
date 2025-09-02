@@ -14,7 +14,19 @@ const FeaturesStore = create((set) => ({
         }catch(error) {
             console.error('Error fetching features:', error);
         }
-    }
+    },
+
+    LegalRequest: async (type) => {
+            try {
+                set({ legalList: null });
+                const res = await axios.get(`${BaseServerUrl}/api/legalDetails/${type}`);
+                if (res?.data?.status === 'Success') {
+                    set({ legalList: res?.data?.data });
+                }
+            } catch (error) {
+                console.error('Error fetching Legal Statements:', error);
+            }
+        },
 }))
 
 
