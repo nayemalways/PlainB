@@ -138,7 +138,7 @@ const UserStore = create((set) => ({
         try {
             set( {profileDetails: null});
             let config = { headers: { token: Cookies.get('token')}}; // Access refresh token
-            let res = await axios.post(`${BaseServerUrl}api/SaveProfile`, postbody, config);
+            let res = await axios.post(`${BaseServerUrl}/api/SaveProfile`, postbody, config);
             return res.data['status'] === "Success";
         }catch(error) {
             toast.error( "Something went wrong");
