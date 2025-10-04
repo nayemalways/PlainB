@@ -13,6 +13,7 @@ import router from './routes/api.js'
 import {DATABASE_URL, DATABASE_PASSWORD, DATABASE_USERNAME, REQUEST_LIMIT_NUMBER, REQUEST_LIMIT_TIME, WEB_CACHE, URL_ENCODED,MAX_JSON_SIZE, PORT} from './app/config/config.js'
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { globalError } from './app/errorHelpers/globalErrorHandler.js';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +25,7 @@ const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
 app.use(cors({
-    origin:["https://plainb.vercel.app", "http://localhost:5173/"]
+    origin:["https://plainb.vercel.app", "http://localhost:5173"]
 }));
 app.use(helmet());
 app.use(hpp());
@@ -72,6 +73,7 @@ app.use('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
 })
 
+app.use(globalError);
 
 /*-------------APPLICATION RUNNER-----------*/
 app.listen(PORT, () => console.log(`App running on https://localhost:${PORT}`))

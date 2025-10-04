@@ -156,8 +156,6 @@ export const CreateInvoiceService = async (req) => {
     }
 }
 
-
-
 export const PaymentSuccessService = async (req) => {
     try {
         const tran_id = req.params.trxID;
@@ -172,8 +170,6 @@ export const PaymentSuccessService = async (req) => {
     }
 }
 
-
-
 export const PaymentFailService = async (req) => {
     try {
         const tran_id = req.params.trxID;
@@ -185,8 +181,6 @@ export const PaymentFailService = async (req) => {
         return {status: "Error", message: "Internal server error..1!"}
     }
 }
-
-
 
 export const PaymentCancelService = async (req) => {
     try {
@@ -200,8 +194,6 @@ export const PaymentCancelService = async (req) => {
         return {status: "Error", message: "Internal server error..1!"}
     }
 }
-
-
 
 export const PaymentIPNService = async (req) => {
     try {
@@ -221,20 +213,16 @@ export const PaymentIPNService = async (req) => {
 
 
 export const InvoiceListService = async (req) => {
-     try {
-
         const userID = req.headers.user_id;
         const data = await InvoiceModel.find({userID});
 
+        if(!data || data.length === 0) {
+            throw new Error("Invoice is empty");
+        }
+
         return {status: "Success", data: data};
 
-     }catch(e) {
-        console.log(e);
-        return {status: "Error", message: "Internal server error..!"}
-     }
 }
-
-
 
 export const InvoiceProductListService = async (req) => {
    try {
@@ -250,9 +238,18 @@ export const InvoiceProductListService = async (req) => {
         matchStage,
         JoinWithProduct,
         Unwind
-    ])
+    ]);
 
-    return {status: "Success", data: data};
+    
+    if(!data || data.length === 0) {
+        throw new Error("Invoice not found");
+    }
+
+    return {status: "Success", data:  {
+        invoice_id: data[0]?.invoiceID ,
+        order_date: data[0]?.createdAt ,
+        data: data
+    }};
 
    }catch(e) {
      
