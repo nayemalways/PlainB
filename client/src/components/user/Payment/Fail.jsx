@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const Fail = ({payment_text}) => {
     const date = new Date();

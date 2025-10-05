@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Success = ({tran_id}) => {
     const date = new Date();

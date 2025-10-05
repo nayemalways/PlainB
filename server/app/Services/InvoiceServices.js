@@ -216,10 +216,6 @@ export const InvoiceListService = async (req) => {
         const userID = req.headers.user_id;
         const data = await InvoiceModel.find({userID});
 
-        if(!data || data.length === 0) {
-            throw new Error("Invoice is empty");
-        }
-
         return {status: "Success", data: data};
 
 }
