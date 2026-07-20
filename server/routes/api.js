@@ -11,7 +11,7 @@ import * as FeaturesControllers from "../app/controllers/FeaturesControllers.js"
 
 
 
-/*---CREATEED ROUTER INSTANCE---*/
+/*---CREATED ROUTER INSTANCE---*/
 const router = express.Router();
 
 
@@ -44,7 +44,7 @@ router.get('/ReadWishListProducts', UserAuthentication, WishListController.ReadW
 router.post('/SaveWishList', UserAuthentication, WishListController.SaveWishList);
 router.post('/RemoveWishList', UserAuthentication, WishListController.RemoveWishList);
 
-/*----------------------------CARTLIST API ENDPOINT---------------------------*/
+/*----------------------------CART LIST API ENDPOINT---------------------------*/
 router.post('/SaveProductToCart', UserAuthentication, CartListController.SaveProductToCart);
 router.post('/UpdateProductOfCart/:CartID', UserAuthentication, CartListController.UpdateProductOfCart);
 router.post('/RemoveProductFromCart', UserAuthentication, CartListController.RemoveProductFromCart);

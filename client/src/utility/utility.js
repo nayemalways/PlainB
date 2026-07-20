@@ -17,7 +17,7 @@ export const unauthorized = (code) => {
 }
 
 
-// export const BaseServerUrl = "http://localhost:5002";
-export const BaseServerUrl = "https://plainb-server.vercel.app";
+export const BaseServerUrl =  import.meta.VITE_BASE_URL;
+// export const BaseServerUrl = "https://plainb-server.vercel.app";
 
  

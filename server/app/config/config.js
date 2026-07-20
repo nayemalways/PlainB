@@ -8,7 +8,7 @@ export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 export const DATABASE_USERNAME = process.env.DATABASE_USERNAME;
 //  JWT CONFIG
 export const JWT_SECRET = process.env.JWT_SECRET;
-export const JWT_EXPIRATIONS_TIME = Number(process.env.JWT_EXPIRATION_TIME);
+export const JWT_EXPIRATIONS_TIME = process.env.JWT_EXPIRATION_TIME;
 
 export const FRONTEND_URL = process.env.FRONTEND_URL;
 
@@ -35,4 +35,4 @@ export const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE;
 
 
 // PORT
-export const PORT = process.env.PORT || 3000;
+export const PORT = Number(process.env.PORT)|| 3000;

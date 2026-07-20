@@ -1,16 +1,11 @@
-import UserModel from "../models/UsersModel/UserModel.js";
-import ProfilesModel from "../models/UsersModel/UserProfiles.js";
-import { EmailSend } from "../utility/EmailSender.js";
-import { TokenEncode } from "../utility/TokenHelper.js";
-import mongoose from "mongoose";
-const ObjectId = mongoose.Types.ObjectId;
+import UserModel from "../../models/UsersModel/UserModel.js";
+import { EmailSend } from "../../utility/EmailSender.js";
+import { TokenEncode } from "../../utility/TokenHelper.js";
 
-
-export const UserOTPService = async (req) => {
+// USER LOGIN
+const loginService = async (email) => {
 
     try {
-
-        const email = req.params.email;
         const code = Math.floor(100000 + Math.random() * 900000);
         const EmailSub = `User Login OTP Verification`
         const EmailText = ``
@@ -89,7 +84,7 @@ export const UserOTPService = async (req) => {
 
         /*---------EMAIL SEND TO USERS MAIL---------*/
         const OTPSender = await EmailSend(email, EmailSub, EmailText, EmailHTML);
-
+        console.log(OTPSender)
 
         if(OTPSender) {
             await UserModel.updateOne({email: email}, {$set: {otp: code}}, {upsert: true});
@@ -101,17 +96,18 @@ export const UserOTPService = async (req) => {
 
     }catch(e) {
         console.log(e);
-        return {status: "Error", message: "Internal server error..!"};
+        return {status: "Error", message: e?.message};
     }
 }
 
-
-export const VerifyOTPService  = async (req) => {
+// VERIFY LOGIN OTP
+const VerifyLoginOTP  = async (email, otp) => {
 
     try {
 
-        const otp = req.params.code;
-        const email = req.params.email;
+        if (!email || !otp) {
+            throw new Error(`Missing email or otp`);
+        }
 
         /*----------OTP MATCHING------------*/
         const data = await UserModel.aggregate([
@@ -126,12 +122,12 @@ export const VerifyOTPService  = async (req) => {
 
 
         /*----------USER EMAIL, ID--------------*/
-        const User_Email = data[0]['email'];
-        const User_id =  data[0]['_id'].toString()
+        const userMail = data[0]['email'];
+        const userId =  data[0]['_id'].toString()
 
 
         /*-------ENCODED USER MAIL AND ID INTO TOKEN---------*/
-        const encoded = await TokenEncode(User_Email, User_id);
+        const encoded = await TokenEncode(userMail, userId);
 
         if(encoded === null) {
             return {status: 'fail', message:'Token info invalid'}
@@ -143,7 +139,7 @@ export const VerifyOTPService  = async (req) => {
 
 
          /*----------------RETURN STATUS------------------*/
-        return {status: "Success", message: "Login success", Token: encoded};
+        return {status: "Success", message: "Login success", token: encoded};
 
 
     }catch(e) {
@@ -152,43 +148,9 @@ export const VerifyOTPService  = async (req) => {
     }
 }
 
- 
-export const SaveProfileService  = async (req) => {
-    try {
 
-        const user_id = req.headers['user_id'];
-        const reqBody = req.body;
- 
-         /*----SET USER ID IN THE PROFILE-----*/
-        reqBody.userID =  user_id;
 
-        /*-------CREATE OR UPDATE USER INFO WHETHER ALREADY USER CREATED OR NOT--------*/
-        await ProfilesModel.updateOne({userID: user_id}, {$set:reqBody}, {upsert: true});
-        return {status: "Success", message: "Profile save success"};
-
-    }catch(e) {
-        console.log(e.toString());
-        return {status: "Error", message: "Internal server error..!"};
-    }
+export const authService = {
+    loginService,
+    VerifyLoginOTP
 }
-
-
-export const ReadProfileService  = async (req) => {
-    try {
-
-        const user_id = new ObjectId(req.headers['user_id']);
-
-         /*-------READ USER PROFILE'S---------*/
-        const data = await ProfilesModel.aggregate([
-            {$match: {userID: user_id}}
-        ])
-
-         /*-------RETURN STATUS---------*/
-        return {status: "Success", data: data[0]};
-
-    }catch(e) {
-        console.log(e.toString());
-        return {status: "Error", message: "Internal server error..!"};
-    }
-}
- 

@@ -5,16 +5,10 @@ import ProductSliderModel from '../models/ProductModel/productSliderModel.js';
 import ProductDetailsModel from '../models/ProductModel/productDetailsModel.js';
 import ReviewModel from '../models/ProductModel/ReviewModel.js';
 import mongoose from 'mongoose';
+
+
+
 const ObjectId = mongoose.Types.ObjectId;
-
-
-
-
-
-
-
-
-
 
 // Group: 1 -- PRODUCT BRAND, CATEGORY, SLIDER  SEARCH
 export const BrandListService = async () => {
