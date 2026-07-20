@@ -17,7 +17,7 @@ export const unauthorized = (code) => {
 }
 
 
-export const BaseServerUrl =  import.meta.VITE_BASE_URL;
+export const BaseServerUrl =  import.meta.env.VITE_BASE_URL;
 // export const BaseServerUrl = "https://plainb-server.vercel.app";
 
  

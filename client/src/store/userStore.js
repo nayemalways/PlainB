@@ -115,7 +115,7 @@ const UserStore = create((set) => ({
         }))
     },
 
-    // Profile detals
+    // Profile details
     profileDetails: null,
     profileDetailsRequest: async () => {
         try {
