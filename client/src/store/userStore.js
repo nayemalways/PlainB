@@ -67,22 +67,20 @@ const UserStore = create((set) => ({
     OtpVerifyRequest: async (code) => {
         try {
             const email = getEmail(); // Get user email from sessionStorage
-            console.log(email);
-            console.log(code);
             set( {isSubmitForm: true });
             let res = await axios.post(`${BaseServerV2Url}/auth/verify`, {email, otp: code});
             set( {isSubmitForm: false });
-            
 
+            const data = res?.data?.data;
 
-            Cookies.set("token", res?.data?.token, {
+            Cookies.set("token", data?.token, {
             expires: 30,    
             sameSite: "Strict",
             secure: true       
             });
 
 
-            return res?.data?.status === 'Success' ? true : res.data["message"];
+            return res;
         }catch(error) {
             toast.error( "Something went wrong");
             console.error( error.toString() );

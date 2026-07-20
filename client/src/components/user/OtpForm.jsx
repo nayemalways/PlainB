@@ -11,16 +11,15 @@ const OtpForm = () => {
          // API Request
         if(OTPFormData.otp.length === 6) {
             const res = await OtpVerifyRequest(OTPFormData.otp);
-            console.log(res);
-            if (res === true) {
+            if (res.data?.success === true) {
                 toast.success("Login success!");
                 navigate("/");
             }else {
-                toast.error(res);
+                toast.error(res.data.message);
             }
             
         } else {
-            toast.error("OTP should be 6 digit")
+            toast.error("Something went wrong!")
         }
     }
 
