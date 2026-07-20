@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { create } from 'zustand';
-import { BaseServerUrl, getEmail, setEmail, unauthorized } from '../utility/utility';
+import { BaseServerUrl, BaseServerV2Url, getEmail, setEmail, unauthorized } from '../utility/utility';
 import toast from 'react-hot-toast';
 
  
@@ -54,7 +54,7 @@ const UserStore = create((set) => ({
     userOtpRequest: async (email) => {
         try {
             set( { isSubmitForm: true });
-            let res = await axios.get(`${BaseServerUrl}/api/UserOTP/${email}`);
+            let res = await axios.post(`${BaseServerV2Url}/auth/login`, { email });
             set({ isSubmitForm: false });
             setEmail(email) // Set user email inside sessionStorage
             return res?.data?.status === 'Success';
@@ -67,13 +67,15 @@ const UserStore = create((set) => ({
     OtpVerifyRequest: async (code) => {
         try {
             const email = getEmail(); // Get user email from sessionStorage
+            console.log(email);
+            console.log(code);
             set( {isSubmitForm: true });
-            let res = await axios.get(`${BaseServerUrl}/api/OTPVerifyLogin/${email}/${code}`);
+            let res = await axios.post(`${BaseServerV2Url}/auth/verify`, {email, otp: code});
             set( {isSubmitForm: false });
             
 
 
-            Cookies.set("token", res?.data?.Token, {
+            Cookies.set("token", res?.data?.token, {
             expires: 30,    
             sameSite: "Strict",
             secure: true       
