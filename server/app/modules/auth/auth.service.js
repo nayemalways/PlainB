@@ -102,9 +102,7 @@ const loginService = async (email) => {
 
 // VERIFY LOGIN OTP
 const VerifyLoginOTP  = async (email, otp) => {
-
     try {
-
         if (!email || !otp) {
             throw new Error(`Missing email or otp`);
         }
