@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { ICart } from './cart.interface.ts';
 
-const DataSchema = new mongoose.Schema(
+const DataSchema = new mongoose.Schema<ICart>(
   {
-    productID: { type: mongoose.Schema.Types.ObjectId, required: true },
-    userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+    productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
     color: { type: String, required: true },
     qty: { type: String, required: true },
     size: { type: String, required: true },
@@ -11,7 +12,7 @@ const DataSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-const CartModel = mongoose.model('carts', DataSchema);
+const CartModel = mongoose.model<ICart>('carts', DataSchema);
 
 // Export Data Model
 export default CartModel;

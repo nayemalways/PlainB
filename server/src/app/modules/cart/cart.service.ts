@@ -1,59 +1,49 @@
 /*-----------------DEPENDENCIES------------*/
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errorHelpers/appError.ts';
+import { ICart } from './cart.interface.ts';
 import CartModel from './cart.model.ts';
 import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
-export const SaveProductToCartService = async (req) => {
-  try {
-    const userID = new ObjectId(req.headers.user_id);
-    const reqBody = req.body;
-    reqBody.userID = userID;
+// SAVE TO CART
+const saveProductToCartService = async (userId: string, payload: ICart) => {
+  const userObjectId = new mongoose.Types.ObjectId(userId);
+  payload.userId = userObjectId;
 
-    /*------If product already exist------*/
-    const alreadyExist = await CartModel.find({ userID: userID, productID: reqBody.productID });
-    if (alreadyExist.length != 0) {
-      throw new Error('Already in the cart');
-    }
-
-    /*--------ADD PRODUCT TO CART--------*/
-    await CartModel.create(reqBody);
-    return { status: 'Success', message: 'Added to cart!' };
-  } catch (e) {
-    return { status: 'Error', message: e._message || e.toString() };
+  const alreadyExist = await CartModel.find({ userID: userObjectId, productID: payload.productId });
+  if (alreadyExist.length != 0) {
+    throw new Error('Already in the cart');
   }
+
+  await CartModel.create(payload);
+  return null;
 };
 
-export const UpdateProductOfCartService = async (req) => {
-  try {
-    const userID = req.headers.user_id;
-    const CartID = req.params.CartID;
-    const reqBody = req.body;
-
-    /*----------------CART LIST PRUDUCT UPDATE-----------------*/
-    await CartModel.updateOne({ _id: CartID, userID }, { $set: reqBody });
-    return { status: 'Success', message: 'Cart updated successful!' };
-  } catch (e) {
-    return { status: 'Error', message: e._message || e.toString() };
-  }
+// UPDATE CART LIST
+const updateProductOfCartService = async (
+  userId: string,
+  cartId: string,
+  payload: Partial<ICart>,
+) => {
+  await CartModel.updateOne({ _id: cartId, userId }, { $set: payload });
+  return null;
 };
 
-export const RemoveProductFromCartService = async (req) => {
-  try {
-    const userID = new ObjectId(req.headers.user_id);
-    const productID = new ObjectId(req.body.productID);
+// REMOVE CART LIST
+const removeProductFromCartService = async (_userId: string, _productId: string) => {
+    const userId = new ObjectId(_userId);
+    const productId = new ObjectId(_productId);
 
     /*---REMOVE CART LIST PRODUCT----*/
-    const res = await CartModel.deleteOne({ productID, userID });
-    if (res.deletedCount === 0) throw new Error('Failed to remove');
-    return { status: 'Success', message: 'Removed success!', d: res };
-  } catch (e) {
-    return { status: 'Error', message: e._message || e.toString() };
-  }
+    const res = await CartModel.deleteOne({ productId , userId});
+    if (res.deletedCount === 0) throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to remove');
+    return null;
 };
 
-export const SelectCartListProductService = async (req) => {
+const selectCartListProductService = async (_userId: string) => {
   try {
-    const userId = new ObjectId(req.headers.user_id);
+    const userId = new ObjectId(_userId);
     /*----------------- DATABASE QUERY--------------------*/
     const matchStage = { $match: { userID: userId } };
 
@@ -110,4 +100,11 @@ export const SelectCartListProductService = async (req) => {
     console.log(e);
     return { status: 'Error', message: 'Internal server error' };
   }
+};
+
+export const cartService = {
+  saveProductToCartService,
+  updateProductOfCartService,
+  removeProductFromCartService,
+  selectCartListProductService,
 };
