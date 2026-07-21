@@ -1,23 +1,33 @@
 import nodemailer from 'nodemailer';
 import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config.ts';
+import SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 
-export const EmailSend = async (EmailTo, EmailSubject, EmailText, EmailHTMLBody) => {
-  const transporter = nodemailer.createTransport({
+
+interface EmailPayload {
+  emailTo: string;
+  emailSubject: string;
+  emailText: string;
+  emailHTMLBody: string;
+}
+
+export const EmailSend = async (payload: EmailPayload) => {
+  const smtpOptions: SMTPTransport.Options = {
     host: EMAIL_HOST,
-    port: EMAIL_PORT,
+    port: Number(EMAIL_PORT),
     secure: true,
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_PASSWORD,
     },
-  });
+  }
+  const transporter = nodemailer.createTransport(smtpOptions);
 
   const MailOptions = {
     from: EMAIL_USER,
-    to: EmailTo,
-    subject: EmailSubject,
-    text: EmailText,
-    html: EmailHTMLBody,
+    to: payload.emailTo,
+    subject: payload.emailSubject,
+    text: payload.emailText,
+    html: payload.emailHTMLBody,
   };
 
   // SEND EMAIL

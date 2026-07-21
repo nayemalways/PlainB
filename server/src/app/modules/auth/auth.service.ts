@@ -1,15 +1,15 @@
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errorHelpers/appError.ts';
 import { EmailSend } from '../../utility/EmailSender.ts';
 import { createUserTokens } from '../../utility/generateAuthTokens.ts';
 import User from '../user/user.model.ts';
 
-
 // USER LOGIN
 const loginService = async (email: string) => {
- 
-    const code = Math.floor(100000 + Math.random() * 900000);
-    const EmailSub = `User Login OTP Verification`;
-    const EmailText = ``;
-    const EmailHTML = `<!DOCTYPE html>
+  const code = Math.floor(100000 + Math.random() * 900000);
+  const EmailSub = `User Login OTP Verification`;
+  const EmailText = ``;
+  const EmailHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -82,18 +82,23 @@ const loginService = async (email: string) => {
 </html>
 `;
 
-    /*---------EMAIL SEND TO USERS MAIL---------*/
-    const OTPSender = await EmailSend(email, EmailSub, EmailText, EmailHTML);
+  /*---------EMAIL SEND TO USERS MAIL---------*/
+  const mailSender = await EmailSend({
+    emailTo: email,
+    emailSubject: EmailSub,
+    emailText: EmailText,
+    emailHTMLBody: EmailHTML
+  });
 
-    if (OTPSender) {
-      await User.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
-      return {
-        status: 'Success',
-        message: '6 Digit OTP has been sent successfully',
-      };
-    } else {
-      return { status: 'fail', message: 'OTP is not been sent' };
-    }
+  if (!mailSender) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is not been sent');
+  }  
+
+  await User.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
+    return {
+      status: 'Success',
+      message: '6 Digit OTP has been sent successfully',
+    };
 };
 
 // VERIFY LOGIN OTP
@@ -103,9 +108,8 @@ const VerifyLoginOTP = async (email: string, otp: string) => {
   }
 
   /*----------OTP MATCHING------------*/
-  const data = await User.aggregate([{ $match: { email: email, otp: otp } }]);
-console.log(data)
-  /*-------------CHECKING DATA FOUND OR NOT--------*/
+  const data = await User.find({ email, otp });
+
   if (!data || data.length === 0) {
     throw new Error('Invalid credentials');
   }
