@@ -2,7 +2,7 @@ import { IUser } from './user.interface.ts';
 import User from './user.model.ts';
 
 const saveProfileService = async (userId: string, payload: Partial<IUser>) => {
-   await User.updateOne({ userID: userId }, { $set: payload }, { upsert: true });
+   await User.updateOne({ _id: userId }, { $set: payload }, { upsert: true });
    return null;
 };
 

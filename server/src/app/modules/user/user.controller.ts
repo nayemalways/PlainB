@@ -3,23 +3,21 @@ import { SendResponse } from '../../utility/SendResponse.ts';
 import { NextFunction, Request, Response } from 'express';
 import { userService } from './user.service.ts';
 import { JwtPayload } from 'jsonwebtoken';
+import { CatchAsync } from '../../utility/CatchAsync.ts';
 
 
 
-const saveProfile = async (req: Request, res: Response, next: NextFunction) => {
+const saveProfile = CatchAsync( async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.user;
   const payload  = req.body;
   const result = await userService.saveProfileService(userId, payload);
   SendResponse(res, {
     success: true,
-
     statusCode: 200,
-
     message: 'Profile saved',
-
     data: result,
   });
-};
+});
 
 const readProfile = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.user as JwtPayload;
