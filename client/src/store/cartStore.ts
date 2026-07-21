@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import axios from 'axios';
-import { BaseServerUrl, unauthorized } from '../utility/utility.ts';
+import { BaseServerUrl, BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 
 interface CartState {
@@ -33,13 +33,13 @@ const CartStore = create<CartState>()((set) => ({
   },
 
   // Add to Cart Request
-  SaveCartRequest: async (payload, productID, quantity) => {
+  SaveCartRequest: async (payload, productId, quantity) => {
     try {
       set({ isCartSubmit: true });
-      payload.productID = productID; // added product id into payload
+      payload.productId = productId; // added product id into payload
       payload.qty = quantity;
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.post(`${BaseServerUrl}/api/SaveProductToCart`, payload, config); // Api call
+      const res = await axios.post(`${BaseServerV2Url}/cart`, payload, config); // Api call
 
       return res.data;
     } catch (e) {
@@ -58,7 +58,7 @@ const CartStore = create<CartState>()((set) => ({
   CartListRequest: async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerUrl}/api/SelectCartListProduct`, config);
+      const res = await axios.get(`${BaseServerV2Url}/cart`, config);
 
       set({ CartList: res.data['data'] });
       set({ CartCount: res.data['data'].length });
@@ -92,10 +92,9 @@ const CartStore = create<CartState>()((set) => ({
   // Product remove from cart list
   removeCartProduct: async (productID) => {
     try {
-      console.log(productID);
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const postBody = { productID };
-      const res = await axios.post(`${BaseServerUrl}/api/RemoveProductFromCart`, postBody, config);
+      const res = await axios.post(`${BaseServerV2Url}/${productID}`, postBody, config);
       return res.data['status'] === 'Success' ? true : res.data['message'];
     } catch (e) {
       unauthorized(e.response.status);
@@ -109,7 +108,7 @@ const CartStore = create<CartState>()((set) => ({
     try {
       set({ isCheckout: true });
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerUrl}/api/CreateInvoice`, config);
+      const res = await axios.get(`${BaseServerV2Url}/api/CreateInvoice`, config);
       set({ isCheckout: true });
       window.location.href = res['data']['data']['GatewayPageURL'];
     } catch (e) {
