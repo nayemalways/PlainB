@@ -1,0 +1,1 @@
+{"version":3,"file":"sendResponse.js","sourceRoot":"","sources":["../../../src/app/utility/sendResponse.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,MAAM,YAAY,GAAG,CAAC,GAAG,EAAE,EAAC,OAAO,EAAE,UAAU,EAAE,OAAO,EAAE,IAAI,EAAC,EAAE,EAAE;IACtE,GAAG,CAAC,MAAM,CAAC,UAAU,CAAC,CAAC,IAAI,CAAC;QACxB,OAAO;QACP,UAAU;QACV,OAAO;QACP,IAAI;KACP,CAAC,CAAA;AACN,CAAC,CAAA"}
