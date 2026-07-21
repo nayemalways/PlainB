@@ -3,13 +3,42 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { create } from 'zustand';
 import {
-  BaseServerUrl,
   BaseServerV2Url,
   getEmail,
   setEmail,
   unauthorized,
 } from '../utility/utility.ts';
 import toast from 'react-hot-toast';
+
+interface UserAddress {
+  cus_address: {
+      cus_address: string,
+      cus_city: string,
+      cus_country: string,
+      cus_fax: string,
+      cus_name: string,
+      cus_phone: string,
+      cus_postcode: string,
+      cus_state: string,
+    },
+
+    ship_address: {
+      ship_address: string,
+      ship_city: string,
+      ship_country: string,
+      ship_name: string,
+      ship_phone: string,
+      ship_postcode: string,
+      ship_state: string,
+    }
+}
+
+interface ProfileSaveResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: null;
+}
 
 interface UserState {
   LoginFormData: { email: string };
@@ -21,11 +50,11 @@ interface UserState {
   isSubmitForm: boolean;
   userOtpRequest: (email: string) => Promise<any>;
   OtpVerifyRequest: (code: string) => Promise<any>;
-  profileForm: Record<string, string>;
+  profileForm: UserAddress;
   profileFormOnChange: (name: string, value: string) => void;
   profileDetails: any;
   profileDetailsRequest: () => Promise<void>;
-  profileSaveRequest: (payload: Record<string, string>) => Promise<boolean | undefined>;
+  profileSaveRequest: (payload: UserAddress) => Promise<ProfileSaveResponse | undefined>;
 }
 
 const UserStore = create<UserState>()((set) => ({
@@ -110,28 +139,36 @@ const UserStore = create<UserState>()((set) => ({
 
   // User Profile
   profileForm: {
-    userID: '',
-    cus_address: '',
-    cus_city: '',
-    cus_country: '',
-    cus_fax: '',
-    cus_name: '',
-    cus_phone: '',
-    cus_postcode: '',
-    cus_state: '',
-    ship_address: '',
-    ship_city: '',
-    ship_country: '',
-    ship_name: '',
-    ship_phone: '',
-    ship_postcode: '',
-    ship_state: '',
+    cus_address: {
+      cus_address: '',
+      cus_city: '',
+      cus_country: '',
+      cus_fax: '',
+      cus_name: '',
+      cus_phone: '',
+      cus_postcode: '',
+      cus_state: '',
+    },
+
+    ship_address: {
+      ship_address: '',
+      ship_city: '',
+      ship_country: '',
+      ship_name: '',
+      ship_phone: '',
+      ship_postcode: '',
+      ship_state: '',
+    }
   },
   profileFormOnChange: (name, value) => {
+    const addressType = name.startsWith('cus_') ? 'cus_address' : 'ship_address';
     set((state) => ({
       profileForm: {
         ...state.profileForm,
-        [name]: value,
+        [addressType]: {
+          ...state.profileForm[addressType],
+          [name]: value,
+        },
       },
     }));
   },
@@ -157,10 +194,12 @@ const UserStore = create<UserState>()((set) => ({
 
   profileSaveRequest: async (payload) => {
     try {
+      console.log(payload);
       set({ profileDetails: null });
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.post(`${BaseServerUrl}/api/SaveProfile`, payload, config);
-      return res.data['status'] === 'Success';
+      const res = await axios.post(`${BaseServerV2Url}/user`, payload, config);
+      console.log(res.data)
+      return res.data;
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error.toString());

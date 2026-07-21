@@ -16,12 +16,12 @@ const ProfileForm = () => {
     (async () => {
       await profileDetailsRequest();
     })();
-  }, []);
+  }, [profileDetailsRequest]);
 
   // Profile Save Handler
   const save = async () => {
     const res = await profileSaveRequest(profileForm);
-    if (res) {
+    if (res?.success) {
       toast.success('Profile Updated');
       await profileDetailsRequest();
     }
@@ -39,7 +39,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Name </label>
               <input
-                value={profileForm && profileForm.cus_name}
+                value={profileForm.cus_address.cus_name}
                 onChange={(e) => profileFormOnChange('cus_name', e.target.value)}
                 type="text"
                 className="form-control "
@@ -48,7 +48,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Phone </label>
               <input
-                value={profileForm && profileForm.cus_phone}
+                value={profileForm.cus_address.cus_phone}
                 onChange={(e) => profileFormOnChange('cus_phone', e.target.value)}
                 type="text"
                 className="form-control "
@@ -57,7 +57,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Fax </label>
               <input
-                value={profileForm && profileForm.cus_fax}
+                value={profileForm.cus_address.cus_fax}
                 onChange={(e) => profileFormOnChange('cus_fax', e.target.value)}
                 type="text"
                 className="form-control "
@@ -66,7 +66,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Country </label>
               <input
-                value={profileForm && profileForm.cus_country}
+                value={profileForm.cus_address.cus_country}
                 onChange={(e) => profileFormOnChange('cus_country', e.target.value)}
                 type="text"
                 className="form-control "
@@ -75,7 +75,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer City </label>
               <input
-                value={profileForm && profileForm.cus_city}
+                value={profileForm.cus_address.cus_city}
                 onChange={(e) => profileFormOnChange('cus_city', e.target.value)}
                 type="text"
                 className="form-control "
@@ -84,7 +84,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer State </label>
               <input
-                value={profileForm && profileForm.cus_state}
+                value={profileForm.cus_address.cus_state}
                 onChange={(e) => profileFormOnChange('cus_state', e.target.value)}
                 type="text"
                 className="form-control "
@@ -93,7 +93,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Post Code </label>
               <input
-                value={profileForm && profileForm.cus_postcode}
+                value={profileForm.cus_address.cus_postcode}
                 onChange={(e) => profileFormOnChange('cus_postcode', e.target.value)}
                 type="text"
                 className="form-control "
@@ -102,7 +102,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Customer Address</label>
               <input
-                value={profileForm && profileForm.cus_address}
+                value={profileForm.cus_address.cus_address}
                 onChange={(e) => profileFormOnChange('cus_address', e.target.value)}
                 type="text"
                 className="form-control "
@@ -117,7 +117,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping Name </label>
               <input
-                value={profileForm && profileForm.ship_name}
+                value={profileForm.ship_address.ship_name}
                 onChange={(e) => profileFormOnChange('ship_name', e.target.value)}
                 type="text"
                 className="form-control "
@@ -126,7 +126,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping Phone </label>
               <input
-                value={profileForm && profileForm.ship_phone}
+                value={profileForm.ship_address.ship_phone}
                 onChange={(e) => profileFormOnChange('ship_phone', e.target.value)}
                 type="text"
                 className="form-control "
@@ -135,7 +135,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping Country </label>
               <input
-                value={profileForm && profileForm.ship_country}
+                value={profileForm.ship_address.ship_country}
                 onChange={(e) => profileFormOnChange('ship_country', e.target.value)}
                 type="text"
                 className="form-control "
@@ -144,7 +144,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping City </label>
               <input
-                value={profileForm && profileForm.ship_city}
+                value={profileForm.ship_address.ship_city}
                 onChange={(e) => profileFormOnChange('ship_city', e.target.value)}
                 type="text"
                 className="form-control "
@@ -153,7 +153,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping State </label>
               <input
-                value={profileForm && profileForm.ship_state}
+                value={profileForm.ship_address.ship_state}
                 onChange={(e) => profileFormOnChange('ship_state', e.target.value)}
                 type="text"
                 className="form-control "
@@ -162,7 +162,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping Post Code </label>
               <input
-                value={profileForm && profileForm.ship_postcode}
+                value={profileForm.ship_address.ship_postcode}
                 onChange={(e) => profileFormOnChange('ship_postcode', e.target.value)}
                 type="text"
                 className="form-control "
@@ -171,7 +171,7 @@ const ProfileForm = () => {
             <div className="col-md-3 p-2">
               <label className="form-label">Shipping Address</label>
               <input
-                value={profileForm && profileForm.ship_address}
+                value={profileForm.ship_address.ship_address}
                 onChange={(e) => profileFormOnChange('ship_address', e.target.value)}
                 type="text"
                 className="form-control "

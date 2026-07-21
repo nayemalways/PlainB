@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import axios from 'axios';
 import { BaseServerUrl, unauthorized } from '../utility/utility.ts';
@@ -40,7 +41,7 @@ const CartStore = create<CartState>()((set) => ({
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.post(`${BaseServerUrl}/api/SaveProductToCart`, payload, config); // Api call
 
-      return res.data['status'] === 'Success' ? true : res.data['message'];
+      return res.data;
     } catch (e) {
       unauthorized(e.response.status);
       console.log(e.toString());
