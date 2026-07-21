@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 // DATABASE INFO
 export const DATABASE_URL = process.env.DATABASE_URL;
 export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
@@ -18,7 +17,6 @@ export const EMAIL_PORT = process.env.EMAIL_PORT;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 export const EMAIL_USER = process.env.EMAIL_USER;
 export const EMAIL_SECURITY = false;
- 
 
 // RATE LIMITING
 export const REQUEST_LIMIT_TIME = process.env.REQUEST_LIMIT_TIME;
@@ -33,6 +31,5 @@ export const URL_ENCODED = process.env.URL_ENCODED;
 // MAXIMUM JSON SIZE
 export const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE;
 
-
 // PORT
-export const PORT = Number(process.env.PORT)|| 3000;
+export const PORT = Number(process.env.PORT) || 3000;

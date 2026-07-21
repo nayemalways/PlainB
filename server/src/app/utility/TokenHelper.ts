@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { JWT_EXPIRATIONS_TIME, JWT_SECRET } from "../config/config.ts";
+import jwt from 'jsonwebtoken';
+import { JWT_EXPIRATIONS_TIME, JWT_SECRET } from '../config/config.ts';
 
 // ENCODE TOKEN
 export const TokenEncode = (email, user_id) => {
@@ -14,7 +14,7 @@ export const TokenEncode = (email, user_id) => {
 export const DecodeToken = (token) => {
   try {
     return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
+  } catch {
     return null;
   }
 };

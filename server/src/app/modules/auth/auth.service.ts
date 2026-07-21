@@ -1,6 +1,6 @@
-import UserModel from "../../models/UsersModel/UserModel.ts";
-import { EmailSend } from "../../utility/EmailSender.ts";
-import { TokenEncode } from "../../utility/TokenHelper.ts";
+import UserModel from './auth.model.ts';
+import { EmailSend } from '../../utility/EmailSender.ts';
+import { TokenEncode } from '../../utility/TokenHelper.ts';
 
 // USER LOGIN
 const loginService = async (email) => {
@@ -86,21 +86,17 @@ const loginService = async (email) => {
     console.log(OTPSender);
 
     if (OTPSender) {
-      await UserModel.updateOne(
-        { email: email },
-        { $set: { otp: code } },
-        { upsert: true },
-      );
+      await UserModel.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
       return {
-        status: "Success",
-        message: "6 Digit OTP has been sent successfully",
+        status: 'Success',
+        message: '6 Digit OTP has been sent successfully',
       };
     } else {
-      return { status: "fail", message: "OTP is not been sent" };
+      return { status: 'fail', message: 'OTP is not been sent' };
     }
   } catch (e) {
     console.log(e);
-    return { status: "Error", message: e?.message };
+    return { status: 'Error', message: e?.message };
   }
 };
 
@@ -111,9 +107,7 @@ const VerifyLoginOTP = async (email, otp) => {
   }
 
   /*----------OTP MATCHING------------*/
-  const data = await UserModel.aggregate([
-    { $match: { email: email, otp: otp } },
-  ]);
+  const data = await UserModel.aggregate([{ $match: { email: email, otp: otp } }]);
 
   /*-------------CHECKING DATA FOUND OR NOT--------*/
   if (!data || data.length === 0) {
@@ -121,18 +115,18 @@ const VerifyLoginOTP = async (email, otp) => {
   }
 
   /*----------USER EMAIL, ID--------------*/
-  const userMail = data[0]["email"];
-  const userId = data[0]["_id"].toString();
+  const userMail = data[0]['email'];
+  const userId = data[0]['_id'].toString();
 
   /*-------ENCODED USER MAIL AND ID INTO TOKEN---------*/
   const encoded = await TokenEncode(userMail, userId);
 
   if (encoded === null) {
-    return { status: "fail", message: "Token info invalid" };
+    return { status: 'fail', message: 'Token info invalid' };
   }
 
   /*-----------OTP RESET AFTER LOGGED IN------------*/
-  await UserModel.updateOne({ email: email }, { otp: "0" });
+  await UserModel.updateOne({ email: email }, { otp: '0' });
 
   /*----------------RETURN STATUS------------------*/
   return { token: encoded };

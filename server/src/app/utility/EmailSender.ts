@@ -1,18 +1,7 @@
-import nodemailer from "nodemailer";
-import {
-  EMAIL_HOST,
-  EMAIL_PASSWORD,
-  EMAIL_PORT,
-  EMAIL_SECURITY,
-  EMAIL_USER,
-} from "../config/config.ts";
+import nodemailer from 'nodemailer';
+import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config.ts';
 
-export const EmailSend = async (
-  EmailTo,
-  EmailSubject,
-  EmailText,
-  EmailHTMLBody,
-) => {
+export const EmailSend = async (EmailTo, EmailSubject, EmailText, EmailHTMLBody) => {
   const transporter = nodemailer.createTransport({
     host: EMAIL_HOST,
     port: EMAIL_PORT,
