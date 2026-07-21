@@ -28,7 +28,7 @@
   --bodyXLarge: 20px;
   --bodyLarge: 18px;
   --bodyMedium: 16px;
-  --bodySmal: 14px;
+  --bodySmall: 14px;
   --bodyXSmal: 10px;
 }
 
@@ -145,8 +145,8 @@ body {
 .bodyMedium {
   font-size: var(--bodyMedium);
 }
-.bodySmal {
-  font-size: var(--bodySmal);
+.bodySmall {
+  font-size: var(--bodySmall);
 }
 .bodyXSmal {
   font-size: var(--bodyXSmal);

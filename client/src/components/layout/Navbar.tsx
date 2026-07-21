@@ -55,15 +55,15 @@ const Navbar = () => {
             </div>
             <div className="col-md-6">
               <span className="float-end">
-                <span className="bodySmal mx-2">
+                <span className="bodySmall mx-2">
                   {' '}
                   <i className="bi bi-whatsapp"></i>{' '}
                 </span>
-                <span className="bodySmal mx-2">
+                <span className="bodySmall mx-2">
                   {' '}
                   <i className="bi bi-youtube"></i>{' '}
                 </span>
-                <span className="bodySmal">
+                <span className="bodySmall">
                   {' '}
                   <i className="bi bi-facebook"></i>{' '}
                 </span>

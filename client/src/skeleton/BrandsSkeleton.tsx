@@ -10,7 +10,7 @@ const BrandsSkeleton = () => {
         <div className="container">
           <div className="row">
             <h1 className="headline-4 text-center my-2 p-0">Top Brands</h1>
-            <span className="bodySmal mb-5 text-center">
+            <span className="bodySmall mb-5 text-center">
               Explore a World of Choices Across Our Most Popular <br />
               Shopping Categories{' '}
             </span>

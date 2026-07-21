@@ -93,7 +93,7 @@ const Details = () => {
                 )}
                 <div className="row">
                   <div className="col-4 p-2">
-                    <label className="bodySmal">Size</label>
+                    <label className="bodySmall">Size</label>
                     <select
                       value={cartForm.size}
                       onChange={(e) => cartFormOnchange('size', e.target.value)}
@@ -111,7 +111,7 @@ const Details = () => {
                     </select>
                   </div>
                   <div className="col-4 p-2">
-                    <label className="bodySmal">Color</label>
+                    <label className="bodySmall">Color</label>
                     <select
                       value={cartForm.color}
                       onChange={(e) => cartFormOnchange('color', e.target.value)}
@@ -129,7 +129,7 @@ const Details = () => {
                     </select>
                   </div>
                   <div className="col-4 p-2">
-                    <label className="bodySmal">Quantity</label>
+                    <label className="bodySmall">Quantity</label>
                     <div className="input-group w-100 my-2">
                       <button
                         onClick={decrementQty}

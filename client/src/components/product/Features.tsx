@@ -25,7 +25,7 @@ const Features = () => {
                       </div>
                       <div className="col-9">
                         <h3 className="bodyXLarge">{item['name']}</h3>
-                        <span className="bodySmal">{item['description']}</span>
+                        <span className="bodySmall">{item['description']}</span>
                       </div>
                     </div>
                   </div>

@@ -14,7 +14,7 @@ const Products = () => {
         <div className="container-fluid py-5 bg-white">
           <div className="row">
             <h1 className="headline-4 text-center my-2 p-0">Our Products</h1>
-            <span className="bodySmal mb-3 text-center">
+            <span className="bodySmall mb-3 text-center">
               Explore a World of Choices Across Our Most Popular
             </span>
             <div className="col-12">
@@ -143,7 +143,7 @@ const Products = () => {
                                 >
                                   <img className="w-100 rounded-top-2" src={item['image']} />
                                   <div className="card-body">
-                                    <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                    <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
                                     <StarRatings
                                       rating={parseFloat(item['star'])}
@@ -192,7 +192,7 @@ const Products = () => {
                                 >
                                   <img className="w-100 rounded-top-2" src={item['image']} />
                                   <div className="card-body">
-                                    <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                    <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
                                     <StarRatings
                                       rating={parseFloat(item['star'])}
@@ -241,7 +241,7 @@ const Products = () => {
                                 >
                                   <img className="w-100 rounded-top-2" src={item['image']} />
                                   <div className="card-body">
-                                    <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                    <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
                                     <StarRatings
                                       rating={parseFloat(item['star'])}
@@ -290,7 +290,7 @@ const Products = () => {
                                 >
                                   <img className="w-100 rounded-top-2" src={item['image']} />
                                   <div className="card-body">
-                                    <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                    <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
                                     <StarRatings
                                       rating={parseFloat(item['star'])}
@@ -339,7 +339,7 @@ const Products = () => {
                                 >
                                   <img className="w-100 rounded-top-2" src={item['image']} />
                                   <div className="card-body">
-                                    <p className="bodySmal text-secondary my-1">{item['title']}</p>
+                                    <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
                                     <StarRatings
                                       rating={parseFloat(item['star'])}

@@ -46,7 +46,7 @@ const WishList = () => {
                     <div className="card shadow-sm h-100 rounded-3 bg-white">
                       <img className="w-100 rounded-top-2" src={item?.products['image']} />
                       <div className="card-body">
-                        <p className="bodySmal text-secondary">{item?.products['title']}</p>
+                        <p className="bodySmall text-secondary">{item?.products['title']}</p>
                         <p className="fw-bold">
                           {' '}
                           Price:

@@ -17,7 +17,7 @@ const Categories = () => {
         <div className="container">
           <div className="row">
             <h1 className="headline-4 text-center my-2 p-0">Top Categories</h1>
-            <span className="bodySmal mb-5 text-center">
+            <span className="bodySmall mb-5 text-center">
               Explore a World of Choices Across Our Most Popular <br />
               Shopping Categories{' '}
             </span>
@@ -32,7 +32,7 @@ const Categories = () => {
                   <Link to={`/categories/${item['_id']}`} className="card h-100 rounded-3 bg-light">
                     <div className="card-body d-flex flex-column justify-content-center align-items-center">
                       <img alt={item['categoryName']} className="w-75" src={item['categoryImg']} />
-                      <p className="bodySmal mt-3">{item['categoryName']}</p>
+                      <p className="bodySmall mt-3">{item['categoryName']}</p>
                     </div>
                   </Link>
                 </div>

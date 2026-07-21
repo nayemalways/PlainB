@@ -134,7 +134,7 @@ const ProductList = () => {
                               >
                                 <img className="rounded-top-2 w-100" src={item['image']} />
                                 <div className="card-body">
-                                  <p className="text-secondary bodySmal my-1">{item['title']}</p>
+                                  <p className="text-secondary bodySmall my-1">{item['title']}</p>
                                   {price}
                                   <StarRatings
                                     rating={parseFloat(item['star'])}
