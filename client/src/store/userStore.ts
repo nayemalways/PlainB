@@ -141,7 +141,7 @@ const UserStore = create<UserState>()((set) => ({
   profileDetailsRequest: async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerUrl}/api/ReadProfile`, config); // Api Call
+      const res = await axios.get(`${BaseServerV2Url}/user`, config); // Api Call
       if (res['data'] || res['data']['data'].length > 0) {
         set({ profileDetails: res['data']['data'] });
         set({ profileForm: res['data']['data'] });

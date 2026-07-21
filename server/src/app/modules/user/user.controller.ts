@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  SaveProfileService,
-  ReadProfileService,
-} from './user.service.ts';
 import { SendResponse } from '../../utility/SendResponse.ts';
 import { NextFunction, Request, Response } from 'express';
+import { userService } from './user.service.ts';
+import { JwtPayload } from 'jsonwebtoken';
 
 
 
 const saveProfile = async (req: Request, res: Response, next: NextFunction) => {
-  const result = await SaveProfileService(req);
+  const { userId } = req.user;
+  const payload  = req.body;
+  const result = await userService.saveProfileService(userId, payload);
   SendResponse(res, {
     success: true,
 
@@ -22,7 +22,8 @@ const saveProfile = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const readProfile = async (req: Request, res: Response, next: NextFunction) => {
-  const result = await ReadProfileService(req);
+  const { userId } = req.user as JwtPayload;
+  const result = await userService.readProfileService(userId as string);
   return SendResponse(res, {
     success: true,
     statusCode: 200,

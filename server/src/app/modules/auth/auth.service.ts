@@ -87,18 +87,16 @@ const loginService = async (email: string) => {
     emailTo: email,
     emailSubject: EmailSub,
     emailText: EmailText,
-    emailHTMLBody: EmailHTML
+    emailHTMLBody: EmailHTML,
   });
 
   if (!mailSender) {
     throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is not been sent');
-  }  
+  }
 
   await User.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
-    return {
-      status: 'Success',
-      message: '6 Digit OTP has been sent successfully',
-    };
+  
+  return null;
 };
 
 // VERIFY LOGIN OTP
@@ -107,20 +105,14 @@ const VerifyLoginOTP = async (email: string, otp: string) => {
     throw new Error(`Missing email or otp`);
   }
 
-  /*----------OTP MATCHING------------*/
-  const data = await User.find({ email, otp });
-
-  if (!data || data.length === 0) {
+  const data = await User.findOne({ email, otp });
+  if (!data) {
     throw new Error('Invalid credentials');
   }
 
-  /*-------ENCODED USER MAIL AND ID INTO TOKEN---------*/
   const userTokens = await createUserTokens(data);
-
-  /*-----------OTP RESET AFTER LOGGED IN------------*/
   await User.updateOne({ email: email }, { otp: '0' });
 
-  /*----------------RETURN STATUS------------------*/
   return userTokens;
 };
 
