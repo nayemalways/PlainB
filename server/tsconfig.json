@@ -8,7 +8,7 @@
     "outDir": "./dist",
     "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
     "strict": false,
-    "noCheck": true,
+    "noCheck": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,

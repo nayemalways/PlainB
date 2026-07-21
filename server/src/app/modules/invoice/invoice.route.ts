@@ -1,14 +1,15 @@
 import express from 'express';
-import { UserAuthentication } from '../../middlewares/AuthMiddleware.ts';
+import { checkAuth } from '../../middlewares/AuthMiddleware.ts';
 import * as invoiceController from './invoice.controller.ts';
+import { Role } from '../user/user.interface.ts';
 
 const router = express.Router();
 
-router.get('/CreateInvoice', UserAuthentication, invoiceController.CreateInvoice);
-router.get('/InvoiceList', UserAuthentication, invoiceController.InvoiceList);
+router.get('/CreateInvoice', checkAuth(Role.USER), invoiceController.CreateInvoice);
+router.get('/InvoiceList', checkAuth(Role.USER), invoiceController.InvoiceList);
 router.get(
   '/InvoiceProductList/:invoice_id',
-  UserAuthentication,
+  checkAuth(Role.USER),
   invoiceController.InvoiceProductList,
 );
 router.post('/PaymentSuccess/:trxID', invoiceController.PaymentSuccess);

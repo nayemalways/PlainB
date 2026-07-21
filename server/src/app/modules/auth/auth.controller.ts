@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/SendResponse.ts';
 import { authService } from './auth.service.ts';
+import { CatchAsync } from '../../utility/CatchAsync.ts';
+import { SetCookies } from '../../utility/setCookies.ts';
+import { StatusCodes } from 'http-status-codes';
 
-const login = async (req, res) => {
+const login = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const email = req.body.email;
   const result = await authService.loginService(email);
   SendResponse(res, {
@@ -10,46 +15,35 @@ const login = async (req, res) => {
     message: 'Login OTP sent successfully',
     data: result,
   });
-};
+}) ;
 
-const VerifyLoginOTP = async (req, res, next) => {
+const VerifyLoginOTP = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { otp, email } = req.body;
   const result = await authService.VerifyLoginOTP(email, otp);
 
-  // Set cookie
+  SetCookies(res, result);
 
-  const cookieOptions = {
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
-    httpOnly: true, // prevents JS access (XSS protection)
-    secure: true, // cookie only sent over HTTPS (in production)
-    sameSite: 'strict', // prevents CSRF (adjust if you need cross-site)
-  };
-
-  try {
-    res.cookie('token', result['Token'], cookieOptions);
-    SendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Verified',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  SendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Verified',
+    data: null
+  })
+})
 
 // LOGOUT
-const userLogout = async (req, res) => {
-  // Remove cookie option by minus (-)
+const userLogout = CatchAsync(async (req, res) => {
   const cookieOptions = { expires: new Date(Date.now() - 24 * 60 * 60 * 1000), httpOnly: false };
-  res.cookie('token', '', cookieOptions);
+  res.clearCookie('accessToken', cookieOptions);
+  res.clearCookie('refreshToken', cookieOptions);
+
   SendResponse(res, {
     success: true,
     statusCode: 200,
     message: 'Logout successful',
     data: null,
   });
-};
+}) ;
 
 export const authController = {
   login,

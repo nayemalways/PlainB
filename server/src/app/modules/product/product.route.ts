@@ -1,6 +1,7 @@
 import express from 'express';
-import { UserAuthentication } from '../../middlewares/AuthMiddleware.ts';
+import { checkAuth } from '../../middlewares/AuthMiddleware.ts';
 import * as productController from './product.controller.ts';
+import { Role } from '../user/user.interface.ts';
 
 const router = express.Router();
 
@@ -15,6 +16,6 @@ router.get('/ProductDetails/:ProductID', productController.ProductDetails);
 router.get('/ProductListByKeyword/:Keyword', productController.ProductListByKeyword);
 router.get('/ProductReviewsList/:ProductId', productController.ProductReviewsList);
 router.post('/ProductFilter', productController.ProductFilter);
-router.post('/ProductReviewCreate', UserAuthentication, productController.ProductReviewCreate);
+router.post('/ProductReviewCreate', checkAuth(Role.USER), productController.ProductReviewCreate);
 
 export const productRouter = router;

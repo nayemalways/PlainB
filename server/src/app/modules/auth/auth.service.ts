@@ -1,10 +1,11 @@
-import UserModel from './auth.model.ts';
 import { EmailSend } from '../../utility/EmailSender.ts';
-import { TokenEncode } from '../../utility/TokenHelper.ts';
+import { createUserTokens } from '../../utility/generateAuthTokens.ts';
+import User from '../user/user.model.ts';
+
 
 // USER LOGIN
-const loginService = async (email) => {
-  try {
+const loginService = async (email: string) => {
+ 
     const code = Math.floor(100000 + Math.random() * 900000);
     const EmailSub = `User Login OTP Verification`;
     const EmailText = ``;
@@ -83,10 +84,9 @@ const loginService = async (email) => {
 
     /*---------EMAIL SEND TO USERS MAIL---------*/
     const OTPSender = await EmailSend(email, EmailSub, EmailText, EmailHTML);
-    console.log(OTPSender);
 
     if (OTPSender) {
-      await UserModel.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
+      await User.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
       return {
         status: 'Success',
         message: '6 Digit OTP has been sent successfully',
@@ -94,42 +94,30 @@ const loginService = async (email) => {
     } else {
       return { status: 'fail', message: 'OTP is not been sent' };
     }
-  } catch (e) {
-    console.log(e);
-    return { status: 'Error', message: e?.message };
-  }
 };
 
 // VERIFY LOGIN OTP
-const VerifyLoginOTP = async (email, otp) => {
+const VerifyLoginOTP = async (email: string, otp: string) => {
   if (!email || !otp) {
     throw new Error(`Missing email or otp`);
   }
 
   /*----------OTP MATCHING------------*/
-  const data = await UserModel.aggregate([{ $match: { email: email, otp: otp } }]);
-
+  const data = await User.aggregate([{ $match: { email: email, otp: otp } }]);
+console.log(data)
   /*-------------CHECKING DATA FOUND OR NOT--------*/
   if (!data || data.length === 0) {
     throw new Error('Invalid credentials');
   }
 
-  /*----------USER EMAIL, ID--------------*/
-  const userMail = data[0]['email'];
-  const userId = data[0]['_id'].toString();
-
   /*-------ENCODED USER MAIL AND ID INTO TOKEN---------*/
-  const encoded = await TokenEncode(userMail, userId);
-
-  if (encoded === null) {
-    return { status: 'fail', message: 'Token info invalid' };
-  }
+  const userTokens = await createUserTokens(data);
 
   /*-----------OTP RESET AFTER LOGGED IN------------*/
-  await UserModel.updateOne({ email: email }, { otp: '0' });
+  await User.updateOne({ email: email }, { otp: '0' });
 
   /*----------------RETURN STATUS------------------*/
-  return { token: encoded };
+  return userTokens;
 };
 
 export const authService = {

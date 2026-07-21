@@ -3,11 +3,14 @@ dotenv.config();
 
 // DATABASE INFO
 export const DATABASE_URL = process.env.DATABASE_URL;
-export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
-export const DATABASE_USERNAME = process.env.DATABASE_USERNAME;
+export const NODE_ENV = process.env.NODE_ENV;
+
 //  JWT CONFIG
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const JWT_EXPIRATIONS_TIME = process.env.JWT_EXPIRATION_TIME;
+
+export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+export const JWT_REFRESH_EXPIRATION = process.env.JWT_REFRESH_EXPIRATION;
 
 export const FRONTEND_URL = process.env.FRONTEND_URL;
 

@@ -1,11 +1,12 @@
 import express from 'express';
-import { UserAuthentication } from '../../middlewares/AuthMiddleware.ts';
+import { checkAuth } from '../../middlewares/AuthMiddleware.ts';
 import * as wishlistController from './wishlist.controller.ts';
+import { Role } from '../user/user.interface.ts';
 
 const router = express.Router();
 
-router.get('/ReadWishListProducts', UserAuthentication, wishlistController.ReadWishListProducts);
-router.post('/SaveWishList', UserAuthentication, wishlistController.SaveWishList);
-router.post('/RemoveWishList', UserAuthentication, wishlistController.RemoveWishList);
+router.get('/ReadWishListProducts', checkAuth(Role.USER), wishlistController.ReadWishListProducts);
+router.post('/SaveWishList', checkAuth(Role.USER), wishlistController.SaveWishList);
+router.post('/RemoveWishList', checkAuth(Role.USER), wishlistController.RemoveWishList);
 
 export const wishlistRouter = router;
