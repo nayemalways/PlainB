@@ -3,7 +3,14 @@ import axios from 'axios';
 import { BaseServerUrl } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 
-const InvoiceStore = create((set) => ({
+interface InvoiceState {
+  invoiceList: any[];
+  invoiceListRequest: () => Promise<void>;
+  invoiceDetails: any;
+  invoiceDetailsRequest: (invoiceId: string) => Promise<void>;
+}
+
+const InvoiceStore = create<InvoiceState>()((set) => ({
   invoiceList: [],
   invoiceListRequest: async () => {
     try {

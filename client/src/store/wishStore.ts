@@ -3,7 +3,16 @@ import axios from 'axios';
 import { BaseServerUrl, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 
-const wishStore = create((set) => ({
+interface WishState {
+  isWishSubmit: boolean;
+  SaveWishRequest: (productID: string) => Promise<boolean | string | undefined>;
+  WishList: any[] | null;
+  WishCount: number;
+  WishListRequest: () => Promise<void>;
+  removeFromWish: (productID: string) => Promise<boolean | string | undefined>;
+}
+
+const wishStore = create<WishState>()((set) => ({
   isWishSubmit: false,
   // Add to Cart Request
   SaveWishRequest: async (productID) => {

@@ -2,7 +2,14 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { BaseServerUrl } from '../utility/utility.ts';
 
-const FeaturesStore = create((set) => ({
+interface FeaturesState {
+  FeaturesList: any[] | null;
+  FeaturesListRequest: () => Promise<void>;
+  legalList: any[] | null;
+  LegalRequest: (type: string) => Promise<void>;
+}
+
+const FeaturesStore = create<FeaturesState>()((set) => ({
   FeaturesList: null,
   FeaturesListRequest: async () => {
     try {
@@ -16,6 +23,7 @@ const FeaturesStore = create((set) => ({
     }
   },
 
+  legalList: null,
   LegalRequest: async (type) => {
     try {
       set({ legalList: null });

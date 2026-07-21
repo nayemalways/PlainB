@@ -3,7 +3,23 @@ import axios from 'axios';
 import { BaseServerUrl, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 
-const CartStore = create((set) => ({
+interface CartState {
+  isCartSubmit: boolean;
+  cartForm: Record<string, string>;
+  cartFormOnchange: (name: string, value: string) => void;
+  SaveCartRequest: (payload: Record<string, unknown>, productID: string, quantity: number) => Promise<boolean | string | undefined>;
+  CartList: any[] | null;
+  CartCount: number;
+  CartTotal: number;
+  CartVatTotal: number;
+  CartPayable: number;
+  CartListRequest: () => Promise<void>;
+  removeCartProduct: (productID: string) => Promise<boolean | string | undefined>;
+  isCheckout: boolean;
+  createInvoice: () => Promise<void>;
+}
+
+const CartStore = create<CartState>()((set) => ({
   isCartSubmit: false,
   cartForm: { productID: '', color: '', size: '' },
   cartFormOnchange: (name, value) => {

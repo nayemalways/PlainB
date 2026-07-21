@@ -2,7 +2,28 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { BaseServerUrl } from '../utility/utility.ts';
 
-const ProductStore = create((set) => ({
+interface ProductState {
+  BrandList: any[] | null;
+  BrandListRequest: () => Promise<void>;
+  CategoryList: any[] | null;
+  CategoryListRequest: () => Promise<void>;
+  SliderList: any[] | null;
+  SliderListRequest: () => Promise<void>;
+  ProductList: any[] | null;
+  ProductListByRemark: (remarks: string) => Promise<void>;
+  ProductListByBrand: (brandId: string) => Promise<void>;
+  ProductListByCategory: (categoryId: string) => Promise<void>;
+  ProductListByKeyword: (keyword: string) => Promise<void>;
+  ProductFilter: (postBody: Record<string, unknown>) => Promise<void>;
+  searchKeyword: string;
+  setSearchKeyword: (keyword: string) => void;
+  productDetails: any;
+  detailsRequest: (id: string) => Promise<void>;
+  reviewList: any[] | null;
+  reviewListRequest: (id: string) => Promise<void>;
+}
+
+const ProductStore = create<ProductState>()((set) => ({
   BrandList: null,
   BrandListRequest: async () => {
     try {

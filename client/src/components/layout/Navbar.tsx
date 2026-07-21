@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import logo from '../../assets/images/plainb-logo.svg';
 import ProductStore from '../../store/productStore.ts';
@@ -13,11 +13,17 @@ const Navbar = () => {
   const { isLogin } = UserStore();
   const { CartCount, CartListRequest } = CartStore();
   const { WishCount, WishListRequest } = WishStore();
+  const navigate = useNavigate();
 
   // Logout handle
   const logoutHandle = async () => {
     const res = await logoutRequest();
-    res ? location.reload() : toast.error('Something went wrong');
+    if (res.success) {
+      // location.reload();
+      navigate('/')
+    } else {
+      toast.error('Something went wrong');
+    }
   };
 
   useEffect(() => {
@@ -27,7 +33,7 @@ const Navbar = () => {
         await WishListRequest();
       })();
     }
-  }, []);
+  }, [CartListRequest, WishListRequest, isLogin]);
 
   return (
     <>

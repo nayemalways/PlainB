@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { create } from 'zustand';
@@ -10,7 +11,24 @@ import {
 } from '../utility/utility.ts';
 import toast from 'react-hot-toast';
 
-const UserStore = create((set) => ({
+interface UserState {
+  LoginFormData: { email: string };
+  inputOnchange: (name: 'email', value: string) => void;
+  OTPFormData: { otp: string };
+  OTPOnchange: (name: 'otp', value: string) => void;
+  isLogin: () => boolean;
+  logoutRequest: () => Promise<any>;
+  isSubmitForm: boolean;
+  userOtpRequest: (email: string) => Promise<any>;
+  OtpVerifyRequest: (code: string) => Promise<any>;
+  profileForm: Record<string, string>;
+  profileFormOnChange: (name: string, value: string) => void;
+  profileDetails: any;
+  profileDetailsRequest: () => Promise<void>;
+  profileSaveRequest: (payload: Record<string, string>) => Promise<boolean | undefined>;
+}
+
+const UserStore = create<UserState>()((set) => ({
   // Login form state management
   LoginFormData: { email: '' },
   inputOnchange: (name, value) => {
@@ -45,10 +63,10 @@ const UserStore = create((set) => ({
         withCredentials: true,
         headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
       };
-      const res = await axios.get(`${BaseServerUrl}/api/UserLogout`, config); // Send request to server
+      const res = await axios.get(`${BaseServerV2Url}/auth/logout`, config); // Send request to server
       sessionStorage.clear();
       localStorage.clear();
-      return res?.data?.status === 'Success';
+      return res?.data;
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error.toString());
