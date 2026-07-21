@@ -35,13 +35,16 @@ const UserStore = create((set) => ({
   /* --------API Call------- */
   // Is user logged in
   isLogin: () => {
-    return !!Cookies.get('token');
+    return !!Cookies.get('accessToken');
   },
 
   // User Logout
   logoutRequest: async () => {
     try {
-      const config = { headers: { token: Cookies.get('token') } }; // Access refresh token
+      const config = {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
+      };
       const res = await axios.get(`${BaseServerUrl}/api/UserLogout`, config); // Send request to server
       sessionStorage.clear();
       localStorage.clear();
@@ -60,7 +63,7 @@ const UserStore = create((set) => ({
       const res = await axios.post(`${BaseServerV2Url}/auth/login`, { email });
       set({ isSubmitForm: false });
       setEmail(email); // Set user email inside sessionStorage
-      return res?.data?.status === 'Success';
+      return res.data;
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error.toString());
@@ -71,18 +74,16 @@ const UserStore = create((set) => ({
     try {
       const email = getEmail(); // Get user email from sessionStorage
       set({ isSubmitForm: true });
-      const res = await axios.post(`${BaseServerV2Url}/auth/verify`, { email, otp: code });
+      const res = await axios.post(
+        `${BaseServerV2Url}/auth/verify`,
+        { email, otp: Number(code) },
+        { withCredentials: true },
+      );
       set({ isSubmitForm: false });
 
-      const data = res?.data?.data;
+      const data = res.data;
 
-      Cookies.set('token', data?.token, {
-        expires: 30,
-        sameSite: 'Strict',
-        secure: true,
-      });
-
-      return res;
+      return data;
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error.toString());
@@ -121,7 +122,7 @@ const UserStore = create((set) => ({
   profileDetails: null,
   profileDetailsRequest: async () => {
     try {
-      const config = { headers: { token: Cookies.get('token') } }; // Access refresh token
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/ReadProfile`, config); // Api Call
       if (res['data'] || res['data']['data'].length > 0) {
         set({ profileDetails: res['data']['data'] });
@@ -136,11 +137,11 @@ const UserStore = create((set) => ({
     }
   },
 
-  profileSaveRequest: async (postbody) => {
+  profileSaveRequest: async (payload) => {
     try {
       set({ profileDetails: null });
-      const config = { headers: { token: Cookies.get('token') } }; // Access refresh token
-      const res = await axios.post(`${BaseServerUrl}/api/SaveProfile`, postbody, config);
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
+      const res = await axios.post(`${BaseServerUrl}/api/SaveProfile`, payload, config);
       return res.data['status'] === 'Success';
     } catch (error) {
       toast.error('Something went wrong');

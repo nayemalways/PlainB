@@ -8,7 +8,7 @@ const InvoiceStore = create((set) => ({
   invoiceListRequest: async () => {
     try {
       set({ invoiceList: [] });
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/InvoiceList`, config);
 
       if (res?.data?.status === 'Success') {
@@ -23,7 +23,7 @@ const InvoiceStore = create((set) => ({
   invoiceDetailsRequest: async (invoiceId) => {
     try {
       set({ invoiceList: [] });
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/InvoiceProductList/${invoiceId}`, config);
 
       if (res?.data?.status === 'Success') {

@@ -13,15 +13,16 @@ const LoginFrom = () => {
     // API Request
     if (!ValidationHelper.isEmail(LoginFormData.email)) {
       toast.error('Valid email required!');
-    } else {
-      const res = await userOtpRequest(LoginFormData.email);
-      if (res) {
+      return;
+    } 
+
+    const res = await userOtpRequest(LoginFormData.email);
+      if (res.success && res.statusCode === 200) {
         toast.success('6 digit OTP sent!');
         navigate('/otp-verify');
       } else {
         toast.error('Something went wrong');
       }
-    }
   };
 
   return (

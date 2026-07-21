@@ -11,7 +11,8 @@ const OtpForm = () => {
     // API Request
     if (OTPFormData.otp.length === 6) {
       const res = await OtpVerifyRequest(OTPFormData.otp);
-      if (res.data?.success === true) {
+      console.log(res);
+      if (res.success && res.statusCode === 200) {
         toast.success('Login success!');
         navigate('/');
       } else {
@@ -31,7 +32,7 @@ const OtpForm = () => {
               <h4>Enter Verification Code</h4>
               <p>A verification code has been sent to the email address you provide</p>
               <input
-                value={OTPFormData.opt}
+                value={OTPFormData.otp}
                 onChange={(e) => OTPOnchange('otp', e.target.value)}
                 placeholder="Verification"
                 type="text"

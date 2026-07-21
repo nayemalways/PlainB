@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import LoginFrom from '../../components/user/LoginFrom.tsx';
 import Layout from '../../components/layout/Layout.tsx';
 

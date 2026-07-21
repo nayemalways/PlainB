@@ -24,6 +24,7 @@ const app = express();
 app.use(
   cors({
     origin: ['https://plainb.vercel.app', 'http://localhost:5173'],
+    credentials: true,
   }),
 );
 app.use(helmet());

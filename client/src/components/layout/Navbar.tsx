@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import Cookies from 'js-cookie';
 import logo from '../../assets/images/plainb-logo.svg';
 import ProductStore from '../../store/productStore.ts';
 import UserStore from '../../store/userStore.ts';
@@ -22,8 +21,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const isLogin = !!Cookies.get('token');
-    if (isLogin) {
+    if (isLogin()) {
       (async () => {
         await CartListRequest();
         await WishListRequest();

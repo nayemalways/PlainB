@@ -9,7 +9,7 @@ const wishStore = create((set) => ({
   SaveWishRequest: async (productID) => {
     try {
       set({ isWishSubmit: true });
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.post(`${BaseServerUrl}/api/SaveWishList`, { productID }, config); // Api call
       return res.data['status'] === 'Success' ? true : res.data['message'];
     } catch (e) {
@@ -24,7 +24,7 @@ const wishStore = create((set) => ({
   WishCount: 0,
   WishListRequest: async () => {
     try {
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/ReadWishListProducts`, config);
 
       set({ WishList: res.data['data'] });
@@ -38,7 +38,7 @@ const wishStore = create((set) => ({
 
   removeFromWish: async (productID) => {
     try {
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const postBody = { productID };
       const res = await axios.post(`${BaseServerUrl}/api/RemoveWishList`, postBody, config);
       return res.data['status'] === 'Success' ? true : res.data['message'];

@@ -21,7 +21,7 @@ const CartStore = create((set) => ({
       set({ isCartSubmit: true });
       payload.productID = productID; // added product id into payload
       payload.qty = quantity;
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.post(`${BaseServerUrl}/api/SaveProductToCart`, payload, config); // Api call
 
       return res.data['status'] === 'Success' ? true : res.data['message'];
@@ -40,7 +40,7 @@ const CartStore = create((set) => ({
   CartPayable: 0,
   CartListRequest: async () => {
     try {
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/SelectCartListProduct`, config);
 
       set({ CartList: res.data['data'] });
@@ -76,7 +76,7 @@ const CartStore = create((set) => ({
   removeCartProduct: async (productID) => {
     try {
       console.log(productID);
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const postBody = { productID };
       const res = await axios.post(`${BaseServerUrl}/api/RemoveProductFromCart`, postBody, config);
       return res.data['status'] === 'Success' ? true : res.data['message'];
@@ -91,7 +91,7 @@ const CartStore = create((set) => ({
   createInvoice: async () => {
     try {
       set({ isCheckout: true });
-      const config = { headers: { token: Cookies.get('token') } }; // Ensure user logged in
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerUrl}/api/CreateInvoice`, config);
       set({ isCheckout: true });
       window.location.href = res['data']['data']['GatewayPageURL'];
