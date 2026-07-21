@@ -38,7 +38,21 @@ const VerifyLoginOTP = async (req, res, next) => {
   }
 };
 
+// LOGOUT
+const userLogout = async (req, res) => {
+  // Remove cookie option by minus (-)
+  const cookieOptions = { expires: new Date(Date.now() - 24 * 60 * 60 * 1000), httpOnly: false };
+  res.cookie('token', '', cookieOptions);
+  SendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Logout successful',
+    data: null,
+  });
+};
+
 export const authController = {
   login,
   VerifyLoginOTP,
+  userLogout
 };
