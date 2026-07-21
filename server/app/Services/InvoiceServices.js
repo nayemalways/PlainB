@@ -2,7 +2,6 @@
 /*----------------------------DEPENDENCIES---------------------------*/
 import mongoose from "mongoose";
 import CartModel from "../models/UsersModel/CartModel.js";
-import ProfileModel from "../models/UsersModel/UserProfiles.js";
 import InvoiceModel from "../models/InvoiceAndPayment/InvoiceModel.js";
 import InvoiceProductModel from "../models/InvoiceAndPayment/InvoiceProductsModel.js"
 import PaymentSettingModel from "../models/InvoiceAndPayment/PaymentSettingsModel.js";
@@ -19,7 +18,7 @@ export const CreateInvoiceService = async (req) => {
     try {
 
         const userID = new ObjectID(req.headers.user_id);
-        const userEamil = req.headers.email;
+        const userEmail = req.headers.email;
  
         /*====^=============^==============<>Step 01: Calculate Total Payable & Vat<>================^=================^========*/
         const matchStage = {$match: {userID}};
@@ -53,10 +52,10 @@ export const CreateInvoiceService = async (req) => {
     
         /*====^=============^==============<>Step 02: Prepare Customer Details & Shipping Details<>==^================^=========*/
         const profile = await ProfileModel.aggregate([matchStage]);
-        const cus_details = `Name: ${profile[0]['cus_name']}, Email: ${userEamil}, Address: ${profile[0]['cus_address']}, Phone: ${profile[0]['cus_phone']}, City: ${profile[0]['cus_city']}, Country: ${profile[0]['cus_country']}` ;
+        const cus_details = `Name: ${profile[0]['cus_name']}, Email: ${userEmail}, Address: ${profile[0]['cus_address']}, Phone: ${profile[0]['cus_phone']}, City: ${profile[0]['cus_city']}, Country: ${profile[0]['cus_country']}` ;
         const ship_details = `Name: ${profile[0]['ship_name']}, Address: ${profile[0]['ship_address']}, Phone: ${profile[0]['ship_phone']}, City: ${profile[0]['ship_city']}, Country: ${profile[0]['ship_country']}` ;
 
-        /*====^=============^==============<>Step 03: Transection & Other's ID<>=====================^=================^========*/
+        /*====^=============^==============<>Step 03: Transaction & Other's ID<>=====================^=================^========*/
         const tran_id = Math.floor(10000000 + Math.random() * 90000000);
         const val_id = 0;
         const delivery_status = "pending";
@@ -70,7 +69,7 @@ export const CreateInvoiceService = async (req) => {
                 ship_details: ship_details,
                 tran_id: tran_id,
                 val_id: val_id,
-                delevary_status: delivery_status,
+                delivery_status: delivery_status,
                 payment_status: payment_status,
                 total: totalAmount,
                 vat: vat
@@ -116,7 +115,7 @@ export const CreateInvoiceService = async (req) => {
         
         // CUSTOMER DETAILS
         form.append("cus_name", profile[0]['cus_name']);
-        form.append("cus_email", userEamil);
+        form.append("cus_email", userEmail);
         form.append("cus_add1", profile[0]['cus_address']);
         form.append("cus_add2", profile[0]['cus_address']);
         form.append("cus_city", profile[0]['cus_city']);

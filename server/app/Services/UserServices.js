@@ -1,5 +1,5 @@
 import UserModel from "../models/UsersModel/UserModel.js";
-import ProfilesModel from "../models/UsersModel/UserProfiles.js";
+import ProfilesModel from "../modules/user/user.model.js";
 import { EmailSend } from "../utility/EmailSender.js";
 import { TokenEncode } from "../utility/TokenHelper.js";
 import mongoose from "mongoose";

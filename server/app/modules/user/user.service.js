@@ -1,3 +1,4 @@
+import ProfilesModel from "./user.model.js";
 
 const saveUserProfile  = async (req) => {
         const user_id = req.headers['user_id'];

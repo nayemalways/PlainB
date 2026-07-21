@@ -8,7 +8,7 @@ const DataSchema = mongoose.Schema(
         ship_details: {type: String, required: true},
         tran_id: {type: String, required: true},
         val_id: {type: String, required: true},
-        delevary_status: {type: String, required: true},
+        delivery_status: {type: String, required: true},
         payment_status: {type: String, required: true},
         total: {type: String, required: true},
         vat: {type: String, required: true}
