@@ -1,24 +1,19 @@
-
-
 export const setEmail = (email) => {
-    sessionStorage.setItem('email', email)
-}
+  sessionStorage.setItem('email', email);
+};
 
 export const getEmail = () => {
-    return sessionStorage.getItem('email');
-}
+  return sessionStorage.getItem('email');
+};
 
 export const unauthorized = (code) => {
-    if(code === 401) {
-        sessionStorage.clear();
-        localStorage.clear();
-        window.location.href= "/login";
-    }
-}
+  if (code === 401) {
+    sessionStorage.clear();
+    localStorage.clear();
+    window.location.href = '/login';
+  }
+};
 
-
-export const BaseServerUrl =  import.meta.env.VITE_BASE_URL;
-export const BaseServerV2Url =  import.meta.env.VITE_BASE_V2_URL;
+export const BaseServerUrl = import.meta.env.VITE_BASE_URL;
+export const BaseServerV2Url = import.meta.env.VITE_BASE_V2_URL;
 // export const BaseServerUrl = "https://plainb-server.vercel.app";
-
- 

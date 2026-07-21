@@ -4,21 +4,19 @@ import FeaturesStore from '../../store/feautresStore.ts';
 import LegalContents from '../../components/features/LegalContents.tsx';
 
 const Privacy = () => {
-    const { LegalRequest } = FeaturesStore();
+  const { LegalRequest } = FeaturesStore();
 
-    // Api Call
-    useEffect(() => {
-
-        (async () => {
-            await LegalRequest('privacy');
-        })()
-
-    }, [])
-    return (
-        <Layout>
-            <LegalContents />
-        </Layout>
-    );
+  // Api Call
+  useEffect(() => {
+    (async () => {
+      await LegalRequest('privacy');
+    })();
+  }, []);
+  return (
+    <Layout>
+      <LegalContents />
+    </Layout>
+  );
 };
 
 export default Privacy;

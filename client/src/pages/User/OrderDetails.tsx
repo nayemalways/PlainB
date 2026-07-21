@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import InvoiceStore from "../../store/invoiceStore.ts";
-import Layout from "../../components/layout/Layout.tsx";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import React, { useRef, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import InvoiceStore from '../../store/invoiceStore.ts';
+import Layout from '../../components/layout/Layout.tsx';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const OrderDetails = () => {
   const { invoiceId, payment_status } = useParams();
@@ -23,7 +23,7 @@ const OrderDetails = () => {
   const total =
     invoiceDetails?.data?.reduce(
       (acc, item) => acc + Number(item.product.price) * Number(item.qty),
-      0
+      0,
     ) || 0;
 
   const vat = total * 0.05; // 5% VAT
@@ -32,14 +32,14 @@ const OrderDetails = () => {
   // Badge class based on payment status
   const getBadgeClass = (status) => {
     switch (status) {
-      case "success":
-        return "bg-success";
-      case "pending":
-        return "bg-warning text-dark";
-      case "failed":
-        return "bg-danger";
+      case 'success':
+        return 'bg-success';
+      case 'pending':
+        return 'bg-warning text-dark';
+      case 'failed':
+        return 'bg-danger';
       default:
-        return "bg-secondary";
+        return 'bg-secondary';
     }
   };
 
@@ -49,14 +49,14 @@ const OrderDetails = () => {
     if (!input) return;
 
     html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
 
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Invoice-${invoiceId}.pdf`);
     });
   };
@@ -70,7 +70,7 @@ const OrderDetails = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h3 className="fw-bold">Invoice Details</h3>
               <span className={`badge px-3 py-2 ${getBadgeClass(payment_status)}`}>
-                {payment_status?.toUpperCase() || "Pending"}
+                {payment_status?.toUpperCase() || 'Pending'}
               </span>
             </div>
 
@@ -80,16 +80,16 @@ const OrderDetails = () => {
                 <strong>Invoice ID:</strong> {invoiceDetails?.invoice_id || invoiceId}
               </h6>
               <p className="text-muted mb-1">
-                <strong>Order Date:</strong>{" "}
+                <strong>Order Date:</strong>{' '}
                 {invoiceDetails?.order_date
                   ? new Date(invoiceDetails.order_date).toLocaleDateString()
-                  : "-"}
+                  : '-'}
               </p>
               <p className="text-muted">
-                <strong>Order Time:</strong>{" "}
+                <strong>Order Time:</strong>{' '}
                 {invoiceDetails?.order_date
                   ? new Date(invoiceDetails.order_date).toLocaleTimeString()
-                  : "-"}
+                  : '-'}
               </p>
             </div>
 
@@ -118,9 +118,9 @@ const OrderDetails = () => {
                               alt={item.product.title}
                               className="rounded"
                               style={{
-                                width: "70px",
-                                height: "70px",
-                                objectFit: "cover",
+                                width: '70px',
+                                height: '70px',
+                                objectFit: 'cover',
                               }}
                             />
                             <div>
@@ -132,15 +132,10 @@ const OrderDetails = () => {
                           </div>
                         </td>
                         <td>
-                          <span
-                            style={{ backgroundColor: item.color }}
-                            className="badge me-2"
-                          >
+                          <span style={{ backgroundColor: item.color }} className="badge me-2">
                             {item.color}
                           </span>
-                          <span className="badge bg-light text-dark">
-                            Size: {item.size}
-                          </span>
+                          <span className="badge bg-light text-dark">Size: {item.size}</span>
                         </td>
                         <td className="text-center">{Number(item.qty)}</td>
                         <td className="text-end">{item.product.price}</td>

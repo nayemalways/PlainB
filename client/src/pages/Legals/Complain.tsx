@@ -4,22 +4,20 @@ import FeaturesStore from '../../store/feautresStore.ts';
 import Layout from '../../components/layout/Layout.tsx';
 
 const Complain = () => {
-    const { LegalRequest } = FeaturesStore();
+  const { LegalRequest } = FeaturesStore();
 
-    // Api Call
-        useEffect(() => {
-    
-            (async () => {
-                await LegalRequest('complain');
-            })()
-    
-        }, [])
+  // Api Call
+  useEffect(() => {
+    (async () => {
+      await LegalRequest('complain');
+    })();
+  }, []);
 
-    return (
-        <Layout>
-            <LegalContents />
-        </Layout>
-    );
+  return (
+    <Layout>
+      <LegalContents />
+    </Layout>
+  );
 };
 
 export default Complain;

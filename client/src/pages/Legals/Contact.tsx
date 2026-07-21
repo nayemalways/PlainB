@@ -4,22 +4,20 @@ import FeaturesStore from '../../store/feautresStore.ts';
 import LegalContents from '../../components/features/LegalContents.tsx';
 
 const Contact = () => {
-    const { LegalRequest } = FeaturesStore();
+  const { LegalRequest } = FeaturesStore();
 
-    // Api Call
-    useEffect(() => {
+  // Api Call
+  useEffect(() => {
+    (async () => {
+      await LegalRequest('contact');
+    })();
+  }, []);
 
-        (async () => {
-            await LegalRequest('contact');
-        })()
-
-    }, [])
-
-    return (
-        <Layout>
-            <LegalContents />
-        </Layout>
-    );
+  return (
+    <Layout>
+      <LegalContents />
+    </Layout>
+  );
 };
 
 export default Contact;

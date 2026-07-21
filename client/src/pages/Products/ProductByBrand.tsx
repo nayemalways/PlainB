@@ -6,22 +6,20 @@ import ProductStore from '../../store/productStore.ts';
 import ProductList from '../../components/product/ProductList.tsx';
 
 const ProductByBrand = () => {
+  const { brandId } = useParams();
+  const { ProductListByBrand } = ProductStore();
 
-    const {brandId} = useParams();
-    const { ProductListByBrand } = ProductStore();
+  useEffect(() => {
+    (async () => {
+      await ProductListByBrand(brandId);
+    })();
+  }, [brandId]);
 
-    useEffect(() => {
-        (async () => {
-            await ProductListByBrand(brandId);
-        })()
-    }, [brandId]);
-
-
-    return (
-        <Layout>
-            <ProductList/>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <ProductList />
+    </Layout>
+  );
 };
 
 export default ProductByBrand;

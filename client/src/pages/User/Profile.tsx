@@ -3,11 +3,11 @@ import Layout from '../../components/layout/Layout.tsx';
 import ProfileForm from '../../components/user/ProfileForm.tsx';
 
 const Profile = () => {
-    return (
-        <Layout>
-            <ProfileForm /> 
-        </Layout>
-    );
+  return (
+    <Layout>
+      <ProfileForm />
+    </Layout>
+  );
 };
 
 export default Profile;

@@ -2,42 +2,37 @@ import { useEffect } from 'react';
 
 import Layout from '../../components/layout/Layout.tsx';
 import HeroSlider from '../../components/product/HeroSlider.tsx';
-import ProductStore  from '../../store/productStore.ts';
+import ProductStore from '../../store/productStore.ts';
 import FeaturesStore from '../../store/feautresStore.ts';
 import Brand from '../../components/product/Brand.tsx';
 import Categories from '../../components/product/Categories.tsx';
 import Features from '../../components/product/Features.tsx';
 import Products from '../../components/product/Products.tsx';
- 
 
 const Home = () => {
+  const { BrandListRequest, CategoryListRequest, SliderListRequest, ProductListByRemark } =
+    ProductStore();
+  const { FeaturesListRequest } = FeaturesStore();
 
-    let {BrandListRequest, CategoryListRequest, SliderListRequest, ProductListByRemark} = ProductStore();
-    let {FeaturesListRequest} = FeaturesStore();
+  useEffect(() => {
+    (async () => {
+      await SliderListRequest();
+      await BrandListRequest();
+      await FeaturesListRequest();
+      await CategoryListRequest();
+      await ProductListByRemark('new');
+    })();
+  }, []);
 
-
-    useEffect( () => {
-
-        (async () => {
-            await SliderListRequest();
-            await BrandListRequest()
-            await FeaturesListRequest();
-            await CategoryListRequest();
-            await ProductListByRemark("new");
-        })()
-
-    }, [])
-    
-
-    return (
-        <Layout>              
-            <HeroSlider/>
-            <Products/>
-            <Categories/>
-            <Features/>
-            <Brand/>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <HeroSlider />
+      <Products />
+      <Categories />
+      <Features />
+      <Brand />
+    </Layout>
+  );
 };
 
 export default Home;

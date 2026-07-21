@@ -5,24 +5,21 @@ import ProductStore from '../../store/productStore.ts';
 import ProductList from '../../components/product/ProductList.tsx';
 import Layout from '../../components/layout/Layout.tsx';
 
-
-
 const ProductByKeyword = () => {
-    const {keyword} = useParams();
-    const { ProductListByKeyword } = ProductStore();
+  const { keyword } = useParams();
+  const { ProductListByKeyword } = ProductStore();
 
-    useEffect(() => {
-        (async () => {
-            await ProductListByKeyword(keyword);
-        })()
-    }, [keyword]);
+  useEffect(() => {
+    (async () => {
+      await ProductListByKeyword(keyword);
+    })();
+  }, [keyword]);
 
-
-    return (
-        <Layout>
-            <ProductList/>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <ProductList />
+    </Layout>
+  );
 };
 
 export default ProductByKeyword;

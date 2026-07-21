@@ -3,11 +3,11 @@ import Layout from '../../components/layout/Layout.tsx';
 import CartList from '../../components/cart/CartList.tsx';
 
 const Cart = () => {
-    return (
-        <Layout>
-            <CartList />
-        </Layout>
-    );
+  return (
+    <Layout>
+      <CartList />
+    </Layout>
+  );
 };
 
 export default Cart;

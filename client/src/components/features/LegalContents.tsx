@@ -9,7 +9,8 @@ const LegalContents = () => {
         <div className="container">
           <h1 className="display-4">About PlainB</h1>
           <p className="lead">
-            Your trusted destination for cutting-edge electronics and innovative technology solutions.
+            Your trusted destination for cutting-edge electronics and innovative technology
+            solutions.
           </p>
         </div>
       </section>
@@ -20,13 +21,13 @@ const LegalContents = () => {
           <div className="col-md-6">
             <h2>Our Story</h2>
             <p>
-              Founded in 2015 by passionate engineers, TechHub Electronics started as a small startup with a
-              vision to make advanced technology accessible to everyone. Over the years, we have grown
-              into a trusted global electronics retailer.
+              Founded in 2015 by passionate engineers, TechHub Electronics started as a small
+              startup with a vision to make advanced technology accessible to everyone. Over the
+              years, we have grown into a trusted global electronics retailer.
             </p>
             <p>
-              From smartphones and laptops to smart home devices, we provide innovative products with
-              exceptional quality and service.
+              From smartphones and laptops to smart home devices, we provide innovative products
+              with exceptional quality and service.
             </p>
           </div>
           <div className="col-md-6">
@@ -82,9 +83,9 @@ const LegalContents = () => {
           <div className="col-md-6 order-md-2">
             <h2>Our Mission</h2>
             <p>
-              To democratize access to cutting-edge technology by providing high-quality electronics,
-              exceptional service, and competitive prices. We believe everyone deserves the transformative
-              power of technology.
+              To democratize access to cutting-edge technology by providing high-quality
+              electronics, exceptional service, and competitive prices. We believe everyone deserves
+              the transformative power of technology.
             </p>
             <ul>
               <li>Curated Selection of trusted brands</li>
@@ -109,7 +110,10 @@ const LegalContents = () => {
           <div className="row">
             <div className="col-md-4 mb-3">
               <div className="card h-100 p-3">
-                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}>
+                <div
+                  className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                  style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}
+                >
                   JS
                 </div>
                 <h5>John Smith</h5>
@@ -118,7 +122,10 @@ const LegalContents = () => {
             </div>
             <div className="col-md-4 mb-3">
               <div className="card h-100 p-3">
-                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}>
+                <div
+                  className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                  style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}
+                >
                   MJ
                 </div>
                 <h5>Maria Johnson</h5>
@@ -127,7 +134,10 @@ const LegalContents = () => {
             </div>
             <div className="col-md-4 mb-3">
               <div className="card h-100 p-3">
-                <div className="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center mx-auto mb-3" style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}>
+                <div
+                  className="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                  style={{ width: '80px', height: '80px', fontSize: '1.5rem' }}
+                >
                   DL
                 </div>
                 <h5>David Lee</h5>

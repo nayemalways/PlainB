@@ -10,196 +10,224 @@ import WishStore from '../../store/wishStore.ts';
 import toast from 'react-hot-toast';
 import NoDataFound from './NoDataFound.tsx';
 
-
-
-
 const Details = () => {
-    const { productDetails }= ProductStore();
-    const [quantity, setQuantity] = useState(1);
-    const {SaveCartRequest, cartForm, cartFormOnchange, CartListRequest, isCartSubmit} = CartStore();
-    const { SaveWishRequest, isWishSubmit, WishListRequest } = WishStore();
+  const { productDetails } = ProductStore();
+  const [quantity, setQuantity] = useState(1);
+  const { SaveCartRequest, cartForm, cartFormOnchange, CartListRequest, isCartSubmit } =
+    CartStore();
+  const { SaveWishRequest, isWishSubmit, WishListRequest } = WishStore();
 
+  // Qty increment and decrement
+  const incrementQty = () => {
+    setQuantity((qty) => qty + 1);
+  };
+  const decrementQty = () => {
+    setQuantity((qty) => qty - 1);
+  };
 
-    // Qty increment and decrement
-    const incrementQty = () => {
-        setQuantity(qty => qty + 1);
-     }
-    const decrementQty = () => {
-        setQuantity(qty => qty - 1);
-    }
-
-    // Add to cartlist 
-    const AddCart = async (productID) => {
-        const res = await SaveCartRequest(cartForm, productID, quantity); // Api Call
-        if(res === true) {
-            toast.success("Added to cart");
-            await CartListRequest();
-        }else {
-
-            if(res === "carts validation failed") {
-                for (const item in cartForm) {
-                     if( cartForm[item].length === 0) {
-                        toast.error(`Select ${item}`);
-                     }
-                }
-                
-            }else {
-                toast.error(res.slice(6, 30)); 
-            }
-
-        }
-    }
-
-
-    // Add to wishlist 
-    const AddWish = async (productID) => {
-        const res = await SaveWishRequest(productID); // Api Call
-
-        if(res === true) {
-            toast.success("Added to Wish");
-            await WishListRequest();
-        }else {
-            toast.error(res.slice(6, res.length)); 
-        }
-    }
-            
-    // Showing Skeleton until the productDetails is null
-    if(productDetails === null ) {
-       return <DetailsSkeleton/>
-    }else if(productDetails.length === 0) {
-        return <div className='vh-100 w-100'>
-            <NoDataFound />
-        </div>
+  // Add to cartlist
+  const AddCart = async (productID) => {
+    const res = await SaveCartRequest(cartForm, productID, quantity); // Api Call
+    if (res === true) {
+      toast.success('Added to cart');
+      await CartListRequest();
     } else {
-        return (
-            <>
-                <div>
-                    <div className="container mt-2">
-                        <div className="row">
-                            <div className="col-md-7 p-3">
-                                <ProductImages />
-                            </div>
-                            <div className="col-md-5 p-3">
-                                <h4>  { productDetails[0]['title']} </h4>
-                                <p className="text-body-secondary my-1 fw-bold">Category:  {productDetails[0]['category']['categoryName']} </p>
-                                <p className="text-body-secondary my-1 fw-bold">Brand: {productDetails[0]['brand']['brandName']}</p>
-                                <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
-                                 {
-                                    productDetails[0]['discount'] ? (
-                                        <span className='fs-5'>
-                                             Price: ৳ 
-                                            <strike>{productDetails[0]?.price} </strike> 
-                                            ৳{productDetails[0]?.discountPrice} 
-                                        </span>
-                                    ) : (
-                                        <span>{productDetails[0]?.price}</span>
-                                    )
-                                 }
-                                <div className="row">
-                                    <div className="col-4 p-2">
-                                        <label className="bodySmal">Size</label>
-                                        <select 
-                                            value={cartForm.size} 
-                                            onChange={(e) => cartFormOnchange("size", e.target.value)} 
-                                            className="form-control form-select my-2"
-                                        >  
-                                            <option value="">Size</option>
-                                            {
-                                                productDetails[0]['ProductDetails']['size'].split(',').map((size, i) => {
-                                                    return <option key={i} value={size}> {size} </option>
-                                                })
-                                                 
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="col-4 p-2">
-                                        <label className="bodySmal">Color</label>
-                                        <select  
-                                            value={cartForm.color} 
-                                            onChange={(e) => cartFormOnchange("color", e.target.value)}
-                                            className="form-control form-select my-2"
-                                        >
-                                            <option value="">Color</option>
-                                            {
-                                                productDetails[0]['ProductDetails']['color'].split(',').map((color, i) => {
-                                                    return <option key={i} value={color}> {color} </option>
-                                                })
-                                                 
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="col-4 p-2">
-                                        <label className="bodySmal">Quantity</label>
-                                        <div className="input-group w-100 my-2">
-                                            <button onClick={decrementQty} disabled={quantity <= 1} className="btn btn-outline-secondary">-</button>
-                                            <input 
-                                                value={quantity} 
-                                                type="text" 
-                                                className="form-control bg-light text-center" 
-                                                readOnly 
-                                            />
-                                            <button onClick={incrementQty} className="btn btn-outline-secondary">+</button>
-                                        </div>
-                                    </div>
-                                    <div className="col-4 p-2">
-                                        <CartButton isSubmit={isCartSubmit} className="btn btn-success w-100" text="Add to Cart" onClick={async () => AddCart(productDetails[0]["_id"])} />
-                                    </div>
-                                    <div className="col-4 p-2">
-                                    <CartButton isSubmit={isWishSubmit} className="btn btn-success w-100" text="Add to Wish" onClick={async () => AddWish(productDetails[0]["_id"])} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row mt-3">
-                            <ul className="nav nav-tabs" id="myTab" role="tablist">
-                                <li className="nav-item" role="presentation">
-                                    <button 
-                                        className="nav-link active" 
-                                        id="Speci-tab" 
-                                        data-bs-toggle="tab" 
-                                        data-bs-target="#Speci-tab-pane" 
-                                        type="button" 
-                                        role="tab" 
-                                        aria-controls="Speci-tab-pane" 
-                                        aria-selected="true">
-                                            Specifications
-                                    </button>
-                                </li>
-                                <li className="nav-item" role="presentation">
-                                    <button 
-                                        className="nav-link" 
-                                        id="Review-tab" 
-                                        data-bs-toggle="tab" 
-                                        data-bs-target="#Review-tab-pane"
-                                        type="button" 
-                                        role="tab" 
-                                        aria-controls="Review-tab-pane" 
-                                        aria-selected="false">
-                                        Review
-                                    </button>
-                                </li>
-                            </ul>
-                            <div className="tab-content" id="myTabContent">
-                                <div className="active fade show tab-pane" id="Speci-tab-pane" role="tabpanel" aria-labelledby="Speci-
-                                    tab" tabIndex="0">
-                                        {
-                                            parser(productDetails[0]['ProductDetails']['des'])
-                                        }
-                                </div>
-                                <div className="fade tab-pane" id="Review-tab-pane" role="tabpanel" aria-labelledby="Review-tab"
-                                tabIndex="0">
-                                    <ul className="list-group list-group-flush">
-                                        <Reviews />
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-            </>
-        );
+      if (res === 'carts validation failed') {
+        for (const item in cartForm) {
+          if (cartForm[item].length === 0) {
+            toast.error(`Select ${item}`);
+          }
+        }
+      } else {
+        toast.error(res.slice(6, 30));
+      }
     }
-    
+  };
+
+  // Add to wishlist
+  const AddWish = async (productID) => {
+    const res = await SaveWishRequest(productID); // Api Call
+
+    if (res === true) {
+      toast.success('Added to Wish');
+      await WishListRequest();
+    } else {
+      toast.error(res.slice(6, res.length));
+    }
+  };
+
+  // Showing Skeleton until the productDetails is null
+  if (productDetails === null) {
+    return <DetailsSkeleton />;
+  } else if (productDetails.length === 0) {
+    return (
+      <div className="vh-100 w-100">
+        <NoDataFound />
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <div>
+          <div className="container mt-2">
+            <div className="row">
+              <div className="col-md-7 p-3">
+                <ProductImages />
+              </div>
+              <div className="col-md-5 p-3">
+                <h4> {productDetails[0]['title']} </h4>
+                <p className="text-body-secondary my-1 fw-bold">
+                  Category: {productDetails[0]['category']['categoryName']}{' '}
+                </p>
+                <p className="text-body-secondary my-1 fw-bold">
+                  Brand: {productDetails[0]['brand']['brandName']}
+                </p>
+                <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
+                {productDetails[0]['discount'] ? (
+                  <span className="fs-5">
+                    Price: ৳<strike>{productDetails[0]?.price} </strike>৳
+                    {productDetails[0]?.discountPrice}
+                  </span>
+                ) : (
+                  <span>{productDetails[0]?.price}</span>
+                )}
+                <div className="row">
+                  <div className="col-4 p-2">
+                    <label className="bodySmal">Size</label>
+                    <select
+                      value={cartForm.size}
+                      onChange={(e) => cartFormOnchange('size', e.target.value)}
+                      className="form-control form-select my-2"
+                    >
+                      <option value="">Size</option>
+                      {productDetails[0]['ProductDetails']['size'].split(',').map((size, i) => {
+                        return (
+                          <option key={i} value={size}>
+                            {' '}
+                            {size}{' '}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="col-4 p-2">
+                    <label className="bodySmal">Color</label>
+                    <select
+                      value={cartForm.color}
+                      onChange={(e) => cartFormOnchange('color', e.target.value)}
+                      className="form-control form-select my-2"
+                    >
+                      <option value="">Color</option>
+                      {productDetails[0]['ProductDetails']['color'].split(',').map((color, i) => {
+                        return (
+                          <option key={i} value={color}>
+                            {' '}
+                            {color}{' '}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="col-4 p-2">
+                    <label className="bodySmal">Quantity</label>
+                    <div className="input-group w-100 my-2">
+                      <button
+                        onClick={decrementQty}
+                        disabled={quantity <= 1}
+                        className="btn btn-outline-secondary"
+                      >
+                        -
+                      </button>
+                      <input
+                        value={quantity}
+                        type="text"
+                        className="form-control bg-light text-center"
+                        readOnly
+                      />
+                      <button onClick={incrementQty} className="btn btn-outline-secondary">
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <div className="col-4 p-2">
+                    <CartButton
+                      isSubmit={isCartSubmit}
+                      className="btn btn-success w-100"
+                      text="Add to Cart"
+                      onClick={async () => AddCart(productDetails[0]['_id'])}
+                    />
+                  </div>
+                  <div className="col-4 p-2">
+                    <CartButton
+                      isSubmit={isWishSubmit}
+                      className="btn btn-success w-100"
+                      text="Add to Wish"
+                      onClick={async () => AddWish(productDetails[0]['_id'])}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row mt-3">
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item" role="presentation">
+                  <button
+                    className="nav-link active"
+                    id="Speci-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#Speci-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="Speci-tab-pane"
+                    aria-selected="true"
+                  >
+                    Specifications
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button
+                    className="nav-link"
+                    id="Review-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#Review-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="Review-tab-pane"
+                    aria-selected="false"
+                  >
+                    Review
+                  </button>
+                </li>
+              </ul>
+              <div className="tab-content" id="myTabContent">
+                <div
+                  className="active fade show tab-pane"
+                  id="Speci-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="Speci-
+                                    tab"
+                  tabIndex="0"
+                >
+                  {parser(productDetails[0]['ProductDetails']['des'])}
+                </div>
+                <div
+                  className="fade tab-pane"
+                  id="Review-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="Review-tab"
+                  tabIndex="0"
+                >
+                  <ul className="list-group list-group-flush">
+                    <Reviews />
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 };
 
 export default Details;
