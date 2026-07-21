@@ -1,20 +1,18 @@
-import jwt from 'jsonwebtoken';
-import { JWT_EXPIRATIONS_TIME, JWT_SECRET } from '../config/config.ts';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
-// ENCODE TOKEN
-export const TokenEncode = (email, user_id) => {
-  const KEY = JWT_SECRET;
-  const EXPIRE = { expiresIn: JWT_EXPIRATIONS_TIME };
-  const PAYLOAD = { email: email, user_id: user_id };
+export const generateToken = (
+  payload: JwtPayload,
+  secret: string,
+  expired: string
+) => {
+  const token = jwt.sign(payload, secret, {
+    expiresIn: expired,
+  } as SignOptions);
 
-  return jwt.sign(PAYLOAD, KEY, EXPIRE);
+  return token;
 };
 
-// DECODE TOKEN
-export const DecodeToken = (token) => {
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
-    return null;
-  }
+export const verifyToken = (token: string, secret: string) => {
+  const verified = jwt.verify(token, secret);
+  return verified;
 };
