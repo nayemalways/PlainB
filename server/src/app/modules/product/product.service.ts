@@ -1,5 +1,3 @@
-import BrandModel from './brand.model.ts';
-import CategoryModel from './category.model.ts';
 import ProductModel from './product.model.ts';
 import ProductSliderModel from './product-slider.model.ts';
 import ReviewModel from './review.model.ts';
@@ -8,28 +6,6 @@ import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
 // Group: 1 -- PRODUCT BRAND, CATEGORY, SLIDER  SEARCH
-export const BrandListService = async () => {
-  try {
-    // Find Brand Data
-    const data = await BrandModel.find();
-    return { status: 'Success', data: data };
-  } catch (e) {
-    console.log(e);
-    return { status: 'error', message: 'Internal server error' };
-  }
-};
-
-export const CategoryListService = async () => {
-  try {
-    // Category Data
-    const data = await CategoryModel.find();
-    return { status: 'Success', data: data };
-  } catch (e) {
-    console.log(e);
-    return { status: 'error', message: 'Internal server error' };
-  }
-};
-
 export const SliderListService = async () => {
   try {
     // Slider Data

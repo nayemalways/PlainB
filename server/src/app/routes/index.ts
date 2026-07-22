@@ -5,6 +5,8 @@ import { cartRouter } from '../modules/cart/cart.route.ts';
 import { wishlistRouter } from '../modules/wishlist/wishlist.route.ts';
 import { invoiceRouter } from '../modules/invoice/invoice.route.ts';
 import { featuresRouter } from '../modules/features/features.route.ts';
+import { brandRouter } from '../modules/brand/brand.route.ts';
+import { categoryRouter } from '../modules/category/category.route.ts';
 import express from 'express';
 
 const router = express.Router();
@@ -21,6 +23,14 @@ const modules = [
   {
     path: '/product',
     module: productRouter,
+  },
+  {
+    path: '/brand',
+    module: brandRouter,
+  },
+  {
+    path: '/category',
+    module: categoryRouter,
   },
   {
     path: '/cart',
@@ -44,6 +54,8 @@ const modules = [
 const legacyModules = [
   userRouter,
   productRouter,
+  brandRouter,
+  categoryRouter,
   cartRouter,
   wishlistRouter,
   invoiceRouter,

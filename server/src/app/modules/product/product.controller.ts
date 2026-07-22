@@ -1,7 +1,5 @@
 /*--------------------------DEPENDENCIE-------------------------*/
 import {
-  BrandListService,
-  CategoryListService,
   SliderListService,
   ListByBrandService,
   ListByCategoryService,
@@ -14,27 +12,6 @@ import {
   ProductFilterService,
 } from './product.service.ts';
 import { SendResponse } from '../../utility/SendResponse.ts';
-
-// Group: 1 -- PRODUCT SEARCH BY BRAND, CATEGORY, SLIDER
-export const ProductBrandList = async (req, res) => {
-  const result = await BrandListService();
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Brands retrieved successfully',
-    data: result,
-  });
-};
-
-export const ProductCategoryList = async (req, res) => {
-  const result = await CategoryListService();
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Categories retrieved successfully',
-    data: result,
-  });
-};
 
 export const ProductSliderList = async (req, res) => {
   const result = await SliderListService();

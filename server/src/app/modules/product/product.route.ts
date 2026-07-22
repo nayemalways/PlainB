@@ -5,8 +5,6 @@ import { Role } from '../user/user.interface.ts';
 
 const router = express.Router();
 
-router.get('/ProductBrandList', productController.ProductBrandList);
-router.get('/ProductCategoryList', productController.ProductCategoryList);
 router.get('/ProductSliderList', productController.ProductSliderList);
 router.get('/ProductListByBrand/:brandId', productController.ProductListByBrand);
 router.get('/ProductListByCategory/:categoryID', productController.ProductListByCategory);

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { IBrand } from './brand.interface.ts';
 
-const DataSchema = mongoose.Schema(
+const brandSchema = new mongoose.Schema<IBrand>(
   {
     brandName: { type: String, required: true, unique: true },
     brandImg: { type: String, required: true },
@@ -8,7 +9,6 @@ const DataSchema = mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-const brandModel = mongoose.model('brands', DataSchema);
+const BrandModel = mongoose.model<IBrand>('brands', brandSchema);
 
-// Export Data Model
-export default brandModel;
+export default BrandModel;
