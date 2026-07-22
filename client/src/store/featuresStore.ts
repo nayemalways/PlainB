@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import axios from 'axios';
-import { BaseServerUrl } from '../utility/utility.ts';
+import { BaseServerV2Url } from '../utility/utility.ts';
 
 interface FeaturesState {
   isFeaturesLoading: boolean;
@@ -18,9 +18,9 @@ const FeaturesStore = create<FeaturesState>()((set) => ({
     set({ isFeaturesLoading: true });
 
     try {
-      const res = await axios.get(`${BaseServerUrl}/api/FeaturesList`);
+      const res = await axios.get(`${BaseServerV2Url}/features`);
       const result = res.data.success ? res.data.data : res.data;
-      if (result.status === 'Success') {
+      if (result.status) {
         set({ FeaturesList: result.data });
       } else {
         set({ FeaturesList: [] });
@@ -37,7 +37,7 @@ const FeaturesStore = create<FeaturesState>()((set) => ({
   LegalRequest: async (type) => {
     try {
       set({ legalList: null });
-      const res = await axios.get(`${BaseServerUrl}/api/legalDetails/${type}`);
+      const res = await axios.get(`${BaseServerV2Url}/api/legalDetails/${type}`);
       if (res?.data?.status === 'Success') {
         set({ legalList: res?.data?.data });
       }

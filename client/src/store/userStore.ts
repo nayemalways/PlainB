@@ -105,15 +105,17 @@ const UserStore = create<UserState>()((set) => ({
   // Login Otp request
   isSubmitForm: false, // Form submit state
   userOtpRequest: async (email) => {
+    set({ isSubmitForm: true });
+
     try {
-      set({ isSubmitForm: true });
       const res = await axios.post(`${BaseServerV2Url}/auth/login`, { email });
-      set({ isSubmitForm: false });
       setEmail(email); // Set user email inside sessionStorage
       return res.data;
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error.toString());
+    } finally {
+      set({ isSubmitForm: false });
     }
   },
 

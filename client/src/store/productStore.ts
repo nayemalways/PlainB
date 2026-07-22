@@ -55,10 +55,9 @@ const ProductStore = create<ProductState>()((set) => ({
     set({ isCategoryLoading: true });
 
     try {
-      const res = await axios.get(`${BaseServerV2Url}/ProductCategoryList`);
-      const result = res.data.success ? res.data.data : res.data;
-      if (result.status === 'Success') {
-        set({ CategoryList: result.data });
+      const res = await axios.get(`${BaseServerV2Url}/category`);
+      if (res.data.success) {
+        set({ CategoryList: res.data.data });
       } else {
         set({ CategoryList: [] });
       }
@@ -75,10 +74,9 @@ const ProductStore = create<ProductState>()((set) => ({
     set({ isSliderLoading: true });
 
     try {
-      const res = await axios.get(`${BaseServerV2Url}/ProductSliderList`);
-      const result = res.data.success ? res.data.data : res.data;
-      if (result.status === 'Success') {
-        set({ SliderList: result.data });
+      const res = await axios.get(`${BaseServerV2Url}/product/slider`);
+      if (res.data.success) {
+        set({ SliderList: res.data.data });
       } else {
         set({ SliderList: [] });
       }
@@ -95,10 +93,9 @@ const ProductStore = create<ProductState>()((set) => ({
     set({ isProductLoading: true });
 
     try {
-      const res = await axios.get(`${BaseServerV2Url}/ProductListByRemark/${remarks}`);
-      const result = res.data.success ? res.data.data : res.data;
-      if (result.status === 'Success') {
-        set({ ProductList: result.data });
+      const res = await axios.get(`${BaseServerV2Url}/product/remark/${remarks}`);
+      if (res.data.success) {
+        set({ ProductList: res.data.data });
       } else {
         set({ ProductList: [] });
       }
@@ -113,8 +110,8 @@ const ProductStore = create<ProductState>()((set) => ({
   ProductListByBrand: async (brandId) => {
     try {
       set({ ProductList: null });
-      const res = await axios.get(`${BaseServerV2Url}/ProductListByBrand/${brandId}`);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.get(`${BaseServerV2Url}/product/brand/${brandId}`);
+      if (res.data.success) {
         set({ ProductList: res.data.data });
       }
     } catch (error) {
@@ -125,8 +122,8 @@ const ProductStore = create<ProductState>()((set) => ({
   ProductListByCategory: async (categoryId) => {
     try {
       set({ ProductList: null });
-      const res = await axios.get(`${BaseServerV2Url}/ProductListByCategory/${categoryId}`);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.get(`${BaseServerV2Url}/product/category/${categoryId}`);
+      if (res.data.success) {
         set({ ProductList: res.data.data });
       }
     } catch (error) {
@@ -137,8 +134,8 @@ const ProductStore = create<ProductState>()((set) => ({
   ProductListByKeyword: async (keyword) => {
     try {
       set({ ProductList: null });
-      const res = await axios.get(`${BaseServerV2Url}/ProductListByKeyword/${keyword}`);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.get(`${BaseServerV2Url}/product/search/${keyword}`);
+      if (res.data.success) {
         set({ ProductList: res.data.data });
       }
     } catch (error) {
@@ -149,8 +146,8 @@ const ProductStore = create<ProductState>()((set) => ({
   ProductFilter: async (postBody) => {
     try {
       set({ ProductList: null });
-      const res = await axios.post(`${BaseServerV2Url}/ProductFilter`, postBody);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.post(`${BaseServerV2Url}/product/filter`, postBody);
+      if (res.data.success) {
         set({ ProductList: res.data.data });
       }
     } catch (error) {
@@ -167,8 +164,8 @@ const ProductStore = create<ProductState>()((set) => ({
   detailsRequest: async (id) => {
     try {
       set({ productDetails: null });
-      const res = await axios.get(`${BaseServerV2Url}/ProductDetails/${id}`);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.get(`${BaseServerV2Url}/product/details/${id}`);
+      if (res.data.success) {
         set({ productDetails: res.data.data });
       }
     } catch (error) {
@@ -180,8 +177,8 @@ const ProductStore = create<ProductState>()((set) => ({
   reviewListRequest: async (id) => {
     try {
       set({ reviewList: null });
-      const res = await axios.get(`${BaseServerV2Url}/ProductReviewsList/${id}`);
-      if (res?.data?.status === 'Success') {
+      const res = await axios.get(`${BaseServerV2Url}/product/review/${id}`);
+      if (res.data.success) {
         set({ reviewList: res.data.data });
       }
     } catch (error) {
