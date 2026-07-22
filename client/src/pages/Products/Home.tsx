@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import Layout from '../../components/layout/Layout.tsx';
 import HeroSlider from '../../components/product/HeroSlider.tsx';
 import ProductStore from '../../store/productStore.ts';
-import FeaturesStore from '../../store/feautresStore.ts';
+import FeaturesStore from '../../store/featuresStore.ts';
 import Brand from '../../components/product/Brand.tsx';
 import Categories from '../../components/product/Categories.tsx';
 import Features from '../../components/product/Features.tsx';

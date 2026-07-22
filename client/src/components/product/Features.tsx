@@ -1,5 +1,5 @@
 import React from 'react';
-import FeaturesStore from '../../store/feautresStore.ts';
+import FeaturesStore from '../../store/featuresStore.ts';
 import FeaturesSkeleton from '../../skeleton/FeaturesSkeleton.tsx';
 
 const Features = () => {

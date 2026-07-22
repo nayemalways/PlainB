@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import LegalContents from '../../components/features/LegalContents.tsx';
-import FeaturesStore from '../../store/feautresStore.ts';
+import FeaturesStore from '../../store/featuresStore.ts';
 import Layout from '../../components/layout/Layout.tsx';
 
 const Complain = () => {

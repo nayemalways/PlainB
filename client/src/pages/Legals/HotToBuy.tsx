@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import FeaturesStore from '../../store/feautresStore.ts';
+import { useEffect } from 'react';
+import FeaturesStore from '../../store/featuresStore.ts';
 import Layout from '../../components/layout/Layout.tsx';
 import LegalContents from '../../components/features/LegalContents.tsx';
 

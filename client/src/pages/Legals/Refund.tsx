@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Layout from '../../components/layout/Layout.tsx';
-import FeaturesStore from '../../store/feautresStore.ts';
+import FeaturesStore from '../../store/featuresStore.ts';
 
 const Refund = () => {
   const { LegalRequest } = FeaturesStore();
