@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import wishStore from '../../store/wishStore.ts';
@@ -6,28 +6,34 @@ import ProductsSkeleton from '../../skeleton/ProductsSkeleton.tsx';
 import StarRatings from 'react-star-ratings';
 import NoDataFound from '../product/NoDataFound.tsx';
 
+const StarRating = StarRatings as unknown as ComponentType<{
+  rating: number;
+  starRatedColor?: string;
+  starDimension?: string;
+  starSpacing?: string;
+}>;
+
 const WishList = () => {
   const { WishListRequest, WishList, removeFromWish } = wishStore();
-  console.log(WishList);
 
   useEffect(() => {
     (async () => {
       await WishListRequest();
     })();
-  }, []);
+  }, [WishListRequest]);
 
   // Remove from wishlist
-  const removeProduct = async (productId) => {
+  const removeProduct = async (productId: string) => {
     const res = await removeFromWish(productId);
-    if (res) {
+    if (res?.success) {
       toast.success('Item removed!');
       await WishListRequest();
     } else {
-      toast.error(res.slice(6, res.length));
+      toast.error('Something went wrong');
     }
   };
 
-  console.log(WishList);
+  // console.log("Wish List: ",  WishList);
 
   if (WishList === null) {
     return <ProductsSkeleton />;
@@ -53,7 +59,7 @@ const WishList = () => {
                           {item.products['discount'] ? (
                             <>
                               <span>
-                                <strike> {item?.products['price']} </strike>
+                                <del> {item?.products['price']} </del>
                               </span>
                               <span>{item?.products['discountPrice']}</span>
                             </>
@@ -61,7 +67,7 @@ const WishList = () => {
                             <span>{item?.products['price']}</span>
                           )}
                         </p>
-                        <StarRatings
+                        <StarRating
                           rating={parseFloat(item?.products['star'])}
                           starRatedColor="rgb(255, 153, 0)"
                           starDimension="15px"

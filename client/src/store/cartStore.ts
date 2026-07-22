@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import axios from 'axios';
-import { BaseServerUrl, BaseServerV2Url, unauthorized } from '../utility/utility.ts';
+import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 
 interface CartState {
@@ -84,7 +84,7 @@ const CartStore = create<CartState>()((set) => ({
 
       return;
     } catch (e) {
-      unauthorized(e.response.status);
+      unauthorized(e.message);
       console.log(e.toString());
     }
   },
