@@ -1,9 +1,7 @@
-/*-------------DEPENDENCIES-----------*/
 import express from 'express';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import fileUpload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import {
@@ -32,7 +30,6 @@ app.use(hpp());
 app.use(cookieParser());
 app.use(express.json({ limit: MAX_JSON_SIZE }));
 app.use(express.urlencoded({ extended: URL_ENCODED }));
-app.use(fileUpload());
 
 /*-------------RATE LIMIT-----------*/
 const limiter = rateLimit({ windowMs: REQUEST_LIMIT_TIME, max: REQUEST_LIMIT_NUMBER });
@@ -54,7 +51,6 @@ app.get('/', (req, res) => {
 });
 
 /*------API ROUTES------*/
-app.use('/api', globalRouter);
 app.use('/api/v2', globalRouter);
 
 app.use(globalError);
