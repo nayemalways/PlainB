@@ -1,115 +1,168 @@
-/*--------------------------DEPENDENCIE-------------------------*/
-import {
-  SliderListService,
-  ListByBrandService,
-  ListByCategoryService,
-  ListBySimilarService,
-  ListByKeywordService,
-  ListByRemarkService,
-  DetailsService,
-  ReviewsListService,
-  ProductReviewCreateService,
-  ProductFilterService,
-} from './product.service.ts';
+import type { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/SendResponse.ts';
+import { CatchAsync } from '../../utility/CatchAsync.ts';
+import { productServices } from './product.service.ts';
+import type { ICreateProductReview, IProductFilter } from './product.interface.ts';
+import type { ICreateProduct } from './product.interface.ts';
+import AppError from '../../errorHelpers/appError.ts';
+import { StatusCodes } from 'http-status-codes';
 
-export const ProductSliderList = async (req, res) => {
-  const result = await SliderListService();
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Sliders retrieved successfully',
-    data: result,
-  });
-};
+export const ProductCreate = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const images = files.map((file) => file.path);
+    if (images.length === 0) {
+      throw new AppError(StatusCodes.BAD_REQUEST, 'At least one product image is required');
+    }
 
-// Group: 2 -- PRODUCT SEARCH BY BRAND, CATEGORY, KEYWORD, SIMILAR, REMARK
-export const ProductListByBrand = async (req, res) => {
-  const result = await ListByBrandService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Products retrieved successfully',
-    data: result,
-  });
-};
+    const payload = { ...req.body, images } as ICreateProduct;
+    const result = await productServices.createProductService(payload);
 
-export const ProductListByCategory = async (req, res) => {
-  const result = await ListByCategoryService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Products retrieved successfully',
-    data: result,
-  });
-};
+    SendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: 'Product created successfully',
+      data: result,
+    });
+  },
+);
 
-export const ProductListByRemark = async (req, res) => {
-  const result = await ListByRemarkService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Products retrieved successfully',
-    data: result,
-  });
-};
+export const ProductSliderList = CatchAsync(
+  async (_req: Request, res: Response, _next: NextFunction) => {
+    const result = await productServices.sliderListService();
 
-export const ProductListBySimilar = async (req, res) => {
-  const result = await ListBySimilarService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Similar products retrieved successfully',
-    data: result,
-  });
-};
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Sliders retrieved successfully',
+      data: result,
+    });
+  },
+);
 
-export const ProductListByKeyword = async (req, res) => {
-  const result = await ListByKeywordService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Products retrieved successfully',
-    data: result,
-  });
-};
+export const ProductListByBrand = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const brandId = String(req.params.brandId);
+    const result = await productServices.listByBrandService(brandId);
 
-export const ProductDetails = async (req, res) => {
-  const result = await DetailsService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Product details retrieved successfully',
-    data: result,
-  });
-};
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Products retrieved successfully',
+      data: result,
+    });
+  },
+);
 
-export const ProductFilter = async (req, res) => {
-  const result = await ProductFilterService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Products filtered successfully',
-    data: result,
-  });
-};
+export const ProductListByCategory = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const categoryId = String(req.params.categoryId);
+    const result = await productServices.listByCategoryService(categoryId);
 
-export const ProductReviewsList = async (req, res) => {
-  const result = await ReviewsListService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Product reviews retrieved successfully',
-    data: result,
-  });
-};
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Products retrieved successfully',
+      data: result,
+    });
+  },
+);
 
-export const ProductReviewCreate = async (req, res) => {
-  const result = await ProductReviewCreateService(req);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Product review created successfully',
-    data: result,
-  });
-};
+export const ProductListByRemark = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const remark = String(req.params.remark);
+    const result = await productServices.listByRemarkService(remark);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Products retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductListBySimilar = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const categoryId = String(req.params.categoryId);
+    const result = await productServices.listBySimilarService(categoryId);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Similar products retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductListByKeyword = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const keyword = String(req.params.keyword);
+    const result = await productServices.listByKeywordService(keyword);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Products retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductDetails = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const productId = String(req.params.productId);
+    const result = await productServices.detailsService(productId);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Product details retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductFilter = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const payload = req.body as IProductFilter;
+    const result = await productServices.productFilterService(payload);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Products filtered successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductReviewsList = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const productId = String(req.params.productId);
+    const result = await productServices.reviewsListService(productId);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Product reviews retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+export const ProductReviewCreate = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.user;
+    const payload = req.body as ICreateProductReview;
+    const result = await productServices.productReviewCreateService(userId as string, payload);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Product review created successfully',
+      data: result,
+    });
+  },
+);

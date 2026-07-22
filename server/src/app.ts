@@ -11,9 +11,9 @@ import {
   URL_ENCODED,
   MAX_JSON_SIZE,
 } from './app/config/config.ts';
-import { globalError } from './app/errorHelpers/globalErrorHandler.ts';
 import { globalRouter } from './app/routes/index.ts';
 import { SendResponse } from './app/utility/SendResponse.ts';
+import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
 
 /*------APP INSTANCE-------*/
 const app = express();
@@ -53,6 +53,6 @@ app.get('/', (req, res) => {
 /*------API ROUTES------*/
 app.use('/api/v2', globalRouter);
 
-app.use(globalError);
+app.use(globalErrorHandler);
 
 export default app;

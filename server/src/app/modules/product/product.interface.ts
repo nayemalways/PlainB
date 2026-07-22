@@ -13,7 +13,6 @@ export interface IProduct {
   categoryId: Types.ObjectId;
   brandId: Types.ObjectId;
   title: string;
-  shortDes: string;
   price: string;
   discount: boolean;
   discountPrice: string;

@@ -7,7 +7,6 @@ import { seedAdmin } from './app/utility/seedAdmin.ts';
 let server: Server | undefined;
 
 const bootstrap = async () => {
-  console.log('Hello');
   await mongoose.connect(DATABASE_URL);
   console.log('Database Connected!');
   await seedAdmin();

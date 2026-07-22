@@ -7,7 +7,6 @@ import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
 
 const getBrandList = CatchAsync(async (_req: Request, res: Response, next: NextFunction) => {
-  console.log('brand');
   const result = await brandServices.getBrandList();
 
   SendResponse(res, {

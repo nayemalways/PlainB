@@ -1,28 +1,18 @@
-import type { NextFunction, Request, Response } from 'express';
-import type { ZodType } from 'zod';
-import AppError from '../errorHelpers/appError.ts';
-import { StatusCodes } from 'http-status-codes';
+import { NextFunction, Request, Response } from 'express';
+import { z } from 'zod';
 
-export const validateRequest = (schema: ZodType) =>
-  (req: Request, _res: Response, next: NextFunction) => {
-    const result = schema.safeParse({
-      body: req.body,
-      params: req.params,
-      query: req.query,
-    });
+export const validateRequest =
+  (ZodSchema: z.ZodTypeAny) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.body?.data) {
+        req.body = JSON.parse(req.body.data);
+      }
 
-    if (!result.success) {
-      const message = result.error.issues
-        .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
-        .join(', ');
-
-      return next(new AppError(StatusCodes.BAD_REQUEST, message));
+      req.body = await ZodSchema.parseAsync(req.body);
+      next();
+ 
+    } catch (error) {
+      next(error);
     }
-
-    const validatedRequest = result.data as { body?: unknown };
-    if (validatedRequest.body !== undefined) {
-      req.body = validatedRequest.body;
-    }
-
-    next();
   };
