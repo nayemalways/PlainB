@@ -19,9 +19,8 @@ const FeaturesStore = create<FeaturesState>()((set) => ({
 
     try {
       const res = await axios.get(`${BaseServerV2Url}/features`);
-      const result = res.data.success ? res.data.data : res.data;
-      if (result.status) {
-        set({ FeaturesList: result.data });
+      if (res.data?.success) {
+        set({ FeaturesList: res.data.data });
       } else {
         set({ FeaturesList: [] });
       }

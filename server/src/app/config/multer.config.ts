@@ -44,6 +44,7 @@ const createImageUpload = (folder: string) => {
 export const productImageUpload = createImageUpload('plainb/products');
 export const brandImageUpload = createImageUpload('plainb/brands');
 export const categoryImageUpload = createImageUpload('plainb/categories');
+export const featureImageUpload = createImageUpload('plainb/features');
 
 export const cleanupCloudinaryUploadsOnError: ErrorRequestHandler = async (
   error,

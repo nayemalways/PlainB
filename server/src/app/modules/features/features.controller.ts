@@ -1,24 +1,55 @@
-import { FeaturesListService, LegalDetailsService } from './features.service.ts';
+import type { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/SendResponse.ts';
+import { CatchAsync } from '../../utility/CatchAsync.ts';
+import AppError from '../../errorHelpers/appError.ts';
+import { StatusCodes } from 'http-status-codes';
+import type { IFeature } from './features.interface.ts';
+import { featuresService } from './features.service.ts';
+
+const createFeature = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const image = req.file?.path;
+    if (!image) {
+      throw new AppError(StatusCodes.BAD_REQUEST, 'Feature image is required');
+    }
+
+    const payload = { ...req.body, img: image } as IFeature;
+    const result = await featuresService.createFeatureService(payload);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: 'Feature created successful',
+      data: result,
+    });
+  },
+);
 
 // Features list
-export const FeaturesList = async (req, res) => {
-  const result = await FeaturesListService();
+const featuresList = CatchAsync(async (req: Request, res: Response, _next: NextFunction) => {
+  const result = await featuresService.featuresListService();
   SendResponse(res, {
     success: true,
     statusCode: 200,
-    message: 'Features retrieved successfully',
+    message: 'Features retrieved successful',
     data: result,
   });
-};
+});
 
 // Legal Details
-export const LegalDetails = async (req, res) => {
-  const result = await LegalDetailsService(req);
+const legalDetails = CatchAsync(async (req: Request, res: Response, _next: NextFunction) => {
+  const result = await featuresService.legalDetailsService(req);
   SendResponse(res, {
     success: true,
     statusCode: 200,
     message: 'Legal details retrieved successfully',
     data: result,
   });
-};
+}) ;
+
+
+export const featuresControllers = {
+  createFeature,
+  featuresList,
+  legalDetails
+}
