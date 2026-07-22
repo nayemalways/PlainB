@@ -3,9 +3,8 @@ import WishListModel from './wishlist.model.ts';
 import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
-export const WishListService = async (req) => {
-  try {
-    const user_id = new ObjectId(req.headers.user_id);
+const getWishList = async (userId: string) => {
+    const user_id = new ObjectId(userId);
 
     /*----------------- DATABASE QUERY--------------------*/
     const matchStage = { $match: { userID: user_id } };
@@ -59,14 +58,10 @@ export const WishListService = async (req) => {
     ]);
 
     /*----------RETURN DATA-----------*/
-    return { status: 'Success', data: data };
-  } catch (e) {
-    console.log(e);
-    return { status: 'Error', message: 'Internal server error..!' };
-  }
+    return data;
 };
 
-export const SaveWishListService = async (req) => {
+const saveToWishList = async (req) => {
   try {
     const userID = req.headers.user_id;
     /*----DATABASE QUERY----*/
@@ -86,7 +81,7 @@ export const SaveWishListService = async (req) => {
   }
 };
 
-export const WishListRemoveService = async (req) => {
+const removeProductFromWishList = async (req) => {
   try {
     const userID = req.headers.user_id;
     const reqBody = req.body;
@@ -100,3 +95,10 @@ export const WishListRemoveService = async (req) => {
     return { status: 'Error', message: 'Internal Server error..!' };
   }
 };
+
+
+export const wishlistServices = {
+  removeProductFromWishList,
+  saveToWishList,
+  getWishList
+}

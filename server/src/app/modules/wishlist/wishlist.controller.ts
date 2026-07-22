@@ -1,21 +1,23 @@
-import { WishListService, SaveWishListService, WishListRemoveService } from './wishlist.service.ts';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { wishlistServices } from './wishlist.service.ts';
 import { SendResponse } from '../../utility/SendResponse.ts';
+import { NextFunction, Request, Response } from 'express';
+import { CatchAsync } from '../../utility/CatchAsync.ts';
+import { JwtPayload } from 'jsonwebtoken';
 
-export const ReadWishListProducts = async (req, res) => {
-  const result = await WishListService(req);
+const getWishList = CatchAsync( async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.user as JwtPayload;
+  const result = await wishlistServices.getWishList(userId as string);
   return SendResponse(res, {
     success: true,
-
     statusCode: 200,
-
     message: 'Wishlist retrieved successfully',
-
     data: result,
   });
-};
+});
 
-export const SaveWishList = async (req, res) => {
-  const result = await SaveWishListService(req);
+const saveToWishList = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await wishlistServices.saveToWishList(req);
   return SendResponse(res, {
     success: true,
 
@@ -27,8 +29,8 @@ export const SaveWishList = async (req, res) => {
   });
 };
 
-export const RemoveWishList = async (req, res) => {
-  const result = await WishListRemoveService(req);
+const removeProductFromWishList = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await wishlistServices.removeProductFromWishList(req);
   return SendResponse(res, {
     success: true,
 
@@ -39,3 +41,10 @@ export const RemoveWishList = async (req, res) => {
     data: result,
   });
 };
+
+
+export const wishListControllers = {
+  getWishList,
+  saveToWishList,
+  removeProductFromWishList
+}

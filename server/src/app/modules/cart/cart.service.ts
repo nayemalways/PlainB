@@ -42,7 +42,6 @@ const removeProductFromCartService = async (_userId: string, _productId: string)
 };
 
 const selectCartListProductService = async (_userId: string) => {
-  try {
     const userId = new ObjectId(_userId);
     /*----------------- DATABASE QUERY--------------------*/
     const matchStage = { $match: { userID: userId } };
@@ -95,11 +94,8 @@ const selectCartListProductService = async (_userId: string) => {
     ]);
 
     /*----------RETURN DATA-----------*/
-    return { status: 'Success', data: data };
-  } catch (e) {
-    console.log(e);
-    return { status: 'Error', message: 'Internal server error' };
-  }
+    return data;
+
 };
 
 export const cartService = {
