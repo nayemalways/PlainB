@@ -15,6 +15,7 @@ const sliderListService = async () => {
   return ProductSliderModel.find();
 };
 
+// CREATE PRODUCT
 const createProductService = async (payload: ICreateProduct) => {
   const [brandExists, categoryExists] = await Promise.all([
     BrandModel.exists({ _id: payload.brandId }),
@@ -69,6 +70,8 @@ const listByBrandService = async (brandId: string) => {
   return data;
 };
 
+
+// GET PRODUCT BY CATEGORY
 const listByCategoryService = async (categoryId: string) => {
   const categoryID = new ObjectId(categoryId);
 
@@ -113,6 +116,7 @@ const listByCategoryService = async (categoryId: string) => {
   return data;
 };
 
+// GET PRODUCT BY REMARK
 const listByRemarkService = async (remark: string) => {
   const Remark = remark;
 
@@ -157,6 +161,7 @@ const listByRemarkService = async (remark: string) => {
   return data;
 };
 
+// GET SIMILAR PRODUCT LIST
 const listBySimilarService = async (categoryId: string) => {
   const categoryID = new ObjectId(categoryId);
 
@@ -189,7 +194,7 @@ const listBySimilarService = async (categoryId: string) => {
     },
   };
 
-  // Data Retriving
+  // Data Retrieving
   const data = await ProductModel.aggregate([
     match,
     limit,
@@ -203,6 +208,8 @@ const listBySimilarService = async (categoryId: string) => {
   return data;
 };
 
+
+// DEAL DETAILS
 const detailsService = async (productId: string) => {
   const productID = new ObjectId(productId);
 
@@ -234,7 +241,7 @@ const detailsService = async (productId: string) => {
     },
   };
 
-  // Data Retrive
+  // Data retrieve
   const data = await ProductModel.aggregate([
     match,
     JoinWithBrandStage,
@@ -248,6 +255,7 @@ const detailsService = async (productId: string) => {
   return data;
 };
 
+// GET PRODUCT BY KEYWORD
 const listByKeywordService = async (keyword: string) => {
   const SearchRegex = { $regex: keyword, $options: 'i' };
   const SearchParams = [{ title: SearchRegex }, { shortDes: SearchRegex }];
@@ -283,7 +291,7 @@ const listByKeywordService = async (keyword: string) => {
     },
   };
 
-  // Data Retriving
+  // Data retrieving
   const data = await ProductModel.aggregate([
     match,
     JoinWithBrandStage,
@@ -297,6 +305,8 @@ const listByKeywordService = async (keyword: string) => {
   return data;
 };
 
+
+// FILTER PRODUCT
 const productFilterService = async (payload: IProductFilter) => {
   // Brand and Category matching conditions
   const matchConditions: Record<string, mongoose.Types.ObjectId> = {};
@@ -331,7 +341,7 @@ const productFilterService = async (payload: IProductFilter) => {
   }
   const PriceMatchStage = { $match: PriceMatchConditions };
 
-  // Join with "brands", "categoroies" fields. And unwind the unecessary Array sign for a single brand data
+  // Join with "brands", "categories" fields. And unwind the unnecessary Array sign for a single brand data
   const JoinWithBrandStage = {
     $lookup: { from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand' },
   };
@@ -347,7 +357,7 @@ const productFilterService = async (payload: IProductFilter) => {
   const UnwindCategoryStage = { $unwind: '$category' };
   const projectionStage = { $project: { 'brand._id': 0, 'category._id': 0, brandId: 0 } };
 
-  // Aggregation Pipline
+  // Aggregation pipeline
   const data = await ProductModel.aggregate([
     MatchStage,
     AddFieldsStage,
@@ -362,6 +372,8 @@ const productFilterService = async (payload: IProductFilter) => {
   return data;
 };
 
+
+// READ PRODUCT REVIEW
 const reviewsListService = async (productID: string) => {
   const productId = new ObjectId(productID);
 
@@ -372,7 +384,7 @@ const reviewsListService = async (productID: string) => {
   const UnwindProfileStage = { $unwind: '$profile' };
   const projectionStage = { $project: { des: 1, rating: 1, 'profile.cus_name': 1 } };
 
-  // Data Retrive
+  // Data retrieve
   const data = await ReviewModel.aggregate([
     matchStage,
     JoinWithUserProfilesStage,
@@ -383,6 +395,8 @@ const reviewsListService = async (productID: string) => {
   return data;
 };
 
+
+// CREATE PRODUCT REVIEW
 const productReviewCreateService = async (userId: string, payload: ICreateProductReview) => {
   const userID = new ObjectId(userId);
   const { productID, des, rating } = payload;

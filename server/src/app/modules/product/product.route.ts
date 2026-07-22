@@ -1,10 +1,10 @@
 import express from 'express';
 import { checkAuth } from '../../middlewares/AuthMiddleware.ts';
-import * as productController from './product.controller.ts';
 import { Role } from '../user/user.interface.ts';
 import { validateRequest } from '../../middlewares/validateRequest.ts';
 import { productValidation } from './product.validation.ts';
 import { cleanupCloudinaryUploadsOnError, productImageUpload } from '../../config/multer.config.ts';
+import { productControllers } from './product.controller.ts';
 
 const router = express.Router();
 
@@ -13,38 +13,38 @@ router.post(
   checkAuth(Role.ADMIN),
   productImageUpload.array('images', 6),
   validateRequest(productValidation.createProductSchema),
-  productController.ProductCreate,
+  productControllers.productCreate,
   cleanupCloudinaryUploadsOnError,
 );
-router.get('/slider', productController.ProductSliderList);
-router.post('/filter', productController.ProductFilter);
-router.post('/review', checkAuth(Role.USER), productController.ProductReviewCreate);
+router.get('/slider', productControllers.productSliderList);
+router.post('/filter', productControllers.productFilter);
+router.post('/review', checkAuth(Role.USER), productControllers.productReviewCreate);
 router.get(
   '/review/:productId',
   validateRequest(productValidation.productIdParamSchema),
-  productController.ProductReviewsList,
+  productControllers.productReviewsList,
 );
 router.get(
   '/brand/:brandId',
   validateRequest(productValidation.brandIdParamSchema),
-  productController.ProductListByBrand,
+  productControllers.productListByBrand,
 );
 router.get(
   '/category/:categoryId',
   validateRequest(productValidation.categoryIdParamSchema),
-  productController.ProductListByCategory,
+  productControllers.productListByCategory,
 );
-router.get('/remark/:remark', productController.ProductListByRemark);
+router.get('/remark/:remark', productControllers.productListByRemark);
 router.get(
   '/similar/:categoryId',
   validateRequest(productValidation.categoryIdParamSchema),
-  productController.ProductListBySimilar,
+  productControllers.productListBySimilar,
 );
 router.get(
   '/details/:productId',
   validateRequest(productValidation.productIdParamSchema),
-  productController.ProductDetails,
+  productControllers.productDetails,
 );
-router.get('/search/:keyword', productController.ProductListByKeyword);
+router.get('/search/:keyword', productControllers.productListByKeyword);
 
 export const productRouter = router;

@@ -7,7 +7,7 @@ import type { ICreateProduct } from './product.interface.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
 
-export const ProductCreate = CatchAsync(
+const productCreate = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
     const images = files.map((file) => file.path);
@@ -27,7 +27,7 @@ export const ProductCreate = CatchAsync(
   },
 );
 
-export const ProductSliderList = CatchAsync(
+const productSliderList = CatchAsync(
   async (_req: Request, res: Response, _next: NextFunction) => {
     const result = await productServices.sliderListService();
 
@@ -40,7 +40,7 @@ export const ProductSliderList = CatchAsync(
   },
 );
 
-export const ProductListByBrand = CatchAsync(
+const productListByBrand = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const brandId = String(req.params.brandId);
     const result = await productServices.listByBrandService(brandId);
@@ -54,7 +54,7 @@ export const ProductListByBrand = CatchAsync(
   },
 );
 
-export const ProductListByCategory = CatchAsync(
+const productListByCategory = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const categoryId = String(req.params.categoryId);
     const result = await productServices.listByCategoryService(categoryId);
@@ -68,7 +68,7 @@ export const ProductListByCategory = CatchAsync(
   },
 );
 
-export const ProductListByRemark = CatchAsync(
+const productListByRemark = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const remark = String(req.params.remark);
     const result = await productServices.listByRemarkService(remark);
@@ -82,7 +82,7 @@ export const ProductListByRemark = CatchAsync(
   },
 );
 
-export const ProductListBySimilar = CatchAsync(
+const productListBySimilar = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const categoryId = String(req.params.categoryId);
     const result = await productServices.listBySimilarService(categoryId);
@@ -96,7 +96,7 @@ export const ProductListBySimilar = CatchAsync(
   },
 );
 
-export const ProductListByKeyword = CatchAsync(
+const productListByKeyword = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const keyword = String(req.params.keyword);
     const result = await productServices.listByKeywordService(keyword);
@@ -110,7 +110,7 @@ export const ProductListByKeyword = CatchAsync(
   },
 );
 
-export const ProductDetails = CatchAsync(
+const productDetails = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const productId = String(req.params.productId);
     const result = await productServices.detailsService(productId);
@@ -124,7 +124,7 @@ export const ProductDetails = CatchAsync(
   },
 );
 
-export const ProductFilter = CatchAsync(
+const productFilter = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const payload = req.body as IProductFilter;
     const result = await productServices.productFilterService(payload);
@@ -138,7 +138,7 @@ export const ProductFilter = CatchAsync(
   },
 );
 
-export const ProductReviewsList = CatchAsync(
+const productReviewsList = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const productId = String(req.params.productId);
     const result = await productServices.reviewsListService(productId);
@@ -152,7 +152,7 @@ export const ProductReviewsList = CatchAsync(
   },
 );
 
-export const ProductReviewCreate = CatchAsync(
+const productReviewCreate = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const { userId } = req.user;
     const payload = req.body as ICreateProductReview;
@@ -166,3 +166,18 @@ export const ProductReviewCreate = CatchAsync(
     });
   },
 );
+
+
+export const productControllers = {
+  productReviewCreate,
+  productReviewsList,
+  productCreate,
+  productDetails,
+  productListByKeyword,
+  productListByRemark,
+  productListByBrand,
+  productFilter,
+  productListBySimilar,
+  productSliderList,
+  productListByCategory
+}
