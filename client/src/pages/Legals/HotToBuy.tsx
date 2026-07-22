@@ -11,7 +11,7 @@ const HotToBuy = () => {
     (async () => {
       await LegalRequest('howtobuy');
     })();
-  }, []);
+  }, [LegalRequest]);
   return (
     <Layout>
       <LegalContents />
