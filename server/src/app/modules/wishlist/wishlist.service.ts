@@ -4,61 +4,61 @@ import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
 const getWishList = async (userId: string) => {
-    const user_id = new ObjectId(userId);
+  const user_id = new ObjectId(userId);
 
-    /*----------------- DATABASE QUERY--------------------*/
-    const matchStage = { $match: { userID: user_id } };
+  /*----------------- DATABASE QUERY--------------------*/
+  const matchStage = { $match: { userID: user_id } };
 
-    const JoinWithProductStage = {
-      $lookup: { from: 'products', localField: 'productID', foreignField: '_id', as: 'products' },
-    };
-    const UnwindProductStage = { $unwind: '$products' };
+  const JoinWithProductStage = {
+    $lookup: { from: 'products', localField: 'productID', foreignField: '_id', as: 'products' },
+  };
+  const UnwindProductStage = { $unwind: '$products' };
 
-    const JoinWithBrandStage = {
-      $lookup: { from: 'brands', localField: 'products.brandID', foreignField: '_id', as: 'brand' },
-    };
-    const UnwindBrandStage = { $unwind: '$brand' };
+  const JoinWithBrandStage = {
+    $lookup: { from: 'brands', localField: 'products.brandId', foreignField: '_id', as: 'brand' },
+  };
+  const UnwindBrandStage = { $unwind: '$brand' };
 
-    const JoinWithCategoryStage = {
-      $lookup: {
-        from: 'categories',
-        localField: 'products.categoryID',
-        foreignField: '_id',
-        as: 'category',
-      },
-    };
-    const UnwindCategoryStage = { $unwind: '$category' };
+  const JoinWithCategoryStage = {
+    $lookup: {
+      from: 'categories',
+      localField: 'products.categoryId',
+      foreignField: '_id',
+      as: 'category',
+    },
+  };
+  const UnwindCategoryStage = { $unwind: '$category' };
 
-    const projectionStage = {
-      $project: {
-        'products.createdAt': 0,
-        'products.updatedAt': 0,
-        'products.brandID': 0,
-        'products.categoryID': 0,
+  const projectionStage = {
+    $project: {
+      'products.createdAt': 0,
+      'products.updatedAt': 0,
+      'products.brandId': 0,
+      'products.categoryId': 0,
 
-        'brand._id': 0,
-        'brand.updatedAt': 0,
-        'brand.createdAt': 0,
+      'brand._id': 0,
+      'brand.updatedAt': 0,
+      'brand.createdAt': 0,
 
-        'category._id': 0,
-        'category.updatedAt': 0,
-        'category.createdAt': 0,
-      },
-    };
-    /*--------JOIN PRODUCT WITH WISH LIST MODEL AND SELECT DATA----------*/
-    const data = await WishListModel.aggregate([
-      matchStage,
-      JoinWithProductStage,
-      UnwindProductStage,
-      JoinWithBrandStage,
-      UnwindBrandStage,
-      JoinWithCategoryStage,
-      UnwindCategoryStage,
-      projectionStage,
-    ]);
+      'category._id': 0,
+      'category.updatedAt': 0,
+      'category.createdAt': 0,
+    },
+  };
+  /*--------JOIN PRODUCT WITH WISH LIST MODEL AND SELECT DATA----------*/
+  const data = await WishListModel.aggregate([
+    matchStage,
+    JoinWithProductStage,
+    UnwindProductStage,
+    JoinWithBrandStage,
+    UnwindBrandStage,
+    JoinWithCategoryStage,
+    UnwindCategoryStage,
+    projectionStage,
+  ]);
 
-    /*----------RETURN DATA-----------*/
-    return data;
+  /*----------RETURN DATA-----------*/
+  return data;
 };
 
 const saveToWishList = async (req) => {
@@ -96,9 +96,8 @@ const removeProductFromWishList = async (req) => {
   }
 };
 
-
 export const wishlistServices = {
   removeProductFromWishList,
   saveToWishList,
-  getWishList
-}
+  getWishList,
+};
