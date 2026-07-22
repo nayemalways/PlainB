@@ -33,6 +33,11 @@ const createProductSchema = z.object({
   brandId: objectId,
 });
 
+const createProductSliderSchema = z.object({
+  productId: objectId,
+  des: z.string().trim().min(1, 'Slider description is required').max(1000),
+});
+
 const brandIdParamSchema = z.object({
   params: z.object({ brandId: objectId }),
 });
@@ -47,6 +52,7 @@ const productIdParamSchema = z.object({
 
 export const productValidation = {
   createProductSchema,
+  createProductSliderSchema,
   brandIdParamSchema,
   categoryIdParamSchema,
   productIdParamSchema,

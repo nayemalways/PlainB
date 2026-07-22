@@ -7,7 +7,12 @@ const DataSchema = new mongoose.Schema<IProductSlider>(
     des: { type: String, required: true },
     color: { type: String, required: true },
     size: { type: String, required: true },
-    productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    image: { type: String, required: true },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'products',
+      required: true,
+    },
   },
 
   { timestamps: true, versionKey: false },

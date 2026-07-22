@@ -2,7 +2,12 @@ import ProductModel from './product.model.ts';
 import ProductSliderModel from './product-slider.model.ts';
 import ReviewModel from './review.model.ts';
 import mongoose from 'mongoose';
-import type { ICreateProduct, ICreateProductReview, IProductFilter } from './product.interface.ts';
+import type {
+  ICreateProduct,
+  ICreateProductReview,
+  ICreateProductSlider,
+  IProductFilter,
+} from './product.interface.ts';
 import BrandModel from '../brand/brand.model.ts';
 import CategoryModel from '../category/category.model.ts';
 import AppError from '../../errorHelpers/appError.ts';
@@ -13,6 +18,30 @@ const ObjectId = mongoose.Types.ObjectId;
 // Group: 1 -- PRODUCT BRAND, CATEGORY, SLIDER  SEARCH
 const sliderListService = async () => {
   return ProductSliderModel.find();
+};
+
+const createSliderService = async (payload: ICreateProductSlider) => {
+  const product = await ProductModel.findById(payload.productId).select(
+    'title color size images',
+  );
+
+  if (!product) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Product not found');
+  }
+
+  const image = product.images[0];
+  if (!image) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Product has no image');
+  }
+
+  return ProductSliderModel.create({
+    productId: product._id,
+    des: payload.des,
+    title: product.title,
+    color: product.color,
+    size: product.size,
+    image,
+  });
 };
 
 // CREATE PRODUCT
@@ -406,6 +435,7 @@ const productReviewCreateService = async (userId: string, payload: ICreateProduc
 };
 
 export const productServices = {
+  createSliderService,
   createProductService,
   sliderListService,
   listByBrandService,

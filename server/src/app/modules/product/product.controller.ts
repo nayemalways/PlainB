@@ -2,7 +2,11 @@ import type { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/SendResponse.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { productServices } from './product.service.ts';
-import type { ICreateProductReview, IProductFilter } from './product.interface.ts';
+import type {
+  ICreateProductReview,
+  ICreateProductSlider,
+  IProductFilter,
+} from './product.interface.ts';
 import type { ICreateProduct } from './product.interface.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
@@ -35,6 +39,20 @@ const productSliderList = CatchAsync(
       success: true,
       statusCode: 200,
       message: 'Sliders retrieved successfully',
+      data: result,
+    });
+  },
+);
+
+const productSliderCreate = CatchAsync(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const payload = req.body as ICreateProductSlider;
+    const result = await productServices.createSliderService(payload);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: 'Slider created successfully',
       data: result,
     });
   },
@@ -169,6 +187,7 @@ const productReviewCreate = CatchAsync(
 
 
 export const productControllers = {
+  productSliderCreate,
   productReviewCreate,
   productReviewsList,
   productCreate,

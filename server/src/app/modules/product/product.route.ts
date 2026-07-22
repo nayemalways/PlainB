@@ -17,6 +17,12 @@ router.post(
   cleanupCloudinaryUploadsOnError,
 );
 router.get('/slider', productControllers.productSliderList);
+router.post(
+  '/slider',
+  checkAuth(Role.ADMIN),
+  validateRequest(productValidation.createProductSliderSchema),
+  productControllers.productSliderCreate,
+);
 router.post('/filter', productControllers.productFilter);
 router.post('/review', checkAuth(Role.USER), productControllers.productReviewCreate);
 router.get(

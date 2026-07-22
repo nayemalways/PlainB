@@ -5,8 +5,13 @@ export interface IProductSlider {
   des: string;
   color: string;
   size: string;
+  image: string;
   productId: Types.ObjectId;
-  required: true;
+}
+
+export interface ICreateProductSlider {
+  productId: string;
+  des: string;
 }
 
 export interface IProduct {
