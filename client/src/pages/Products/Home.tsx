@@ -22,7 +22,13 @@ const Home = () => {
       await CategoryListRequest();
       await ProductListByRemark('new');
     })();
-  }, []);
+  }, [
+    BrandListRequest,
+    CategoryListRequest,
+    FeaturesListRequest,
+    ProductListByRemark,
+    SliderListRequest,
+  ]);
 
   return (
     <Layout>

@@ -6,7 +6,16 @@ import ProductStore from '../../store/productStore.ts';
 import ProductsSkeleton from './../../skeleton/ProductsSkeleton.tsx';
 
 const Products = () => {
-  const { ProductList, ProductListByRemark } = ProductStore(); // Import Api function and data
+  const { ProductList, ProductListByRemark, isProductLoading } = ProductStore(); // Import Api function and data
+
+  if (!isProductLoading && ProductList !== null && ProductList.length === 0) {
+    return (
+      <div className="section bg-white py-5 text-center">
+        <h1 className="headline-4">Our Products</h1>
+        <p className="text-secondary">No products found</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -118,7 +127,7 @@ const Products = () => {
                     aria-labelledby="pills-home-tab"
                     tabIndex="0"
                   >
-                    {ProductList === null ? (
+                    {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
                     ) : (
                       <div className="container">
@@ -167,7 +176,7 @@ const Products = () => {
                     aria-labelledby="pills-profile-tab"
                     tabIndex="0"
                   >
-                    {ProductList === null ? (
+                    {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
                     ) : (
                       <div className="container">
@@ -216,7 +225,7 @@ const Products = () => {
                     aria-labelledby="pills-contact-tab"
                     tabIndex="0"
                   >
-                    {ProductList === null ? (
+                    {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
                     ) : (
                       <div className="container">
@@ -265,7 +274,7 @@ const Products = () => {
                     aria-labelledby="pills-disabled-tab"
                     tabIndex="0"
                   >
-                    {ProductList === null ? (
+                    {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
                     ) : (
                       <div className="container">
@@ -314,7 +323,7 @@ const Products = () => {
                     aria-labelledby="pills-disabled-tab"
                     tabIndex="0"
                   >
-                    {ProductList === null ? (
+                    {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
                     ) : (
                       <div className="container">

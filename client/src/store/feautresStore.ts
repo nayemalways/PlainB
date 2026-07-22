@@ -3,6 +3,7 @@ import axios from 'axios';
 import { BaseServerUrl } from '../utility/utility.ts';
 
 interface FeaturesState {
+  isFeaturesLoading: boolean;
   FeaturesList: any[] | null;
   FeaturesListRequest: () => Promise<void>;
   legalList: any[] | null;
@@ -10,16 +11,24 @@ interface FeaturesState {
 }
 
 const FeaturesStore = create<FeaturesState>()((set) => ({
+  isFeaturesLoading: false,
   FeaturesList: null,
   FeaturesListRequest: async () => {
+    set({ isFeaturesLoading: true });
+
     try {
-      set({ FeaturesList: null });
       const res = await axios.get(`${BaseServerUrl}/api/FeaturesList`);
-      if (res?.data?.status === 'Success') {
-        set({ FeaturesList: res?.data['data'] });
+      const result = res.data.success ? res.data.data : res.data;
+      if (result.status === 'Success') {
+        set({ FeaturesList: result.data });
+      } else {
+        set({ FeaturesList: [] });
       }
     } catch (error) {
+      set({ FeaturesList: [] });
       console.error('Error fetching features:', error);
+    } finally {
+      set({ isFeaturesLoading: false });
     }
   },
 

@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from 'zustand';
 import axios from 'axios';
-import { BaseServerUrl } from '../utility/utility.ts';
+import { BaseServerV2Url } from '../utility/utility.ts';
 
 interface ProductState {
+  isBrandLoading: boolean;
+  isCategoryLoading: boolean;
+  isSliderLoading: boolean;
+  isProductLoading: boolean;
   BrandList: any[] | null;
   BrandListRequest: () => Promise<void>;
   CategoryList: any[] | null;
@@ -24,62 +29,93 @@ interface ProductState {
 }
 
 const ProductStore = create<ProductState>()((set) => ({
-  BrandList: null,
+  BrandList: [],
+  isBrandLoading: false,
+  isCategoryLoading: false,
+  isSliderLoading: false,
+  isProductLoading: false,
   BrandListRequest: async () => {
+    set({ isBrandLoading: true });
+
     try {
-      const res = await axios.get(`${BaseServerUrl}/api/ProductBrandList`);
-      if (res?.data?.status === 'Success') {
-        set((state) => ({ BrandList: res.data.data }));
+      const res = await axios.get(`${BaseServerV2Url}/brand`);
+      if (res.data.success) {
+        set({ BrandList: res.data.data });
       }
     } catch (error) {
+      set({ BrandList: [] });
       console.error('Error fetching BrandList:', error);
+    } finally {
+      set({ isBrandLoading: false });
     }
   },
 
   CategoryList: null,
   CategoryListRequest: async () => {
+    set({ isCategoryLoading: true });
+
     try {
-      const res = await axios.get(`${BaseServerUrl}/api/ProductCategoryList`);
-      if (res?.data?.status === 'Success') {
-        set((state) => ({ CategoryList: res.data.data }));
+      const res = await axios.get(`${BaseServerV2Url}/ProductCategoryList`);
+      const result = res.data.success ? res.data.data : res.data;
+      if (result.status === 'Success') {
+        set({ CategoryList: result.data });
+      } else {
+        set({ CategoryList: [] });
       }
     } catch (error) {
+      set({ CategoryList: [] });
       console.error('Error fetching CategoryList:', error);
+    } finally {
+      set({ isCategoryLoading: false });
     }
   },
 
   SliderList: null,
   SliderListRequest: async () => {
+    set({ isSliderLoading: true });
+
     try {
-      set((state) => ({ SliderList: null })); // Reset before fetching
-      const res = await axios.get(`${BaseServerUrl}/api/ProductSliderList`);
-      if (res?.data?.status === 'Success') {
-        set((state) => ({ SliderList: res.data.data }));
+      const res = await axios.get(`${BaseServerV2Url}/ProductSliderList`);
+      const result = res.data.success ? res.data.data : res.data;
+      if (result.status === 'Success') {
+        set({ SliderList: result.data });
+      } else {
+        set({ SliderList: [] });
       }
     } catch (error) {
+      set({ SliderList: [] });
       console.error('Error fetching SliderList:', error);
+    } finally {
+      set({ isSliderLoading: false });
     }
   },
 
   ProductList: null,
   ProductListByRemark: async (remarks) => {
+    set({ isProductLoading: true });
+
     try {
-      set((state) => ({ ProductList: null })); // Reset before fetching
-      const res = await axios.get(`${BaseServerUrl}/api/ProductListByRemark/${remarks}`);
-      if (res?.data?.status === 'Success') {
-        set((state) => ({ ProductList: res.data.data }));
+      const res = await axios.get(`${BaseServerV2Url}/ProductListByRemark/${remarks}`);
+      const result = res.data.success ? res.data.data : res.data;
+      if (result.status === 'Success') {
+        set({ ProductList: result.data });
+      } else {
+        set({ ProductList: [] });
       }
     } catch (error) {
+      set({ ProductList: [] });
       console.error('Error fetching ProductListByRemark:', error);
+    } finally {
+      set({ isProductLoading: false });
     }
   },
 
   ProductListByBrand: async (brandId) => {
     try {
-      set((state) => ({ ProductList: null }));
-      const res = await axios.get(`${BaseServerUrl}/api/ProductListByBrand/${brandId}`);
+      set({ ProductList: null });
+      const res = await axios.get(`${BaseServerV2Url}/ProductListByBrand/${brandId}`);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ ProductList: res.data.data }));
+        set({ ProductList: res.data.data });
       }
     } catch (error) {
       console.error('Error fetching ProductListByBrand:', error);
@@ -88,10 +124,10 @@ const ProductStore = create<ProductState>()((set) => ({
 
   ProductListByCategory: async (categoryId) => {
     try {
-      set((state) => ({ ProductList: null }));
-      const res = await axios.get(`${BaseServerUrl}/api/ProductListByCategory/${categoryId}`);
+      set({ ProductList: null });
+      const res = await axios.get(`${BaseServerV2Url}/ProductListByCategory/${categoryId}`);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ ProductList: res.data.data }));
+        set({ ProductList: res.data.data });
       }
     } catch (error) {
       console.error('Error fetching ProductListByCategory:', error);
@@ -100,10 +136,10 @@ const ProductStore = create<ProductState>()((set) => ({
 
   ProductListByKeyword: async (keyword) => {
     try {
-      set((state) => ({ ProductList: null }));
-      const res = await axios.get(`${BaseServerUrl}/api/ProductListByKeyword/${keyword}`);
+      set({ ProductList: null });
+      const res = await axios.get(`${BaseServerV2Url}/ProductListByKeyword/${keyword}`);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ ProductList: res.data.data }));
+        set({ ProductList: res.data.data });
       }
     } catch (error) {
       console.error('Error fetching ProductListByKeyword:', error);
@@ -112,10 +148,10 @@ const ProductStore = create<ProductState>()((set) => ({
 
   ProductFilter: async (postBody) => {
     try {
-      set((state) => ({ ProductList: null }));
-      const res = await axios.post(`${BaseServerUrl}/api/ProductFilter`, postBody);
+      set({ ProductList: null });
+      const res = await axios.post(`${BaseServerV2Url}/ProductFilter`, postBody);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ ProductList: res.data.data }));
+        set({ ProductList: res.data.data });
       }
     } catch (error) {
       console.error('Error filtering products:', error);
@@ -124,16 +160,16 @@ const ProductStore = create<ProductState>()((set) => ({
 
   searchKeyword: '',
   setSearchKeyword: (keyword) => {
-    set((state) => ({ searchKeyword: keyword }));
+    set({ searchKeyword: keyword });
   },
 
   productDetails: null,
   detailsRequest: async (id) => {
     try {
-      set((state) => ({ productDetails: null }));
-      const res = await axios.get(`${BaseServerUrl}/api/ProductDetails/${id}`);
+      set({ productDetails: null });
+      const res = await axios.get(`${BaseServerV2Url}/ProductDetails/${id}`);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ productDetails: res.data.data }));
+        set({ productDetails: res.data.data });
       }
     } catch (error) {
       console.error('Error fetching product details:', error);
@@ -143,10 +179,10 @@ const ProductStore = create<ProductState>()((set) => ({
   reviewList: null,
   reviewListRequest: async (id) => {
     try {
-      set((state) => ({ reviewList: null }));
-      const res = await axios.get(`${BaseServerUrl}/api/ProductReviewsList/${id}`);
+      set({ reviewList: null });
+      const res = await axios.get(`${BaseServerV2Url}/ProductReviewsList/${id}`);
       if (res?.data?.status === 'Success') {
-        set((state) => ({ reviewList: res.data.data }));
+        set({ reviewList: res.data.data });
       }
     } catch (error) {
       console.error('Error fetching review list:', error);

@@ -3,10 +3,10 @@ import FeaturesStore from '../../store/feautresStore.ts';
 import FeaturesSkeleton from '../../skeleton/FeaturesSkeleton.tsx';
 
 const Features = () => {
-  const { FeaturesList } = FeaturesStore();
+  const { FeaturesList, isFeaturesLoading } = FeaturesStore();
 
   // Check has Data fetched ohterwise showing loading skeleton
-  if (FeaturesList === null) {
+  if (isFeaturesLoading || FeaturesList === null) {
     return <FeaturesSkeleton />;
   }
 
@@ -14,7 +14,7 @@ const Features = () => {
     <>
       <div className="container section">
         <div className="row">
-          {FeaturesList.map((item, index) => {
+          {FeaturesList.length > 0 ? FeaturesList.map((item, index) => {
             return (
               <div key={index} className="col-6 p-2 col-md-3 col-lg-3 col-sm-6">
                 <div className="card shadow-sm">
@@ -32,7 +32,7 @@ const Features = () => {
                 </div>
               </div>
             );
-          })}
+          }) : <p className="text-center text-secondary py-4">No features found</p>}
         </div>
       </div>
     </>

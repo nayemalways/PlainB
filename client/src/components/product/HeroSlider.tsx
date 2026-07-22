@@ -5,9 +5,13 @@ import SliderSkeleton from './../../skeleton/SliderSkeleton.tsx';
 
 const HeroSlider = () => {
   // Access data from product Store (Zustand state management)
-  const { SliderList } = ProductStore();
-  if (SliderList === null) {
+  const { SliderList, isSliderLoading } = ProductStore();
+  if (isSliderLoading || SliderList === null) {
     return <SliderSkeleton />;
+  }
+
+  if (SliderList.length === 0) {
+    return <p className="text-center text-secondary py-5">No sliders found</p>;
   }
 
   return (

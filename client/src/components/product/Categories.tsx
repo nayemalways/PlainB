@@ -4,10 +4,10 @@ import ProductStore from '../../store/productStore.ts';
 import { Link } from 'react-router-dom';
 
 const Categories = () => {
-  const { CategoryList } = ProductStore();
+  const { CategoryList, isCategoryLoading } = ProductStore();
 
   // Showing Skeleton until the CategoryList is null
-  if (CategoryList === null) {
+  if (isCategoryLoading || CategoryList === null) {
     return <CategorySkeleton />;
   }
 
@@ -22,7 +22,7 @@ const Categories = () => {
               Shopping Categories{' '}
             </span>
 
-            {CategoryList.map((item, index) => {
+            {CategoryList.length > 0 ? CategoryList.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -37,7 +37,7 @@ const Categories = () => {
                   </Link>
                 </div>
               );
-            })}
+            }) : <p className="text-center text-secondary">No categories found</p>}
           </div>
         </div>
       </div>

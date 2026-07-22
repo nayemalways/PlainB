@@ -4,12 +4,12 @@ import ProductStore from '../../store/productStore.ts';
 import { Link } from 'react-router-dom';
 
 const Brand = () => {
-  const { BrandList } = ProductStore();
+  const { BrandList, isBrandLoading } = ProductStore();
 
-  // Check has Data fetched ohterwise showing loading skeleton
-  if (BrandList === null) {
+  // Check has Data fetched otherwise showing loading skeleton
+  if (isBrandLoading) {
     return <BrandsSkeleton />;
-  }
+  } 
 
   return (
     <>
@@ -22,7 +22,7 @@ const Brand = () => {
               Shopping Categories{' '}
             </span>
 
-            {BrandList.map((item, index) => {
+            {BrandList.length > 0 ? BrandList.map((item, index) => {
               return (
                 <div
                   key={index}
@@ -36,7 +36,7 @@ const Brand = () => {
                   </Link>
                 </div>
               );
-            })}
+            }) : <p className="text-center text-secondary">No brands found</p>}
           </div>
         </div>
       </div>

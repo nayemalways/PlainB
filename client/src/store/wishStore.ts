@@ -44,8 +44,6 @@ const wishStore = create<WishState>()((set) => ({
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.get(`${BaseServerV2Url}/wishlist`, config);
 
-      console.log("REsponse :",  res.data.data)
-
       set({ WishList: res.data['data'] });
       set({ WishCount: res.data['data'].length });
       return;
