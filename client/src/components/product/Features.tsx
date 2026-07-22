@@ -1,11 +1,10 @@
-import React from 'react';
 import FeaturesStore from '../../store/featuresStore.ts';
 import FeaturesSkeleton from '../../skeleton/FeaturesSkeleton.tsx';
 
 const Features = () => {
   const { FeaturesList, isFeaturesLoading } = FeaturesStore();
 
-  // Check has Data fetched ohterwise showing loading skeleton
+  // Check has Data fetched otherwise showing loading skeleton
   if (isFeaturesLoading || FeaturesList === null) {
     return <FeaturesSkeleton />;
   }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 
@@ -8,14 +7,11 @@ import ProductsSkeleton from './../../skeleton/ProductsSkeleton.tsx';
 const Products = () => {
   const { ProductList, ProductListByRemark, isProductLoading } = ProductStore(); // Import Api function and data
 
-  if (!isProductLoading && ProductList !== null && ProductList.length === 0) {
-    return (
-      <div className="section bg-white py-5 text-center">
-        <h1 className="headline-4">Our Products</h1>
-        <p className="text-secondary">No products found</p>
-      </div>
-    );
-  }
+  const noProductsFound = (
+    <div className="py-5 text-center">
+      <p className="text-secondary mb-0">No products found</p>
+    </div>
+  );
 
   return (
     <>
@@ -125,10 +121,12 @@ const Products = () => {
                     id="pills-new"
                     role="tabpanel"
                     aria-labelledby="pills-home-tab"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
+                    ) : ProductList.length === 0 ? (
+                      noProductsFound
                     ) : (
                       <div className="container">
                         <div className="row">
@@ -139,7 +137,7 @@ const Products = () => {
                             if (item['discount'] === true) {
                               price = (
                                 <p className="bodyMedium  text-dark my-1">
-                                  Price:<strike> ${item['price']} </strike> $
+                                  Price:<del> ${item['price']} </del> $
                                   {item['discountPrice']}{' '}
                                 </p>
                               );
@@ -150,7 +148,7 @@ const Products = () => {
                                   to={`/details/${item['_id']}`}
                                   className="card shadow-sm h-100 rounded-3 bg-white"
                                 >
-                                  <img className="w-100 rounded-top-2" src={item['image']} />
+                                  <img className="w-100 rounded-top-2" src={item?.['images'][0]} />
                                   <div className="card-body">
                                     <p className="bodySmall text-secondary my-1">{item['title']}</p>
                                     {price}
@@ -174,10 +172,12 @@ const Products = () => {
                     id="pills-trending"
                     role="tabpanel"
                     aria-labelledby="pills-profile-tab"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
+                    ) : ProductList.length === 0 ? (
+                      noProductsFound
                     ) : (
                       <div className="container">
                         <div className="row">
@@ -188,7 +188,7 @@ const Products = () => {
                             if (item['discount'] === true) {
                               price = (
                                 <p className="bodyMedium  text-dark my-1">
-                                  Price:<strike> ${item['price']} </strike> $
+                                  Price:<del> ${item['price']} </del> $
                                   {item['discountPrice']}{' '}
                                 </p>
                               );
@@ -223,10 +223,12 @@ const Products = () => {
                     id="pills-popular"
                     role="tabpanel"
                     aria-labelledby="pills-contact-tab"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
+                    ) : ProductList.length === 0 ? (
+                      noProductsFound
                     ) : (
                       <div className="container">
                         <div className="row">
@@ -237,7 +239,7 @@ const Products = () => {
                             if (item['discount'] === true) {
                               price = (
                                 <p className="bodyMedium  text-dark my-1">
-                                  Price:<strike> ${item['price']} </strike> $
+                                  Price:<del> ${item['price']} </del> $
                                   {item['discountPrice']}{' '}
                                 </p>
                               );
@@ -272,10 +274,12 @@ const Products = () => {
                     id="pills-top"
                     role="tabpanel"
                     aria-labelledby="pills-disabled-tab"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
+                    ) : ProductList.length === 0 ? (
+                      noProductsFound
                     ) : (
                       <div className="container">
                         <div className="row">
@@ -286,7 +290,7 @@ const Products = () => {
                             if (item['discount'] === true) {
                               price = (
                                 <p className="bodyMedium  text-dark my-1">
-                                  Price:<strike> ${item['price']} </strike> $
+                                  Price:<del> ${item['price']} </del> $
                                   {item['discountPrice']}{' '}
                                 </p>
                               );
@@ -321,10 +325,12 @@ const Products = () => {
                     id="pills-special"
                     role="tabpanel"
                     aria-labelledby="pills-disabled-tab"
-                    tabIndex="0"
+                    tabIndex={0}
                   >
                     {isProductLoading || ProductList === null ? (
                       <ProductsSkeleton />
+                    ) : ProductList.length === 0 ? (
+                      noProductsFound
                     ) : (
                       <div className="container">
                         <div className="row">
@@ -335,7 +341,7 @@ const Products = () => {
                             if (item['discount'] === true) {
                               price = (
                                 <p className="bodyMedium  text-dark my-1">
-                                  Price:<strike> ${item['price']} </strike> $
+                                  Price:<del> ${item['price']} </del> $
                                   {item['discountPrice']}{' '}
                                 </p>
                               );

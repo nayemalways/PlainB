@@ -121,7 +121,7 @@ const ProductList = () => {
                           if (item['discount'] === true) {
                             price = (
                               <p className="text-dark bodyMedium my-1">
-                                Price:<strike> ${item['price']} </strike> $
+                                Price:<del> ${item['price']} </del> $
                                 {item['discountPrice']}{' '}
                               </p>
                             );

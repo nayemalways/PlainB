@@ -85,7 +85,7 @@ const Details = () => {
                 <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
                 {productDetails[0]['discount'] ? (
                   <span className="fs-5">
-                    Price: ৳<strike>{productDetails[0]?.price} </strike>৳
+                    Price: ৳<del>{productDetails[0]?.price} </del>৳
                     {productDetails[0]?.discountPrice}
                   </span>
                 ) : (
@@ -206,7 +206,7 @@ const Details = () => {
                   role="tabpanel"
                   aria-labelledby="Speci-
                                     tab"
-                  tabIndex="0"
+                  tabIndex={0}
                 >
                   {parser(productDetails[0]['ProductDetails']['des'])}
                 </div>
@@ -215,7 +215,7 @@ const Details = () => {
                   id="Review-tab-pane"
                   role="tabpanel"
                   aria-labelledby="Review-tab"
-                  tabIndex="0"
+                  tabIndex={0}
                 >
                   <ul className="list-group list-group-flush">
                     <Reviews />
