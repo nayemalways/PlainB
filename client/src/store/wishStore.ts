@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 interface WishResponse {
   success: boolean;
@@ -12,7 +13,7 @@ interface WishResponse {
 
 interface WishState {
   isWishSubmit: boolean;
-  saveToWishlist: (productID: string) => Promise<boolean | string | undefined>;
+  saveToWishlist: (productID: string) => Promise<WishResponse | undefined>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   WishList: any[] | null;
   WishCount: number;
@@ -28,7 +29,11 @@ const wishStore = create<WishState>()((set) => ({
     try {
       set({ isWishSubmit: true });
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.post(`${BaseServerV2Url}/wishlist`, { productId }, config); // Api call
+      const res = await axios.post<WishResponse>(
+        `${BaseServerV2Url}/wishlist`,
+        { productId },
+        config,
+      ); // Api call
       
       if (res.data?.success) {
         return res.data;
@@ -36,6 +41,7 @@ const wishStore = create<WishState>()((set) => ({
     } catch (e) {
       if (axios.isAxiosError(e)) {
         unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+        toast.error(e.response?.data?.message)
       }
       console.log(e);
     } finally {

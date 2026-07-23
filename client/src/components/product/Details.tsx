@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductImages from './ProductImages.tsx';
 import ProductStore from '../../store/productStore.ts';
 import DetailsSkeleton from '../../skeleton/DetailsSkeleton.tsx';
@@ -15,6 +15,14 @@ const Details = () => {
   const [quantity, setQuantity] = useState(1);
   const { saveToCart, cartForm, cartFormOnchange, CartListRequest, isCartSubmit } = CartStore();
   const { saveToWishlist, isWishSubmit, WishListRequest } = WishStore();
+  const { BrandListRequest } = ProductStore();
+
+   
+  useEffect(() => {
+  void (async () => {
+    await BrandListRequest();
+  })();
+}, [BrandListRequest]);
 
   // Qty increment and decrement
   const incrementQty = () => {
@@ -27,12 +35,12 @@ const Details = () => {
   // Add to cart list
   const AddCart = async (productId: string) => {
 
-    if (cartForm?.color.length === 0 ) {
+    if (cartForm.color.length === 0) {
       toast.error('Select color');
       return;
     }
-    if (cartForm?.size.length === 0 ) {
-      toast.error('Select color');
+    if (cartForm.size.length === 0) {
+      toast.error('Select size');
       return;
     }
 
@@ -44,8 +52,8 @@ const Details = () => {
   const AddWish = async (productID: string) => {
     const res = await saveToWishlist(productID); // Api Call
 
-    if (res.data.success) {
-      toast.success(res?.data?.message);
+    if (res?.success) {
+      toast.success(res.message);
       await WishListRequest();
     } else {
       toast.error('Something went wrong');
