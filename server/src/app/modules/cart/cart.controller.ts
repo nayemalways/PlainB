@@ -48,10 +48,10 @@ const removeProductFromCart = CatchAsync(
   },
 );
 
-const selectCartListProduct = CatchAsync(
+const getCartListService = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.user as JwtPayload;
-    const result = await cartService.selectCartListProductService(userId as string);
+    const result = await cartService.getCartListService(userId as string);
 
     SendResponse(res, {
       success: true,
@@ -66,5 +66,5 @@ export const cartControllers = {
   saveProductToCart,
   updateProductOfCart,
   removeProductFromCart,
-  selectCartListProduct,
+  getCartListService,
 };

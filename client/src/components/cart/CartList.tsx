@@ -21,17 +21,19 @@ const CartList = () => {
     (async () => {
       await CartListRequest();
     })();
-  }, []);
+  }, [removeCartProduct, CartListRequest]);
 
   // cart product remove
-  const removeProduct = (productID) => {
-    const res = removeCartProduct(productID);
-    if (res) {
-      toast.success('Removed item!');
+  const removeProduct = async (productId: string) => {
+    const res = await removeCartProduct(productId);
+
+    if (res?.success) {
       CartListRequest();
+      toast.success(res.message);
     } else {
-      toast.error(res.slice(6, res.length));
+      toast.error('Something went wrong');
     }
+
   };
 
   // UI
@@ -51,14 +53,13 @@ const CartList = () => {
                     return (
                       <li
                         key={i}
-                        className="list-
-                                            group-item d-flex justify-content-between align-items-start"
+                        className="list-group-item d-flex justify-content-between align-items-start"
                       >
                         <img
                           className="rounded-1"
                           width="90"
                           height="auto"
-                          src={item['product']['image']}
+                          src={item['product']['images'][0]}
                         />
                         <div className="ms-2 me-auto">
                           <p className="fw-lighter m-0">{item['product']['title']}</p>
@@ -79,7 +80,7 @@ const CartList = () => {
                           </p>
                         </div>
                         <button
-                          onClick={() => removeProduct(item['productID'])}
+                          onClick={() => removeProduct(item['productId'])}
                           className="btn btn-sm btn-outline-danger"
                         >
                           <i className="bi bi-trash"></i>

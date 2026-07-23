@@ -45,7 +45,7 @@ const removeProductFromCartService = async (_userId: string, _productId: string)
 };
 
 // READ CART LIST
-const selectCartListProductService = async (_userId: string) => {
+const getCartListService = async (_userId: string) => {
   const userId = new ObjectId(_userId);
   /*----------------- DATABASE QUERY--------------------*/
   const matchStage = { $match: { userId } };
@@ -105,5 +105,5 @@ export const cartService = {
   saveProductToCartService,
   updateProductOfCartService,
   removeProductFromCartService,
-  selectCartListProductService,
+  getCartListService,
 };

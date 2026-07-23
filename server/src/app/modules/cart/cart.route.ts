@@ -5,7 +5,7 @@ import { cartControllers } from './cart.controller.ts';
 
 const router = express.Router();
 
-router.get('/', checkAuth(Role.USER), cartControllers.selectCartListProduct);
+router.get('/', checkAuth(Role.USER), cartControllers.getCartListService);
 router.post('/', checkAuth(Role.USER), cartControllers.saveProductToCart);
 router.patch('/:cartId', checkAuth(Role.USER), cartControllers.updateProductOfCart);
 router.delete('/:productId', checkAuth(Role.USER), cartControllers.removeProductFromCart);

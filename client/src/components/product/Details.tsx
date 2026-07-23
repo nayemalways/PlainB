@@ -26,6 +26,16 @@ const Details = () => {
 
   // Add to cart list
   const AddCart = async (productId: string) => {
+
+    if (cartForm?.color.length === 0 ) {
+      toast.error('Select color');
+      return;
+    }
+    if (cartForm?.size.length === 0 ) {
+      toast.error('Select color');
+      return;
+    }
+
     await saveToCart(cartForm, productId, quantity); // Api Call
     await CartListRequest();
   };

@@ -6,8 +6,8 @@ export const getEmail = (): string => {
   return sessionStorage.getItem('email');
 };
 
-export const unauthorized = (code: number) => {
-  if (code === 401) {
+export const unauthorized = (code: number, message: string) => {
+  if (code === 401 && message === 'jwt expired') {
     sessionStorage.clear();
     localStorage.clear();
     window.location.href = '/login';

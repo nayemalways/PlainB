@@ -5,18 +5,27 @@ import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 
+interface CartResponse {
+  success: boolean;
+  message: string;
+}
+
 interface CartState {
   isCartSubmit: boolean;
   cartForm: Record<string, string>;
   cartFormOnchange: (name: string, value: string) => void;
-  saveToCart: (payload: Record<string, unknown>, productID: string, quantity: number) => Promise<boolean | string | undefined>;
+  saveToCart: (
+    payload: Record<string, unknown>,
+    productID: string,
+    quantity: number,
+  ) => Promise<boolean | string | undefined>;
   CartList: any[] | null;
   CartCount: number;
   CartTotal: number;
   CartVatTotal: number;
   CartPayable: number;
   CartListRequest: () => Promise<void>;
-  removeCartProduct: (productID: string) => Promise<boolean | string | undefined>;
+  removeCartProduct: (productID: string) => Promise<CartResponse | undefined>;
   isCheckout: boolean;
   createInvoice: () => Promise<void>;
 }
@@ -41,17 +50,16 @@ const CartStore = create<CartState>()((set) => ({
       payload.qty = quantity;
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.post(`${BaseServerV2Url}/cart`, payload, config); // Api call
- 
+
       if (res.data?.success) {
         toast.success('Added to cart');
-        return res.data
+        return res.data;
       }
 
       return null;
-
-    } catch (error) {
-      unauthorized(error?.response?.status);
-      toast.error(error.response?.data?.message);
+    } catch (e) {
+      unauthorized(e.response.status, e?.response?.message || e?.message);
+      toast.error(e.response?.data?.message);
     } finally {
       set({ isCartSubmit: false });
     }
@@ -91,21 +99,31 @@ const CartStore = create<CartState>()((set) => ({
 
       return;
     } catch (e) {
-      unauthorized(e.message);
+      unauthorized(e.response.status, e?.response?.message || e?.message);
       console.log(e.toString());
     }
   },
 
   // Product remove from cart list
-  removeCartProduct: async (productID) => {
+  removeCartProduct: async (productId) => {
     try {
-      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const postBody = { productID };
-      const res = await axios.post(`${BaseServerV2Url}/${productID}`, postBody, config);
-      return res.data['status'] === 'Success' ? true : res.data['message'];
+      const config = {
+        headers: {
+          Authorization: `Bearer ${Cookies.get('accessToken')}`,
+        }
+      };
+
+      const res = await axios.delete<CartResponse>(
+        `${BaseServerV2Url}/cart/${productId}`,
+        config,
+      );
+      if (res.data.success) {
+        return res.data;
+      }
     } catch (e) {
-      unauthorized(e.response.status);
-      console.log(e.toString());
+      unauthorized(e.response.status, e?.response?.message || e?.message);
+      console.log(e);
+      toast.error(e.response?.message);
     }
   },
 
