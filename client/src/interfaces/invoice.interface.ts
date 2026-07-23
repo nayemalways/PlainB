@@ -38,6 +38,8 @@ export interface IInvoiceState {
   invoiceList: IInvoice[];
   invoiceDetails: IInvoiceDetails | null;
   isLoading: boolean;
+  isPdfDownloading: boolean;
   invoiceListRequest: () => Promise<void>;
   invoiceDetailsRequest: (invoiceId: string) => Promise<void>;
+  downloadInvoicePdf: (invoiceId: string) => Promise<void>;
 }

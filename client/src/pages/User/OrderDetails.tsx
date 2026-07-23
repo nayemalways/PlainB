@@ -1,16 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import InvoiceStore from '../../store/invoiceStore.ts';
 import Layout from '../../components/layout/Layout.tsx';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const OrderDetails = () => {
   const { invoiceId } = useParams();
-  const { invoiceDetails, invoiceDetailsRequest, isLoading } = InvoiceStore();
-
-  const invoiceRef = useRef<HTMLDivElement>(null);
+  const { invoiceDetails, invoiceDetailsRequest, downloadInvoicePdf, isLoading, isPdfDownloading } =
+    InvoiceStore();
 
   // Fetch invoice details on mount
   useEffect(() => {
@@ -47,24 +44,6 @@ const OrderDetails = () => {
     }
   };
 
-  // Download PDF function
-  const downloadPDF = () => {
-    const input = invoiceRef.current;
-    if (!input) return;
-
-    html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Invoice-${invoiceId}.pdf`);
-    });
-  };
-
   return (
     <Layout>
       {isLoading && <p className="text-center my-5">Loading invoice...</p>}
@@ -77,49 +56,49 @@ const OrderDetails = () => {
         </div>
       )}
       {invoiceDetails && (
-      <div className="container my-5" ref={invoiceRef}>
-        <div className="card shadow-sm border-0 rounded-3">
-          <div className="card-body p-4">
-            {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <h3 className="fw-bold">Invoice Details</h3>
-              <span
-                className={`badge px-3 py-2 ${getBadgeClass(invoiceDetails.invoice.payment_status)}`}
-              >
-                {invoiceDetails.invoice.payment_status.toUpperCase()}
-              </span>
-            </div>
+        <div className="container my-5">
+          <div className="card shadow-sm border-0 rounded-3">
+            <div className="card-body p-4">
+              {/* Header */}
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="fw-bold">Invoice Details</h3>
+                <span
+                  className={`badge px-3 py-2 ${getBadgeClass(invoiceDetails.invoice.payment_status)}`}
+                >
+                  {invoiceDetails.invoice.payment_status.toUpperCase()}
+                </span>
+              </div>
 
-            {/* Invoice Info */}
-            <div className="mb-4">
-              <h6 className="mb-1">
-                <strong>Invoice ID:</strong> {invoiceDetails.invoice._id}
-              </h6>
-              <p className="text-muted mb-1">
-                <strong>Order Date:</strong>{' '}
-                {new Date(invoiceDetails.invoice.createdAt).toLocaleDateString()}
-              </p>
-              <p className="text-muted">
-                <strong>Order Time:</strong>{' '}
-                {new Date(invoiceDetails.invoice.createdAt).toLocaleTimeString()}
-              </p>
-            </div>
+              {/* Invoice Info */}
+              <div className="mb-4">
+                <h6 className="mb-1">
+                  <strong>Invoice ID:</strong> {invoiceDetails.invoice._id}
+                </h6>
+                <p className="text-muted mb-1">
+                  <strong>Order Date:</strong>{' '}
+                  {new Date(invoiceDetails.invoice.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-muted">
+                  <strong>Order Time:</strong>{' '}
+                  {new Date(invoiceDetails.invoice.createdAt).toLocaleTimeString()}
+                </p>
+              </div>
 
-            {/* Product Table */}
-            <div className="table-responsive">
-              <table className="table table-bordered align-middle">
-                <thead className="table-light">
-                  <tr>
-                    <th>#</th>
-                    <th>Product</th>
-                    <th>Color / Size</th>
-                    <th className="text-center">Qty</th>
-                    <th className="text-end">Unit Price (BDT)</th>
-                    <th className="text-end">Total (BDT)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoiceDetails.products.map((item, i) => (
+              {/* Product Table */}
+              <div className="table-responsive">
+                <table className="table table-bordered align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Color / Size</th>
+                      <th className="text-center">Qty</th>
+                      <th className="text-end">Unit Price (BDT)</th>
+                      <th className="text-end">Total (BDT)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoiceDetails.products.map((item, i) => (
                       <tr key={item._id}>
                         <td>{i + 1}</td>
                         <td>
@@ -155,42 +134,46 @@ const OrderDetails = () => {
                         </td>
                       </tr>
                     ))}
-                </tbody>
-                <tfoot>
-                  <tr className="table-secondary">
-                    <td colSpan={5} className="text-end fw-bold">
-                      Total
-                    </td>
-                    <td className="text-end fw-bold">{total} BDT</td>
-                  </tr>
-                  <tr className="table-secondary">
-                    <td colSpan={5} className="text-end fw-bold">
-                      VAT (5%)
-                    </td>
-                    <td className="text-end fw-bold">{vat} BDT</td>
-                  </tr>
-                  <tr className="table-secondary">
-                    <td colSpan={5} className="text-end fw-bold">
-                      Subtotal
-                    </td>
-                    <td className="text-end fw-bold">{subtotalWithVat} BDT</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+                  </tbody>
+                  <tfoot>
+                    <tr className="table-secondary">
+                      <td colSpan={5} className="text-end fw-bold">
+                        Total
+                      </td>
+                      <td className="text-end fw-bold">{total} BDT</td>
+                    </tr>
+                    <tr className="table-secondary">
+                      <td colSpan={5} className="text-end fw-bold">
+                        VAT (5%)
+                      </td>
+                      <td className="text-end fw-bold">{vat} BDT</td>
+                    </tr>
+                    <tr className="table-secondary">
+                      <td colSpan={5} className="text-end fw-bold">
+                        Subtotal
+                      </td>
+                      <td className="text-end fw-bold">{subtotalWithVat} BDT</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
 
-            {/* Footer Buttons */}
-            <div className="d-flex justify-content-end mt-3">
-              <Link to="/order" className="btn btn-outline-secondary me-2">
-                Back to Orders
-              </Link>
-              <button className="btn btn-primary" onClick={downloadPDF}>
-                Download Invoice
-              </button>
+              {/* Footer Buttons */}
+              <div className="d-flex justify-content-end mt-3">
+                <Link to="/order" className="btn btn-outline-secondary me-2">
+                  Back to Orders
+                </Link>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => invoiceId && downloadInvoicePdf(invoiceId)}
+                  disabled={isPdfDownloading}
+                >
+                  {isPdfDownloading ? 'Generating PDF...' : 'Download Invoice'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       )}
     </Layout>
   );

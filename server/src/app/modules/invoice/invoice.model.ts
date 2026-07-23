@@ -12,6 +12,12 @@ const DataSchema = new mongoose.Schema(
     payment_status: { type: String, required: true },
     stripe_session_id: { type: String, default: null, index: true },
     stripe_payment_intent_id: { type: String, default: null },
+    payment_email_status: {
+      type: String,
+      enum: ['pending', 'sending', 'sent', 'failed'],
+      default: 'pending',
+    },
+    payment_email_sent_at: { type: Date, default: null },
     total: { type: String, required: true },
     vat: { type: String, required: true },
   },

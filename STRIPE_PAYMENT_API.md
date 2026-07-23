@@ -99,11 +99,14 @@ Both invoice endpoints require the access-token authorization header.
 ```http
 GET /api/v2/invoice
 GET /api/v2/invoice/<invoice-id>
+GET /api/v2/invoice/<invoice-id>/pdf
 Authorization: Bearer <access-token>
 ```
 
 The list endpoint returns the authenticated user's newest invoices first. The details endpoint
 returns the invoice together with its purchased products and the prices captured at checkout.
+The PDF endpoint generates a professional A4 invoice with Puppeteer and returns it as an
+`application/pdf` attachment. Users can only download their own invoices.
 
 ## Stripe webhook
 
@@ -119,6 +122,10 @@ Subscribe to:
 - `checkout.session.async_payment_succeeded`
 - `checkout.session.async_payment_failed`
 - `checkout.session.expired`
+
+After a verified paid Checkout event, PlainB sends the customer an EJS-rendered payment receipt.
+The invoice stores `payment_email_status` and `payment_email_sent_at` so webhook retries do not
+send duplicate successful emails. SMTP delivery failures remain retryable through Stripe.
 
 For local development:
 

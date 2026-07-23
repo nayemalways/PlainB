@@ -12,6 +12,7 @@ import CartModel from '../cart/cart.model.ts';
 import User from '../user/user.model.ts';
 import InvoiceModel from '../invoice/invoice.model.ts';
 import InvoiceProductModel from '../invoice/invoice-product.model.ts';
+import { sendEmail } from '../../utility/EmailSender.ts';
 import type {
   ICheckoutCartProduct,
   ICheckoutResponse,
@@ -175,6 +176,53 @@ const handleStripeWebhook = async (
           typeof session.payment_intent === 'string' ? session.payment_intent : null,
       },
     );
+
+    const invoiceForEmail = await InvoiceModel.findOneAndUpdate(
+      {
+        _id: invoiceId,
+        payment_email_sent_at: null,
+        payment_email_status: { $ne: 'sending' },
+      },
+      { payment_email_status: 'sending' },
+      { new: true },
+    );
+
+    if (invoiceForEmail) {
+      try {
+        const customer = await User.findById(invoiceForEmail.userID).lean();
+        if (!customer?.email) {
+          throw new Error('Customer email not found.');
+        }
+
+        await sendEmail({
+          to: customer.email,
+          subject: `Payment received — ${invoiceForEmail.tran_id}`,
+          text: `Your payment of ${invoiceForEmail.payable} ${STRIPE_CURRENCY.toUpperCase()} was successful. Transaction: ${invoiceForEmail.tran_id}.`,
+          template: 'payment-success',
+          data: {
+            name: customer.cus_address?.cus_name,
+            invoiceId: invoiceForEmail.id,
+            transactionId: invoiceForEmail.tran_id,
+            amount: Number(invoiceForEmail.payable).toFixed(2),
+            currency: STRIPE_CURRENCY.toUpperCase(),
+            paymentDate: new Date().toLocaleString('en-GB'),
+            orderUrl: `${FRONTEND_URL}/order/${invoiceForEmail.id}`,
+          },
+        });
+
+        await InvoiceModel.updateOne(
+          { _id: invoiceForEmail._id },
+          { payment_email_status: 'sent', payment_email_sent_at: new Date() },
+        );
+      } catch (error) {
+        await InvoiceModel.updateOne(
+          { _id: invoiceForEmail._id },
+          { payment_email_status: 'failed' },
+        );
+        throw error;
+      }
+    }
+
     if (session.metadata?.userId) {
       await CartModel.deleteMany({ userId: session.metadata.userId });
     }
@@ -235,4 +283,3 @@ export const paymentServices = {
   getPaymentStatus,
   cancelPayment
 }
-

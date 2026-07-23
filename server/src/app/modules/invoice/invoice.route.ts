@@ -6,6 +6,7 @@ import { invoiceControllers } from './invoice.controller.ts';
 const router = express.Router();
 
 router.get('/', checkAuth(Role.USER), invoiceControllers.getInvoiceList);
+router.get('/:invoiceId/pdf', checkAuth(Role.USER), invoiceControllers.downloadInvoicePdf);
 router.get('/:invoiceId', checkAuth(Role.USER), invoiceControllers.getInvoiceDetails);
 
 export const invoiceRouter = router;

@@ -34,7 +34,25 @@ const getInvoiceDetails = async (req: Request, res: Response, next: NextFunction
   }
 };
 
+const downloadInvoicePdf = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const invoiceId = req.params.invoiceId as string;
+    const pdf = await invoiceServices.generateInvoicePdf(invoiceId, req.user.userId);
+    res
+      .status(StatusCodes.OK)
+      .set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="invoice-${invoiceId}.pdf"`,
+        'Content-Length': pdf.byteLength.toString(),
+      })
+      .send(Buffer.from(pdf));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const invoiceControllers = {
   getInvoiceList,
   getInvoiceDetails,
+  downloadInvoicePdf,
 };

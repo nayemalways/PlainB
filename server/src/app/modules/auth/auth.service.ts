@@ -1,118 +1,40 @@
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../../errorHelpers/appError.ts';
-import { EmailSend } from '../../utility/EmailSender.ts';
+import { sendEmail } from '../../utility/EmailSender.ts';
 import { createUserTokens } from '../../utility/generateAuthTokens.ts';
 import User from '../user/user.model.ts';
 
-// USER LOGIN
 const loginService = async (email: string) => {
   const code = Math.floor(100000 + Math.random() * 900000);
-  const EmailSub = `User Login OTP Verification`;
-  const EmailText = ``;
-  const EmailHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Login Code</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .header {
-            text-align: center;
-            padding: 10px 0;
-        }
-        .header h1 {
-            color: #4CAF50;
-            font-size: 24px;
-        }
-        .otp {
-            font-size: 24px;
-            color: #4CAF50;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px 0;
-        }
-        .message {
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Welcome to MERN-SHOP</h1>
-        </div>
-        <div class="message">
-            <p>Use the following OTP to complete your login:</p>
-        </div>
-        <div class="otp">
-            ${code}
-        </div>
-        <div class="message">
-            <p>If you did not request this, please ignore this email.</p>
-        </div>
-        <div class="footer">
-            &copy; 2024 MERN-SHOP. All rights reserved.
-        </div>
-    </div>
-</body>
-</html>
-`;
 
-  /*---------EMAIL SEND TO USERS MAIL---------*/
-  const mailSender = await EmailSend({
-    emailTo: email,
-    emailSubject: EmailSub,
-    emailText: EmailText,
-    emailHTMLBody: EmailHTML,
-  });
-
-  if (!mailSender) {
-    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is not been sent');
+  try {
+    await sendEmail({
+      to: email,
+      subject: 'Your PlainB login code',
+      text: `Your PlainB login code is ${code}. Never share this code with anyone.`,
+      template: 'otp',
+      data: { otp: code },
+    });
+  } catch {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP could not be sent.');
   }
 
-  await User.updateOne({ email: email }, { $set: { otp: code } }, { upsert: true });
-  
+  await User.updateOne({ email }, { $set: { otp: code } }, { upsert: true });
   return null;
 };
 
-// VERIFY LOGIN OTP
 const VerifyLoginOTP = async (email: string, otp: string) => {
   if (!email || !otp) {
-    throw new Error(`Missing email or otp`);
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Email and OTP are required.');
   }
 
   const data = await User.findOne({ email, otp });
   if (!data) {
-    throw new Error('Invalid credentials');
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'Invalid credentials.');
   }
 
   const userTokens = await createUserTokens(data);
-  await User.updateOne({ email: email }, { otp: '0' });
-
+  await User.updateOne({ email }, { otp: 0 });
   return userTokens;
 };
 

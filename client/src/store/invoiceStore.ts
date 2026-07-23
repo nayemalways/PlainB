@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 import type {
   IInvoice,
   IInvoiceApiResponse,
@@ -13,7 +14,9 @@ const InvoiceStore = create<IInvoiceState>()((set) => ({
   invoiceList: [],
   invoiceDetails: null,
   isLoading: false,
+  isPdfDownloading: false,
 
+  // Load the authenticated user's invoices.
   invoiceListRequest: async () => {
     try {
       set({ isLoading: true });
@@ -32,6 +35,7 @@ const InvoiceStore = create<IInvoiceState>()((set) => ({
     }
   },
 
+  // Load one invoice with its purchased products.
   invoiceDetailsRequest: async (invoiceId) => {
     try {
       set({ isLoading: true, invoiceDetails: null });
@@ -47,6 +51,36 @@ const InvoiceStore = create<IInvoiceState>()((set) => ({
       set({ invoiceDetails: null });
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  // Generate the invoice on the server and download the returned PDF.
+  downloadInvoicePdf: async (invoiceId) => {
+    try {
+      set({ isPdfDownloading: true });
+      const response = await axios.get<Blob>(
+        `${BaseServerV2Url}/invoice/${encodeURIComponent(invoiceId)}/pdf`,
+        {
+          responseType: 'blob',
+          headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` },
+        },
+      );
+
+      const downloadUrl = URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `invoice-${invoiceId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        unauthorized(error.response?.status ?? 0, error.message);
+      }
+      toast.error('Unable to generate the invoice PDF.');
+    } finally {
+      set({ isPdfDownloading: false });
     }
   },
 }));

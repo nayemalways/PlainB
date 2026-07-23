@@ -1,41 +1,33 @@
+import { fileURLToPath } from 'node:url';
+import ejs from 'ejs';
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config.ts';
-import SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
+import type { IEmailPayload } from './email.interface.ts';
 
+const smtpOptions: SMTPTransport.Options = {
+  host: EMAIL_HOST,
+  port: Number(EMAIL_PORT),
+  secure: Number(EMAIL_PORT) === 465,
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASSWORD,
+  },
+};
 
-interface EmailPayload {
-  emailTo: string;
-  emailSubject: string;
-  emailText: string;
-  emailHTMLBody: string;
-}
+const transporter = nodemailer.createTransport(smtpOptions);
 
-export const EmailSend = async (payload: EmailPayload) => {
-  const smtpOptions: SMTPTransport.Options = {
-    host: EMAIL_HOST,
-    port: Number(EMAIL_PORT),
-    secure: true,
-    auth: {
-      user: EMAIL_USER,
-      pass: EMAIL_PASSWORD,
-    },
-  }
-  const transporter = nodemailer.createTransport(smtpOptions);
+export const sendEmail = async (payload: IEmailPayload): Promise<void> => {
+  const templatePath = fileURLToPath(
+    new URL(`./templates/${payload.template}.ejs`, import.meta.url),
+  );
+  const html = await ejs.renderFile(templatePath, payload.data);
 
-  const MailOptions = {
-    from: EMAIL_USER,
-    to: payload.emailTo,
-    subject: payload.emailSubject,
-    text: payload.emailText,
-    html: payload.emailHTMLBody,
-  };
-
-  // SEND EMAIL
-  try {
-    await transporter.sendMail(MailOptions);
-    return true;
-  } catch (error) {
-    console.log(error?.message);
-    return false;
-  }
+  await transporter.sendMail({
+    from: `"PlainB" <${EMAIL_USER}>`,
+    to: payload.to,
+    subject: payload.subject,
+    text: payload.text,
+    html,
+  });
 };
