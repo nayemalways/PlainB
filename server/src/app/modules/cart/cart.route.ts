@@ -5,6 +5,7 @@ import { cartControllers } from './cart.controller.ts';
 
 const router = express.Router();
 
+router.get('/total', checkAuth(Role.USER), cartControllers.getTotalCartCount);
 router.get('/', checkAuth(Role.USER), cartControllers.getCartListService);
 router.post('/', checkAuth(Role.USER), cartControllers.saveProductToCart);
 router.patch('/:cartId', checkAuth(Role.USER), cartControllers.updateProductOfCart);

@@ -25,6 +25,7 @@ interface CartState {
   CartVatTotal: number;
   CartPayable: number;
   CartListRequest: () => Promise<void>;
+  totalCartCount: () => Promise<number | undefined>;
   removeCartProduct: (productID: string) => Promise<CartResponse | undefined>;
   isCheckout: boolean;
   createInvoice: () => Promise<void>;
@@ -72,6 +73,19 @@ const CartStore = create<CartState>()((set) => ({
   CartTotal: 0,
   CartVatTotal: 0,
   CartPayable: 0,
+  totalCartCount: async () => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
+      const res = await axios.get<{ data: number }>(`${BaseServerV2Url}/cart/total`, config);
+      set({ CartCount: res.data.data });
+      return res.data.data;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
+    }
+  },
   CartListRequest: async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };

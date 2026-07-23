@@ -62,9 +62,24 @@ const getCartListService = CatchAsync(
   },
 );
 
+const getTotalCartCount = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.user as JwtPayload;
+    const result = await cartService.getTotalCartCountService(userId as string);
+
+    SendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Total cart count fetched',
+      data: result,
+    });
+  },
+);
+
 export const cartControllers = {
   saveProductToCart,
   updateProductOfCart,
   removeProductFromCart,
   getCartListService,
+  getTotalCartCount,
 };

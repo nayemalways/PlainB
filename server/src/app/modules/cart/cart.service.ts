@@ -44,6 +44,11 @@ const removeProductFromCartService = async (_userId: string, _productId: string)
   return null;
 };
 
+// GET TOTAL CART PRODUCT COUNT
+const getTotalCartCountService = async (userId: string) => {
+  return CartModel.countDocuments({ userId });
+};
+
 // READ CART LIST
 const getCartListService = async (_userId: string) => {
   const userId = new ObjectId(_userId);
@@ -105,5 +110,6 @@ export const cartService = {
   saveProductToCartService,
   updateProductOfCartService,
   removeProductFromCartService,
+  getTotalCartCountService,
   getCartListService,
 };

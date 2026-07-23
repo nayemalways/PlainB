@@ -11,8 +11,8 @@ const Navbar = () => {
   const { searchKeyword, setSearchKeyword } = ProductStore();
   const { logoutRequest } = UserStore();
   const { isLogin } = UserStore();
-  const { CartCount, CartListRequest } = CartStore();
-  const { WishCount, WishListRequest, totalWishCount } = WishStore();
+  const { CartCount, totalCartCount } = CartStore();
+  const { WishCount, totalWishCount } = WishStore();
   const navigate = useNavigate();
 
   // Logout handle
@@ -29,10 +29,11 @@ const Navbar = () => {
   useEffect(() => {
     if (isLogin()) {
       (async () => {
+        await totalCartCount();
         await totalWishCount();
       })();
     }
-  }, [CartListRequest, WishListRequest, totalWishCount, isLogin]);
+  }, [totalCartCount, totalWishCount, isLogin]);
 
   return (
     <>
