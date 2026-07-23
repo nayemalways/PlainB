@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import type { IInvoice } from './invoice.interface.ts';
 
-const DataSchema = new mongoose.Schema(
+const DataSchema = new mongoose.Schema<IInvoice>(
   {
     userID: { type: mongoose.Schema.Types.ObjectId, required: true },
     payable: { type: String, required: true },
@@ -24,7 +25,7 @@ const DataSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-const InvoiceModel = mongoose.model('invoices', DataSchema);
+const InvoiceModel = mongoose.model<IInvoice>('invoices', DataSchema);
 
 // Export Data Model
 export default InvoiceModel;

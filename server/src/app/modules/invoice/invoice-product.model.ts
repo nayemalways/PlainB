@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import type { IInvoiceProduct } from './invoice.interface.ts';
 
-const DataSchema = new mongoose.Schema(
+const DataSchema = new mongoose.Schema<IInvoiceProduct>(
   {
     userID: { type: mongoose.Schema.Types.ObjectId, required: true },
     productID: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -13,7 +14,7 @@ const DataSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-const InvoiceProductsModel = mongoose.model('invoiceproducts', DataSchema);
+const InvoiceProductsModel = mongoose.model<IInvoiceProduct>('invoiceproducts', DataSchema);
 
 // Export Data Model
 export default InvoiceProductsModel;

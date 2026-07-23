@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import { IProduct } from './product.interface.ts';
 
-const DataSchema = new mongoose.Schema<IProduct>(
+const productSchema = new mongoose.Schema<IProduct>(
   {
     title: { type: String, required: true },
     price: { type: String, required: true },
@@ -29,7 +29,11 @@ const DataSchema = new mongoose.Schema<IProduct>(
   { timestamps: true, versionKey: false },
 );
 
-const ProductModel = mongoose.model<IProduct>('products', DataSchema);
+productSchema.index({ remark: 1 });
+productSchema.index({ categoryId: 1 });
+productSchema.index({ brandId: 1 });
+
+const ProductModel = mongoose.model<IProduct>('products', productSchema);
 
 /*---EXPORT PRODUCT MODEL---*/
 export default ProductModel;

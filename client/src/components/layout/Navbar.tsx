@@ -45,7 +45,7 @@ const Navbar = () => {
               <span>
                 <span className="f-12">
                   {' '}
-                  <i className="bi bi-envelope"></i> Support@PlanB.com{' '}
+                  <i className="bi bi-envelope"></i> support@plan.com{' '}
                 </span>
                 <span className="f-12 mx-2">
                   {' '}

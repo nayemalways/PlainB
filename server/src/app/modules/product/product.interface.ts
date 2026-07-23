@@ -47,3 +47,10 @@ export interface ICreateProductReview {
   des: string;
   rating: string | number;
 }
+
+export interface IReview {
+  productID: Types.ObjectId;
+  userID: Types.ObjectId;
+  des: string;
+  rating: string;
+}

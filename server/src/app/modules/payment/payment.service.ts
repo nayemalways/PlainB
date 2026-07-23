@@ -31,6 +31,8 @@ const getStripe = (): Stripe => {
   return stripe;
 };
 
+
+// STRIPE CHECKOUT SESSION
 const createCheckoutSession = async (
   userId: string,
   userEmail: string,
@@ -138,6 +140,7 @@ const createCheckoutSession = async (
   }
 };
 
+// STRIPE WEBHOOK HANDLER
 const handleStripeWebhook = async (
   rawBody: Buffer,
   signature: string | string[] | undefined,
@@ -236,6 +239,7 @@ const handleStripeWebhook = async (
   }
 };
 
+// GET PAYMENT STATUS
 const getPaymentStatus = async (
   sessionId: string,
   userId: string,
@@ -265,6 +269,8 @@ const getPaymentStatus = async (
   };
 };
 
+
+// CANCEL PAYMENT
 const cancelPayment = async (invoiceId: string, userId: string): Promise<void> => {
   const result = await InvoiceModel.updateOne(
     { _id: invoiceId, userID: userId, payment_status: 'pending' },

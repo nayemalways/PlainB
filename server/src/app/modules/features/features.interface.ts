@@ -3,3 +3,8 @@ export interface IFeature {
   description: string;
   img: string;
 }
+
+export interface ILegalDetails {
+  description?: string;
+  type?: string;
+}

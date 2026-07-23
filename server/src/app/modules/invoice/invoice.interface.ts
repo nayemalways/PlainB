@@ -1,5 +1,34 @@
 import type { Types } from 'mongoose';
 
+export interface IInvoice {
+  userID: Types.ObjectId;
+  payable: string;
+  cus_details: string;
+  ship_details: string;
+  tran_id: string;
+  val_id: string;
+  delivery_status: string;
+  payment_status: string;
+  stripe_session_id?: string | null;
+  stripe_payment_intent_id?: string | null;
+  payment_email_status: 'pending' | 'sending' | 'sent' | 'failed';
+  payment_email_sent_at?: Date | null;
+  total: string;
+  vat: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IInvoiceProduct {
+  userID: Types.ObjectId;
+  productID: Types.ObjectId;
+  invoiceID: Types.ObjectId;
+  qty: string;
+  price: string;
+  color: string;
+  size: string;
+}
+
 export interface IInvoiceProductDetails {
   _id: Types.ObjectId;
   productID: Types.ObjectId;
