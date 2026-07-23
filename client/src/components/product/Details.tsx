@@ -17,12 +17,11 @@ const Details = () => {
   const { saveToWishlist, isWishSubmit, WishListRequest } = WishStore();
   const { BrandListRequest } = ProductStore();
 
-   
   useEffect(() => {
-  void (async () => {
-    await BrandListRequest();
-  })();
-}, [BrandListRequest]);
+    void (async () => {
+      await BrandListRequest();
+    })();
+  }, [BrandListRequest]);
 
   // Qty increment and decrement
   const incrementQty = () => {
@@ -34,7 +33,6 @@ const Details = () => {
 
   // Add to cart list
   const AddCart = async (productId: string) => {
-
     if (cartForm.color.length === 0) {
       toast.error('Select color');
       return;
