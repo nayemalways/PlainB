@@ -41,3 +41,20 @@ export interface IProductFilter {
   priceMin?: string | number;
   priceMax?: string | number;
 }
+
+export type ProductSort = 'newest' | 'price-asc' | 'price-desc' | 'rating';
+
+export interface IProductQuery {
+  page?: string;
+  limit?: string;
+  sort?: ProductSort;
+  priceMin?: string;
+  priceMax?: string;
+}
+
+export interface IPaginationMeta {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+}

@@ -11,15 +11,11 @@ export const checkAuth =
   (...restRole: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const authHeader = req.headers.authorization as string | undefined; // GET TOKEN
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new AppError(StatusCodes.UNAUTHORIZED, 'Token not provided!');
-      }
-
-      const accessToken = authHeader.split(' ')[1];
-
+      const authHeader = req.headers.authorization as string | undefined;
+      const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : undefined;
+      const accessToken = req.cookies?.accessToken ?? bearerToken;
       if (!accessToken) {
-      throw new AppError(StatusCodes.BAD_REQUEST, "Token required");
+        throw new AppError(StatusCodes.UNAUTHORIZED, 'Token not provided!');
       }
 
       // VERIFY USER
