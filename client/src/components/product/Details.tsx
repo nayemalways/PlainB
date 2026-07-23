@@ -14,7 +14,7 @@ const Details = () => {
   const { productDetails } = ProductStore();
   const [quantity, setQuantity] = useState(1);
   const { saveToCart, cartForm, cartFormOnchange, CartListRequest, isCartSubmit } = CartStore();
-  const { SaveWishRequest, isWishSubmit, WishListRequest } = WishStore();
+  const { saveToWishlist, isWishSubmit, WishListRequest } = WishStore();
 
   // Qty increment and decrement
   const incrementQty = () => {
@@ -42,10 +42,10 @@ const Details = () => {
 
   // Add to wishlist
   const AddWish = async (productID: string) => {
-    const res = await SaveWishRequest(productID); // Api Call
+    const res = await saveToWishlist(productID); // Api Call
 
     if (res.data.success) {
-      toast.success('Added to Wish');
+      toast.success(res?.data?.message);
       await WishListRequest();
     } else {
       toast.error('Something went wrong');

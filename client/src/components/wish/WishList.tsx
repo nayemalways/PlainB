@@ -50,7 +50,7 @@ const WishList = () => {
                 return (
                   <div key={i} className="col-md-3 p-2 col-lg-3 col-sm-6 col-12">
                     <div className="card shadow-sm h-100 rounded-3 bg-white">
-                      <img className="w-100 rounded-top-2" src={item?.products['image']} />
+                      <img className="w-100 rounded-top-2" src={item?.products['images'][0]} />
                       <div className="card-body">
                         <p className="bodySmall text-secondary">{item?.products['title']}</p>
                         <p className="fw-bold">

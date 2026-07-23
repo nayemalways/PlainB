@@ -1,24 +1,25 @@
 /*------------------DEPENDENCIES------------------*/
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errorHelpers/appError.ts';
+import { IWishList } from './wishlist.interface.ts';
 import WishListModel from './wishlist.model.ts';
 import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
+// GET WISH LIST
 const getWishList = async (userId: string) => {
   const user_id = new ObjectId(userId);
 
   /*----------------- DATABASE QUERY--------------------*/
-  const matchStage = { $match: { userID: user_id } };
-
+  const matchStage = { $match: { userId: user_id } };
   const JoinWithProductStage = {
-    $lookup: { from: 'products', localField: 'productID', foreignField: '_id', as: 'products' },
+    $lookup: { from: 'products', localField: 'productId', foreignField: '_id', as: 'products' },
   };
   const UnwindProductStage = { $unwind: '$products' };
-
   const JoinWithBrandStage = {
     $lookup: { from: 'brands', localField: 'products.brandId', foreignField: '_id', as: 'brand' },
   };
   const UnwindBrandStage = { $unwind: '$brand' };
-
   const JoinWithCategoryStage = {
     $lookup: {
       from: 'categories',
@@ -28,7 +29,6 @@ const getWishList = async (userId: string) => {
     },
   };
   const UnwindCategoryStage = { $unwind: '$category' };
-
   const projectionStage = {
     $project: {
       'products.createdAt': 0,
@@ -45,6 +45,7 @@ const getWishList = async (userId: string) => {
       'category.createdAt': 0,
     },
   };
+
   /*--------JOIN PRODUCT WITH WISH LIST MODEL AND SELECT DATA----------*/
   const data = await WishListModel.aggregate([
     matchStage,
@@ -61,43 +62,49 @@ const getWishList = async (userId: string) => {
   return data;
 };
 
-const saveToWishList = async (req) => {
-  try {
-    const userID = req.headers.user_id;
-    /*----DATABASE QUERY----*/
-    const reqBody = req.body;
-    reqBody.userID = userID;
-
-    const alreadyExist = await WishListModel.find({ productID: reqBody.productID, userID: userID });
-    if (alreadyExist.length > 0) {
-      throw new Error('Already in the whishlist');
-    }
-
-    /*-------SAVE PRODUCT IN THE WISH LIST DB---------*/
-    await WishListModel.create(reqBody);
-    return { status: 'Success', message: 'Wish list save success' };
-  } catch (e) {
-    return { status: 'Error', message: e._message || e.toString() };
-  }
+const myTotalWishProducts = async (userId: string) => {
+  return await WishListModel.countDocuments({ userId: userId });
 };
 
-const removeProductFromWishList = async (req) => {
-  try {
-    const userID = req.headers.user_id;
-    const reqBody = req.body;
-    reqBody.userID = userID;
+// SAVE TO WISH LIST
+const saveToWishList = async (userId: string, payload: IWishList) => {
+  const wishPayload = {
+    ...payload,
+    userId,
+  };
 
-    /*-----REMOVE PRODUCT FROM THE WISHLIST DB--------*/
-    await WishListModel.deleteOne(reqBody);
-    return { status: 'Success', message: 'Wish list delete success' };
-  } catch (e) {
-    console.log(e);
-    return { status: 'Error', message: 'Internal Server error..!' };
+  console.log(wishPayload);
+
+  const alreadyExist = await WishListModel.find({
+    productId: wishPayload.productId,
+    userId: userId,
+  });
+  if (alreadyExist.length > 0) {
+    throw new Error('Already in the whish list');
   }
+
+  /*-------SAVE PRODUCT IN THE WISH LIST DB---------*/
+  const saveToWish = await WishListModel.create(wishPayload);
+  console.log(saveToWish);
+  return null;
+};
+
+// REMOVE FROM WISH LIST
+const removeProductFromWishList = async (userId: string, productId: string) => {
+  const product = await WishListModel.findOne({ productId });
+  if (!product) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Product not exist');
+  }
+
+  /*-----REMOVE PRODUCT FROM THE WISHLIST DB--------*/
+  await WishListModel.deleteOne({ productId });
+
+  return null;
 };
 
 export const wishlistServices = {
   removeProductFromWishList,
   saveToWishList,
   getWishList,
+  myTotalWishProducts
 };

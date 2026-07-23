@@ -5,8 +5,9 @@ import { wishListControllers } from './wishlist.controller.ts';
 
 const router = express.Router();
 
+router.get('/total', checkAuth(Role.USER), wishListControllers.myTotalWishProducts);
 router.get('/', checkAuth(Role.USER), wishListControllers.getWishList);
 router.post('/', checkAuth(Role.USER), wishListControllers.saveToWishList);
-router.delete('/', checkAuth(Role.USER), wishListControllers.removeProductFromWishList);
+router.delete('/:productId', checkAuth(Role.USER), wishListControllers.removeProductFromWishList);
 
 export const wishlistRouter = router;

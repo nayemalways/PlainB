@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
+import { IWishList } from './wishlist.interface.ts';
 
-const DataSchema = mongoose.Schema(
+const DataSchema = new mongoose.Schema<IWishList>(
   {
-    productID: { type: mongoose.Schema.Types.ObjectId, required: true },
-    userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+    productId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   { timestamps: true, versionKey: false },
 );
 
-const WishModel = mongoose.model('wishes', DataSchema);
+const WishModel = mongoose.model<IWishList>('wishes', DataSchema);
 
 // Export Data Model
 export default WishModel;
