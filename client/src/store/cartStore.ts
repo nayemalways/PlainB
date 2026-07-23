@@ -58,8 +58,10 @@ const CartStore = create<CartState>()((set) => ({
 
       return null;
     } catch (e) {
-      unauthorized(e.response.status, e?.response?.message || e?.message);
-      toast.error(e.response?.data?.message);
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+        toast.error(e.response?.data?.message ?? 'Unable to add product to cart');
+      }
     } finally {
       set({ isCartSubmit: false });
     }
@@ -99,8 +101,10 @@ const CartStore = create<CartState>()((set) => ({
 
       return;
     } catch (e) {
-      unauthorized(e.response.status, e?.response?.message || e?.message);
-      console.log(e.toString());
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
     }
   },
 
@@ -121,9 +125,11 @@ const CartStore = create<CartState>()((set) => ({
         return res.data;
       }
     } catch (e) {
-      unauthorized(e.response.status, e?.response?.message || e?.message);
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+        toast.error(e.response?.data?.message ?? 'Unable to remove product');
+      }
       console.log(e);
-      toast.error(e.response?.message);
     }
   },
 
@@ -137,8 +143,10 @@ const CartStore = create<CartState>()((set) => ({
       set({ isCheckout: true });
       window.location.href = res['data']['data']['GatewayPageURL'];
     } catch (e) {
-      // unauthorized(e.response.status);
-      console.log(e.toString());
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
     }
   },
 }));

@@ -189,8 +189,13 @@ const UserStore = create<UserState>()((set) => ({
       }
     } catch (error) {
       toast.error('Something went wrong');
-      console.error(error.toString());
-      unauthorized(error.response.status);
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        unauthorized(
+          error.response?.status ?? 0,
+          error.response?.data?.message ?? error.message,
+        );
+      }
     }
   },
 
@@ -204,8 +209,13 @@ const UserStore = create<UserState>()((set) => ({
       return res.data;
     } catch (error) {
       toast.error('Something went wrong');
-      console.error(error.toString());
-      unauthorized(error.response.status);
+      console.error(error);
+      if (axios.isAxiosError(error)) {
+        unauthorized(
+          error.response?.status ?? 0,
+          error.response?.data?.message ?? error.message,
+        );
+      }
     }
   },
 }));

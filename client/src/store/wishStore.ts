@@ -30,8 +30,10 @@ const wishStore = create<WishState>()((set) => ({
       const res = await axios.post(`${BaseServerV2Url}/wishlist`, { productID }, config); // Api call
       return res.data['status'] === 'Success' ? true : res.data['message'];
     } catch (e) {
-      // unauthorized(e.response.status);
-      console.log(e.toString());
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
     } finally {
       set({ isWishSubmit: false });
     }
@@ -48,8 +50,10 @@ const wishStore = create<WishState>()((set) => ({
       set({ WishCount: res.data['data'].length });
       return;
     } catch (e) {
-      unauthorized(e.message);
-      console.log(e.message);
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
     }
   },
 
@@ -60,8 +64,10 @@ const wishStore = create<WishState>()((set) => ({
       const res = await axios.post(`${BaseServerV2Url}/wishlist`, postBody, config);
       return res.data;
     } catch (e) {
-      unauthorized(e.response.status);
-      console.log(e.toString());
+      if (axios.isAxiosError(e)) {
+        unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+      }
+      console.log(e);
     }
   },
 }));
