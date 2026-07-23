@@ -27,28 +27,23 @@ router.post('/filter', productControllers.productFilter);
 router.post('/review', checkAuth(Role.USER), productControllers.productReviewCreate);
 router.get(
   '/review/:productId',
-  validateRequest(productValidation.productIdParamSchema),
   productControllers.productReviewsList,
 );
 router.get(
   '/brand/:brandId',
-  validateRequest(productValidation.brandIdParamSchema),
   productControllers.productListByBrand,
 );
 router.get(
   '/category/:categoryId',
-  validateRequest(productValidation.categoryIdParamSchema),
   productControllers.productListByCategory,
 );
 router.get('/remark/:remark', productControllers.productListByRemark);
 router.get(
   '/similar/:categoryId',
-  validateRequest(productValidation.categoryIdParamSchema),
   productControllers.productListBySimilar,
 );
 router.get(
   '/details/:productId',
-  validateRequest(productValidation.productIdParamSchema),
   productControllers.productDetails,
 );
 router.get('/search/:keyword', productControllers.productListByKeyword);

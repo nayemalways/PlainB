@@ -51,7 +51,7 @@ const HeroSlider = () => {
                       <p className="h2 fw-bolder">{item['price']}</p>
                       <p>{item['des']}</p>
                       <Link
-                        to={`/details/${item['productID']}`}
+                        to={`/details/${item['productId']}`}
                         className="btn text-white btn-success px-5"
                       >
                         Buy Now

@@ -3,12 +3,13 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
 
 interface CartState {
   isCartSubmit: boolean;
   cartForm: Record<string, string>;
   cartFormOnchange: (name: string, value: string) => void;
-  SaveCartRequest: (payload: Record<string, unknown>, productID: string, quantity: number) => Promise<boolean | string | undefined>;
+  saveToCart: (payload: Record<string, unknown>, productID: string, quantity: number) => Promise<boolean | string | undefined>;
   CartList: any[] | null;
   CartCount: number;
   CartTotal: number;
@@ -33,18 +34,24 @@ const CartStore = create<CartState>()((set) => ({
   },
 
   // Add to Cart Request
-  SaveCartRequest: async (payload, productId, quantity) => {
+  saveToCart: async (payload, productId, quantity) => {
     try {
       set({ isCartSubmit: true });
       payload.productId = productId; // added product id into payload
       payload.qty = quantity;
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
       const res = await axios.post(`${BaseServerV2Url}/cart`, payload, config); // Api call
+ 
+      if (res.data?.success) {
+        toast.success('Added to cart');
+        return res.data
+      }
 
-      return res.data;
-    } catch (e) {
-      unauthorized(e.response.status);
-      console.log(e.toString());
+      return null;
+
+    } catch (error) {
+      unauthorized(error?.response?.status);
+      toast.error(error.response?.data?.message);
     } finally {
       set({ isCartSubmit: false });
     }

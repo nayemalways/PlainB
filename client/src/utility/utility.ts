@@ -1,12 +1,12 @@
-export const setEmail = (email) => {
+export const setEmail = (email: string) => {
   sessionStorage.setItem('email', email);
 };
 
-export const getEmail = () => {
+export const getEmail = (): string => {
   return sessionStorage.getItem('email');
 };
 
-export const unauthorized = (code) => {
+export const unauthorized = (code: number) => {
   if (code === 401) {
     sessionStorage.clear();
     localStorage.clear();

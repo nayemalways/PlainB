@@ -271,7 +271,7 @@ const detailsService = async (productId: string) => {
   };
 
   // Data retrieve
-  const data = await ProductModel.aggregate([
+  const [data] = await ProductModel.aggregate([
     match,
     JoinWithBrandStage,
     JoinWithCategoryStage,

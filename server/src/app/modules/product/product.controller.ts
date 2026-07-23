@@ -130,7 +130,7 @@ const productListByKeyword = CatchAsync(
 
 const productDetails = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
-    const productId = String(req.params.productId);
+    const productId = req.params.productId as string;
     const result = await productServices.detailsService(productId);
 
     SendResponse(res, {

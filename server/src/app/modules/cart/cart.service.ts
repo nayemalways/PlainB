@@ -16,7 +16,7 @@ const saveProductToCartService = async (userId: string, payload: ICart) => {
     productId: payload.productId,
   });
   if (alreadyExist) {
-    throw new Error('Already in the cart');
+    throw new AppError(StatusCodes.CONFLICT, 'Already in the cart');
   }
 
   await CartModel.create(payload);
@@ -44,6 +44,7 @@ const removeProductFromCartService = async (_userId: string, _productId: string)
   return null;
 };
 
+// READ CART LIST
 const selectCartListProductService = async (_userId: string) => {
   const userId = new ObjectId(_userId);
   /*----------------- DATABASE QUERY--------------------*/

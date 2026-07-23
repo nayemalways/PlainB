@@ -167,6 +167,7 @@ const ProductStore = create<ProductState>()((set) => ({
       const res = await axios.get(`${BaseServerV2Url}/product/details/${id}`);
       if (res.data.success) {
         set({ productDetails: res.data.data });
+        return res.data;
       }
     } catch (error) {
       console.error('Error fetching product details:', error);

@@ -13,8 +13,7 @@ import NoDataFound from './NoDataFound.tsx';
 const Details = () => {
   const { productDetails } = ProductStore();
   const [quantity, setQuantity] = useState(1);
-  const { SaveCartRequest, cartForm, cartFormOnchange, CartListRequest, isCartSubmit } =
-    CartStore();
+  const { saveToCart, cartForm, cartFormOnchange, CartListRequest, isCartSubmit } = CartStore();
   const { SaveWishRequest, isWishSubmit, WishListRequest } = WishStore();
 
   // Qty increment and decrement
@@ -25,34 +24,21 @@ const Details = () => {
     setQuantity((qty) => qty - 1);
   };
 
-  // Add to cartlist
-  const AddCart = async (productID) => {
-    const res = await SaveCartRequest(cartForm, productID, quantity); // Api Call
-    if (res === true) {
-      toast.success('Added to cart');
-      await CartListRequest();
-    } else {
-      if (res === 'carts validation failed') {
-        for (const item in cartForm) {
-          if (cartForm[item].length === 0) {
-            toast.error(`Select ${item}`);
-          }
-        }
-      } else {
-        toast.error(res.slice(6, 30));
-      }
-    }
+  // Add to cart list
+  const AddCart = async (productId: string) => {
+    await saveToCart(cartForm, productId, quantity); // Api Call
+    await CartListRequest();
   };
 
   // Add to wishlist
-  const AddWish = async (productID) => {
+  const AddWish = async (productID: string) => {
     const res = await SaveWishRequest(productID); // Api Call
 
-    if (res === true) {
+    if (res.data.success) {
       toast.success('Added to Wish');
       await WishListRequest();
     } else {
-      toast.error(res.slice(6, res.length));
+      toast.error('Something went wrong');
     }
   };
 
@@ -75,32 +61,31 @@ const Details = () => {
                 <ProductImages />
               </div>
               <div className="col-md-5 p-3">
-                <h4> {productDetails[0]['title']} </h4>
+                <h4> {productDetails['title']} </h4>
                 <p className="text-body-secondary my-1 fw-bold">
-                  Category: {productDetails[0]['category']['categoryName']}{' '}
+                  Category: {productDetails['category']['categoryName']}{' '}
                 </p>
                 <p className="text-body-secondary my-1 fw-bold">
-                  Brand: {productDetails[0]['brand']['brandName']}
+                  Brand: {productDetails['brand']['brandName']}
                 </p>
-                <p className="mb-2 fs-6 mt-1">{productDetails[0]['shortDes']}</p>
-                {productDetails[0]['discount'] ? (
+                <p className="mb-2 fs-6 mt-1">{productDetails['shortDes']}</p>
+                {productDetails['discount'] ? (
                   <span className="fs-5">
-                    Price: ৳<del>{productDetails[0]?.price} </del>৳
-                    {productDetails[0]?.discountPrice}
+                    Price: ৳<del>{productDetails?.price} </del>৳{productDetails?.discountPrice}
                   </span>
                 ) : (
-                  <span>{productDetails[0]?.price}</span>
+                  <span>{productDetails?.price}</span>
                 )}
                 <div className="row">
                   <div className="col-4 p-2">
                     <label className="bodySmall">Size</label>
                     <select
-                      value={cartForm.size}
+                      value={cartForm?.size}
                       onChange={(e) => cartFormOnchange('size', e.target.value)}
                       className="form-control form-select my-2"
                     >
                       <option value="">Size</option>
-                      {productDetails[0]['ProductDetails']['size'].split(',').map((size, i) => {
+                      {productDetails['size'].split(',').map((size: string, i: number) => {
                         return (
                           <option key={i} value={size}>
                             {' '}
@@ -118,7 +103,7 @@ const Details = () => {
                       className="form-control form-select my-2"
                     >
                       <option value="">Color</option>
-                      {productDetails[0]['ProductDetails']['color'].split(',').map((color, i) => {
+                      {productDetails['color'].split(',').map((color: string, i: number) => {
                         return (
                           <option key={i} value={color}>
                             {' '}
@@ -154,7 +139,7 @@ const Details = () => {
                       isSubmit={isCartSubmit}
                       className="btn btn-success w-100"
                       text="Add to Cart"
-                      onClick={async () => AddCart(productDetails[0]['_id'])}
+                      onClick={async () => AddCart(productDetails['_id'])}
                     />
                   </div>
                   <div className="col-4 p-2">
@@ -162,7 +147,7 @@ const Details = () => {
                       isSubmit={isWishSubmit}
                       className="btn btn-success w-100"
                       text="Add to Wish"
-                      onClick={async () => AddWish(productDetails[0]['_id'])}
+                      onClick={async () => AddWish(productDetails['_id'])}
                     />
                   </div>
                 </div>
@@ -208,7 +193,7 @@ const Details = () => {
                                     tab"
                   tabIndex={0}
                 >
-                  {parser(productDetails[0]['ProductDetails']['des'])}
+                  {parser(productDetails['des'])}
                 </div>
                 <div
                   className="fade tab-pane"

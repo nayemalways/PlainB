@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const validateRequest =
   (ZodSchema: z.ZodTypeAny) =>
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.url)
     try {
       if (req.body?.data) {
         req.body = JSON.parse(req.body.data);
