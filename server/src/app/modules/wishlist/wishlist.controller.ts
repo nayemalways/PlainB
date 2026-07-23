@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { wishlistServices } from './wishlist.service.ts';
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import { NextFunction, Request, Response } from 'express';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { JwtPayload } from 'jsonwebtoken';

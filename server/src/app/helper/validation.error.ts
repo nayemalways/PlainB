@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import {
   TErrorSources,
   TGenericsErrorResponse,
-} from '../interface/error.types';
+} from '../types/errorTypes.ts';
 
 export const validationError = (
   err: mongoose.Error.ValidationError

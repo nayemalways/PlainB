@@ -1,5 +1,5 @@
 # PlainB Ecommerce Application
-PlainB is a full-stack ecommerce application using MERN technology with SSL ecommerz payment getway integrated.
+PlainB is a full-stack MERN ecommerce application with Stripe Checkout payments.
 
 ## Features
 ### Products

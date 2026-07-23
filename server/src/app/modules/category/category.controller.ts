@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import type { ICategory } from './category.interface.ts';
 import { categoryServices } from './category.service.ts';
 import AppError from '../../errorHelpers/appError.ts';

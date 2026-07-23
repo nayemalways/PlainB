@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
+import type { IApiResponse, ICheckoutResponse } from '../interfaces/payment.interface.ts';
 
 interface CartResponse {
   success: boolean;
@@ -153,14 +154,19 @@ const CartStore = create<CartState>()((set) => ({
     try {
       set({ isCheckout: true });
       const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerV2Url}/api/CreateInvoice`, config);
-      set({ isCheckout: true });
-      window.location.href = res['data']['data']['GatewayPageURL'];
+      const res = await axios.post<IApiResponse<ICheckoutResponse>>(
+        `${BaseServerV2Url}/payment/checkout`,
+        {},
+        config,
+      );
+      window.location.assign(res.data.data.checkoutUrl);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         unauthorized(e.response?.status ?? 0, e.response?.data?.message ?? e.message);
+        toast.error(e.response?.data?.message ?? 'Unable to start Stripe Checkout');
       }
       console.log(e);
+      set({ isCheckout: false });
     }
   },
 }));

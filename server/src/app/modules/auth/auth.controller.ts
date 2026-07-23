@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import { authService } from './auth.service.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { SetCookies } from '../../utility/setCookies.ts';

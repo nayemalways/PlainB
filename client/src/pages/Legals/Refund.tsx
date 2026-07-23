@@ -11,7 +11,7 @@ const Refund = () => {
       await LegalRequest('refund');
     })();
   }, []);
-  return <Layout></Layout>;
+  return <Layout>{null}</Layout>;
 };
 
 export default Refund;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { JwtPayload } from 'jsonwebtoken';
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import { cartService } from './cart.service.ts';
 import { NextFunction, Request, Response } from 'express';
 import { CatchAsync } from '../../utility/CatchAsync.ts';

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';

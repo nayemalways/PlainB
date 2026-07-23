@@ -30,7 +30,16 @@ export const CLOUDINARY_NAME = process.env.CLOUDINARY_NAME;
 export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 export const CLOUDINARY_SECRET = process.env.CLOUDINARY_SECRET;
 
-export const FRONTEND_URL = process.env.FRONTEND_URL;
+// Local Vite development runs over HTTP. Normalizing localhost prevents Stripe
+// Checkout sessions from being created with an unreachable HTTPS return URL.
+export const FRONTEND_URL = process.env.FRONTEND_URL
+  ?.replace(/^https:\/\/(localhost|127\.0\.0\.1)(?=[:/]|$)/i, 'http://$1')
+  .replace(/\/+$/, '');
+
+// STRIPE
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+export const STRIPE_CURRENCY = (process.env.STRIPE_CURRENCY || 'bdt').toLowerCase();
 
 // EMAIL CONFIG
 export const EMAIL_HOST = process.env.EMAIL_HOST;

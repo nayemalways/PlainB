@@ -12,13 +12,15 @@ import {
   MAX_JSON_SIZE,
 } from './app/config/config.ts';
 import { globalRouter } from './app/routes/index.ts';
-import { SendResponse } from './app/utility/SendResponse.ts';
+import { SendResponse } from './app/utility/sendResponse.ts';
 import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
+import { stripeWebhookHandler } from './app/modules/payment/payment.route.ts';
 
 /*------APP INSTANCE-------*/
 const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
+app.set('etag', 'strong');
 app.use(
   cors({
     origin: ['https://plainb.vercel.app', 'http://localhost:5173'],
@@ -28,6 +30,12 @@ app.use(
 app.use(helmet());
 app.use(hpp());
 app.use(cookieParser());
+// Stripe signature verification requires the exact, unparsed request body.
+app.post(
+  ['/webhook', '/api/v2/payment/webhook'],
+  express.raw({ type: 'application/json' }),
+  stripeWebhookHandler,
+);
 app.use(express.json({ limit: MAX_JSON_SIZE }));
 app.use(express.urlencoded({ extended: URL_ENCODED }));
 
@@ -49,6 +57,8 @@ app.get('/', (req, res) => {
     data: null,
   });
 });
+
+
 
 /*------API ROUTES------*/
 app.use('/api/v2', globalRouter);

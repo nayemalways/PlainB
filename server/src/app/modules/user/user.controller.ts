@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { SendResponse } from '../../utility/SendResponse.ts';
+import { SendResponse } from '../../utility/sendResponse.ts';
 import { NextFunction, Request, Response } from 'express';
 import { userService } from './user.service.ts';
 import { JwtPayload } from 'jsonwebtoken';

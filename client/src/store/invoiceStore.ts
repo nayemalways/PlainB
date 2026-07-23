@@ -1,43 +1,52 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { BaseServerUrl } from '../utility/utility.ts';
 import Cookies from 'js-cookie';
+import type {
+  IInvoice,
+  IInvoiceApiResponse,
+  IInvoiceDetails,
+  IInvoiceState,
+} from '../interfaces/invoice.interface.ts';
+import { BaseServerV2Url, unauthorized } from '../utility/utility.ts';
 
-interface InvoiceState {
-  invoiceList: any[];
-  invoiceListRequest: () => Promise<void>;
-  invoiceDetails: any;
-  invoiceDetailsRequest: (invoiceId: string) => Promise<void>;
-}
-
-const InvoiceStore = create<InvoiceState>()((set) => ({
+const InvoiceStore = create<IInvoiceState>()((set) => ({
   invoiceList: [],
+  invoiceDetails: null,
+  isLoading: false,
+
   invoiceListRequest: async () => {
     try {
-      set({ invoiceList: [] });
-      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerUrl}/api/InvoiceList`, config);
-
-      if (res?.data?.status === 'Success') {
-        set({ invoiceList: res?.data['data'].reverse() });
-      }
+      set({ isLoading: true });
+      const response = await axios.get<IInvoiceApiResponse<IInvoice[]>>(
+        `${BaseServerV2Url}/invoice`,
+        { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } },
+      );
+      set({ invoiceList: response.data.data });
     } catch (error) {
-      console.error('Error fetching invoice list:', error);
+      if (axios.isAxiosError(error)) {
+        unauthorized(error.response?.status ?? 0, error.response?.data?.message ?? error.message);
+      }
+      set({ invoiceList: [] });
+    } finally {
+      set({ isLoading: false });
     }
   },
 
-  invoiceDetails: [],
   invoiceDetailsRequest: async (invoiceId) => {
     try {
-      set({ invoiceList: [] });
-      const config = { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } };
-      const res = await axios.get(`${BaseServerUrl}/api/InvoiceProductList/${invoiceId}`, config);
-
-      if (res?.data?.status === 'Success') {
-        set({ invoiceDetails: res?.data['data'] });
-      }
+      set({ isLoading: true, invoiceDetails: null });
+      const response = await axios.get<IInvoiceApiResponse<IInvoiceDetails>>(
+        `${BaseServerV2Url}/invoice/${encodeURIComponent(invoiceId)}`,
+        { headers: { Authorization: `Bearer ${Cookies.get('accessToken')}` } },
+      );
+      set({ invoiceDetails: response.data.data });
     } catch (error) {
-      console.error('Error fetching invoice details:', error);
+      if (axios.isAxiosError(error)) {
+        unauthorized(error.response?.status ?? 0, error.response?.data?.message ?? error.message);
+      }
+      set({ invoiceDetails: null });
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

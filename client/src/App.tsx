@@ -51,9 +51,10 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/login" element={<Login />} />
             <Route path="/otp-verify" element={<OTP />} />
-            <Route path="/payment/:payment_status/:trn_id" element={<Payment />} />
+            <Route path="/payment/success" element={<Payment />} />
+            <Route path="/payment/cancel" element={<Payment />} />
             <Route path="/order" element={<Order />} />
-            <Route path="/order/:invoiceId/:payment_status" element={<OrderDetails />} />
+            <Route path="/order/:invoiceId" element={<OrderDetails />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
