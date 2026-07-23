@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Layout from '../../components/layout/Layout.tsx';
@@ -13,7 +13,7 @@ const ProductByCategory = () => {
     (async () => {
       await ProductListByCategory(id);
     })();
-  }, []);
+  }, [id, ProductListByCategory]);
 
   return (
     <Layout>

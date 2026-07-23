@@ -10,12 +10,16 @@ const ProductList = () => {
   const {
     ProductList,
     BrandList,
-    BrandListRequest,
     CategoryList,
+    BrandListRequest,
     CategoryListRequest,
     ProductFilter,
   } = ProductStore();
   const [Filter, setFilter] = useState({ brandID: '', categoryID: '', priceMin: '', priceMax: '' });
+  const [debouncedPrice, setDebouncedPrice] = useState({
+    priceMin: Filter.priceMin,
+    priceMax: Filter.priceMax,
+  });
 
   const inputOnchange = async (name, value) => {
     setFilter((data) => ({
@@ -25,14 +29,34 @@ const ProductList = () => {
   };
 
   useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedPrice({
+        priceMin: Filter.priceMin,
+        priceMax: Filter.priceMax,
+      });
+    }, 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [Filter.priceMin, Filter.priceMax]);
+
+  useEffect(() => {
     (async () => {
       if (BrandList === null) await BrandListRequest();
       if (CategoryList === null) await CategoryListRequest();
-
-      const everyFilterProperty = Object.values(Filter).every((value) => value === '');
-      if (!everyFilterProperty) await ProductFilter(Filter);
     })();
-  }, [Filter]);
+  }, [BrandList, CategoryList, BrandListRequest, CategoryListRequest]);
+
+  useEffect(() => {
+    const appliedFilter = {
+      brandID: Filter.brandID,
+      categoryID: Filter.categoryID,
+      priceMin: debouncedPrice.priceMin,
+      priceMax: debouncedPrice.priceMax,
+    };
+    const everyFilterProperty = Object.values(appliedFilter).every((value) => value === '');
+
+    if (!everyFilterProperty) void ProductFilter(appliedFilter);
+  }, [Filter.brandID, Filter.categoryID, debouncedPrice, ProductFilter]);
 
   return (
     <>
@@ -132,7 +156,7 @@ const ProductList = () => {
                                 to={`/details/${item['_id']}`}
                                 className="card bg-white h-100 rounded-3 shadow-sm"
                               >
-                                <img className="rounded-top-2 w-100" src={item['image']} />
+                                <img className="rounded-top-2 w-100" src={item['images'][0]} />
                                 <div className="card-body">
                                   <p className="text-secondary bodySmall my-1">{item['title']}</p>
                                   {price}

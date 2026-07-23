@@ -123,6 +123,7 @@ const ProductStore = create<ProductState>()((set) => ({
     try {
       set({ ProductList: null });
       const res = await axios.get(`${BaseServerV2Url}/product/category/${categoryId}`);
+      console.log("response: ", res)
       if (res.data.success) {
         set({ ProductList: res.data.data });
       }
