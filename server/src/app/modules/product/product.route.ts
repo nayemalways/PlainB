@@ -24,11 +24,6 @@ router.post(
   productControllers.productSliderCreate,
 );
 router.post('/filter', productControllers.productFilter);
-router.post('/review', checkAuth(Role.USER), productControllers.productReviewCreate);
-router.get(
-  '/review/:productId',
-  productControllers.productReviewsList,
-);
 router.get(
   '/brand/:brandId',
   productControllers.productListByBrand,

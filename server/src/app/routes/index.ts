@@ -8,6 +8,7 @@ import { featuresRouter } from '../modules/features/features.route.ts';
 import { brandRouter } from '../modules/brand/brand.route.ts';
 import { categoryRouter } from '../modules/category/category.route.ts';
 import { paymentRouter } from '../modules/payment/payment.route.ts';
+import { reviewRouter } from '../modules/review/review.route.ts';
 import express from 'express';
 
 const router = express.Router();
@@ -52,6 +53,10 @@ const modules = [
   {
     path: '/payment',
     module: paymentRouter,
+  },
+  {
+    path: '/review',
+    module: reviewRouter,
   },
 ];
 

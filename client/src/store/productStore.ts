@@ -24,8 +24,6 @@ interface ProductState {
   setSearchKeyword: (keyword: string) => void;
   productDetails: any;
   detailsRequest: (id: string) => Promise<void>;
-  reviewList: any[] | null;
-  reviewListRequest: (id: string) => Promise<void>;
 }
 
 const ProductStore = create<ProductState>()((set) => ({
@@ -175,18 +173,6 @@ const ProductStore = create<ProductState>()((set) => ({
     }
   },
 
-  reviewList: null,
-  reviewListRequest: async (id) => {
-    try {
-      set({ reviewList: null });
-      const res = await axios.get(`${BaseServerV2Url}/product/review/${id}`);
-      if (res.data.success) {
-        set({ reviewList: res.data.data });
-      }
-    } catch (error) {
-      console.error('Error fetching review list:', error);
-    }
-  },
 }));
 
 export default ProductStore;

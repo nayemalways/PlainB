@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import type { IReview } from './product.interface.ts';
+import type { IReview } from './review.interface.ts';
 
-const DataSchema = new mongoose.Schema<IReview>(
+const reviewSchema = new mongoose.Schema<IReview>(
   {
     productID: { type: mongoose.Schema.Types.ObjectId, required: true },
     userID: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -11,7 +11,8 @@ const DataSchema = new mongoose.Schema<IReview>(
   { timestamps: true, versionKey: false },
 );
 
-const ReviewModel = mongoose.model<IReview>('reviews', DataSchema);
+reviewSchema.index({ productID: 1 });
 
-// Export Data Model
+const ReviewModel = mongoose.model<IReview>('reviews', reviewSchema);
+
 export default ReviewModel;

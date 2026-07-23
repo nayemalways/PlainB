@@ -2,11 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/sendResponse.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { productServices } from './product.service.ts';
-import type {
-  ICreateProductReview,
-  ICreateProductSlider,
-  IProductFilter,
-} from './product.interface.ts';
+import type { ICreateProductSlider, IProductFilter } from './product.interface.ts';
 import type { ICreateProduct } from './product.interface.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
@@ -156,40 +152,8 @@ const productFilter = CatchAsync(
   },
 );
 
-const productReviewsList = CatchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const productId = String(req.params.productId);
-    const result = await productServices.reviewsListService(productId);
-
-    SendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Product reviews retrieved successfully',
-      data: result,
-    });
-  },
-);
-
-const productReviewCreate = CatchAsync(
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const { userId } = req.user;
-    const payload = req.body as ICreateProductReview;
-    const result = await productServices.productReviewCreateService(userId as string, payload);
-
-    SendResponse(res, {
-      success: true,
-      statusCode: 200,
-      message: 'Product review created successfully',
-      data: result,
-    });
-  },
-);
-
-
 export const productControllers = {
   productSliderCreate,
-  productReviewCreate,
-  productReviewsList,
   productCreate,
   productDetails,
   productListByKeyword,

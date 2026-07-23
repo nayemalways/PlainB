@@ -1,10 +1,8 @@
 import ProductModel from './product.model.ts';
 import ProductSliderModel from './product-slider.model.ts';
-import ReviewModel from './review.model.ts';
 import mongoose from 'mongoose';
 import type {
   ICreateProduct,
-  ICreateProductReview,
   ICreateProductSlider,
   IProductFilter,
 } from './product.interface.ts';
@@ -402,38 +400,6 @@ const productFilterService = async (payload: IProductFilter) => {
 };
 
 
-// READ PRODUCT REVIEW
-const reviewsListService = async (productID: string) => {
-  const productId = new ObjectId(productID);
-
-  const matchStage = { $match: { productID: productId } };
-  const JoinWithUserProfilesStage = {
-    $lookup: { from: 'profiles', localField: 'userID', foreignField: 'userID', as: 'profile' },
-  };
-  const UnwindProfileStage = { $unwind: '$profile' };
-  const projectionStage = { $project: { des: 1, rating: 1, 'profile.cus_name': 1 } };
-
-  // Data retrieve
-  const data = await ReviewModel.aggregate([
-    matchStage,
-    JoinWithUserProfilesStage,
-    UnwindProfileStage,
-    projectionStage,
-  ]);
-
-  return data;
-};
-
-
-// CREATE PRODUCT REVIEW
-const productReviewCreateService = async (userId: string, payload: ICreateProductReview) => {
-  const userID = new ObjectId(userId);
-  const { productID, des, rating } = payload;
-
-  // Create Review
-  return ReviewModel.create({ productID, userID, des, rating });
-};
-
 export const productServices = {
   createSliderService,
   createProductService,
@@ -445,6 +411,4 @@ export const productServices = {
   detailsService,
   listByKeywordService,
   productFilterService,
-  reviewsListService,
-  productReviewCreateService,
 };

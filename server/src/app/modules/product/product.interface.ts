@@ -41,16 +41,3 @@ export interface IProductFilter {
   priceMin?: string | number;
   priceMax?: string | number;
 }
-
-export interface ICreateProductReview {
-  productID: string;
-  des: string;
-  rating: string | number;
-}
-
-export interface IReview {
-  productID: Types.ObjectId;
-  userID: Types.ObjectId;
-  des: string;
-  rating: string;
-}
