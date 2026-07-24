@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
-import { IsActiveUser, IUser, Role } from './user.interface.ts';
+import { IAuthProvider, IsActiveUser, IUser, Role } from './user.interface.ts';
+
+
+const authProviderSchema = new mongoose.Schema<IAuthProvider>({
+    provider: { type: String, required: true },
+    providerId: { type: String, required: true }
+}, {
+    _id: false,
+    versionKey: false
+});
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -9,6 +18,7 @@ const userSchema = new mongoose.Schema<IUser>(
     isActive: { type: String, enum: IsActiveUser, default: IsActiveUser.ACTIVE },
     role: { type: String, enum: Role, default: Role.USER },
     isDeleted: {type: Boolean, default: false},
+    auths: [authProviderSchema],
 
     cus_address: {
       cus_address: { type: String },

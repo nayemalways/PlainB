@@ -5,6 +5,10 @@ import { authService } from './auth.service.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { SetCookies } from '../../utility/setCookies.ts';
 import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errorHelpers/appError.ts';
+import { JwtPayload } from 'jsonwebtoken';
+import { env } from '../../config/config.ts';
+import passport from 'passport';
 
 const login = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const email = req.body.email;
@@ -32,14 +36,15 @@ const VerifyLoginOTP = CatchAsync(async (req: Request, res: Response, next: Next
 });
 
 const session = CatchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
   SendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'Session retrieved successfully',
     data: {
-      userId: req.user.userId,
-      email: req.user.email,
-      role: req.user.role,
+      userId: user.userId,
+      email: user.email,
+      role: user.role,
     },
   });
 });
@@ -76,10 +81,49 @@ const userLogout = CatchAsync(async (req, res) => {
   });
 }) ;
 
+
+// REGISTER WITH GOOGLE
+const googleRegister = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const redirect = (req.query?.redirectTo as string) || '/';
+
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      state: redirect,
+      prompt: 'consent select_account',
+      session: false,
+    })(req, res, next);
+  }
+);
+
+//  GOOGLE CALLBACK
+const googleCallback = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let redirectTo = req.query.state ? (req.query.state as string) : '';
+    if (redirectTo.startsWith('/')) {
+      redirectTo = redirectTo.slice(1);
+    }
+
+    const user = req.user as JwtPayload;
+    if (!user) throw new AppError(StatusCodes.BAD_REQUEST, 'User not found');
+    const tokens = await authService.createOAuthSession(user);
+
+    // Set cookies
+    SetCookies(res, tokens);
+
+    res.redirect(
+        `${env.FRONTEND_URL}${redirectTo}`
+      );
+  }
+);
+
+
 export const authController = {
   login,
   VerifyLoginOTP,
   session,
   refresh,
   userLogout,
+  googleRegister,
+  googleCallback
 };

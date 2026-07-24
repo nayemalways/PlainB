@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
+import './app/config/passport.config.ts';
 import { globalRouter } from './app/routes/index.ts';
 import { SendResponse } from './app/utility/sendResponse.ts';
 import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
@@ -26,6 +28,7 @@ app.use(
 app.use(helmet());
 app.use(hpp());
 app.use(cookieParser());
+app.use(passport.initialize());
 // Stripe signature verification requires the exact, unparsed request body.
 app.post(
   ['/webhook', '/api/v2/payment/webhook'],

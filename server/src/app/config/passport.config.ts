@@ -91,9 +91,11 @@ passport.use(
 
         if (!user) {
           user = await User.create({
-            user_name: profile.displayName,
+            cus_address: {
+                cus_name: profile.displayName
+            },
             email,
-            role: Role.VENDOR,
+            role: Role.USER,
             isVerified: true,
             auths: [
               {

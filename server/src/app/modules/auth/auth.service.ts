@@ -72,6 +72,18 @@ const VerifyLoginOTP = async (email: string, otp: string) => {
   return { ...userTokens, csrfToken: createCsrfToken() };
 };
 
+const createOAuthSession = async (user: JwtPayload) => {
+  const userTokens = await createUserTokens(user);
+  await saveRefreshSession(
+    user._id.toString(),
+    userTokens.refreshToken,
+    userTokens.jti,
+    userTokens.familyId,
+  );
+
+  return { ...userTokens, csrfToken: createCsrfToken() };
+};
+
 const refreshSession = async (refreshToken?: string) => {
   if (!refreshToken) {
     throw new AppError(StatusCodes.UNAUTHORIZED, 'Refresh token is required.');
@@ -141,6 +153,7 @@ const revokeSession = async (refreshToken?: string) => {
 export const authService = {
   loginService,
   VerifyLoginOTP,
+  createOAuthSession,
   refreshSession,
   revokeSession,
 };

@@ -11,11 +11,17 @@ export enum IsActiveUser {
   BLOCKED = 'BLOCKED',
 }
 
+export interface IAuthProvider {
+    provider: "credentials" | "google" | "apple",
+    providerId: string;
+}
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
   email: string;
-  otp: number;
+  otp?: number;
   password?: string;
+  auths: IAuthProvider[];
   isActive?: IsActiveUser;
   isDeleted?: boolean;
   role?: Role;

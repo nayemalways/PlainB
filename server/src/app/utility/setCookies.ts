@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { env } from 'node:process';
+import { env } from '../config/config.ts';
 
 interface AuthTokenInfo {
   accessToken?: string;
@@ -23,7 +23,7 @@ export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      maxAge: durationToMs(env.JWT_EXPIRATIONS_TIME, 60 * 60 * 1000),
+      maxAge: durationToMs(env.JWT_EXPIRATION_TIME, 60 * 60 * 1000),
     });
   }
 
