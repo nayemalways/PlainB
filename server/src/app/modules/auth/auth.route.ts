@@ -7,8 +7,8 @@ import passport from 'passport';
 
 const router = express.Router();
 
-router.post('/login', authController.login);
-router.post('/verify', authController.VerifyLoginOTP);
+// CREDENTIAL LOGIN
+router.post('/login', authController.credentialsLogin);
 router.get('/session', checkAuth(Role.USER, Role.ADMIN), authController.session);
 router.post('/refresh', authController.refresh);
 router.post('/logout', authController.userLogout);

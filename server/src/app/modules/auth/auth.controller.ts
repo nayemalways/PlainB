@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/sendResponse.ts';
@@ -10,31 +11,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { env } from '../../config/config.ts';
 import passport from 'passport';
 
-const login = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const email = req.body.email;
-  const result = await authService.loginService(email);
-  SendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Login OTP sent successfully',
-    data: result,
-  });
-}) ;
-
-const VerifyLoginOTP = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { otp, email } = req.body;
-  const result = await authService.VerifyLoginOTP(email, otp);
-
-  SetCookies(res, result);
-
-  SendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: 'Verified',
-    data: null
-  })
-});
-
+// SESSION MANAGEMENT
 const session = CatchAsync(async (req: Request, res: Response) => {
   const user = req.user as JwtPayload;
   SendResponse(res, {
@@ -49,6 +26,7 @@ const session = CatchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// GENERATE REFRESH
 const refresh = CatchAsync(async (req: Request, res: Response) => {
   const result = await authService.refreshSession(req.cookies?.refreshToken);
   SetCookies(res, result);
@@ -81,7 +59,6 @@ const userLogout = CatchAsync(async (req, res) => {
   });
 }) ;
 
-
 // REGISTER WITH GOOGLE
 const googleRegister = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -106,7 +83,7 @@ const googleCallback = CatchAsync(
 
     const user = req.user as JwtPayload;
     if (!user) throw new AppError(StatusCodes.BAD_REQUEST, 'User not found');
-    const tokens = await authService.createOAuthSession(user);
+    const tokens = await authService.createAuthSession(user);
 
     // Set cookies
     SetCookies(res, tokens);
@@ -117,13 +94,40 @@ const googleCallback = CatchAsync(
   }
 );
 
+// CREDENTIALS LOGIN
+const credentialsLogin = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('local', async (err: any, user: any, info: any) => {
+      try {
+        if (err) return next(err);
+        if (!user) {
+          return next(
+            new AppError(StatusCodes.UNAUTHORIZED, info?.message ?? 'Invalid email or password.'),
+          );
+        }
+
+        const tokens = await authService.createAuthSession(user);
+        SetCookies(res, tokens);
+
+        SendResponse(res, {
+          success: true,
+          statusCode: StatusCodes.OK,
+          message: 'Login successful',
+          data: null,
+        });
+      } catch (error) {
+        next(error);
+      }
+    })(req, res, next);
+  }
+);
+
 
 export const authController = {
-  login,
-  VerifyLoginOTP,
   session,
   refresh,
   userLogout,
   googleRegister,
-  googleCallback
+  googleCallback,
+  credentialsLogin
 };

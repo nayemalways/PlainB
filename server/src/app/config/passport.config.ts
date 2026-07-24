@@ -9,7 +9,7 @@ import {
 import bcrypt from 'bcrypt';
 import User from '../modules/user/user.model.ts';
 import { env } from './config.ts';
-import { Role } from '../modules/user/user.interface.ts';
+import { IsActiveUser, Role } from '../modules/user/user.interface.ts';
 
 
 // CREDENTIALS LOGIN LOCAL STRATEGY
@@ -18,48 +18,43 @@ passport.use(
     { usernameField: 'email', passwordField: 'password' },
     async (email: string, password: string, done: any) => {
       try {
-        const user = await User.findOne({ email });
+        const normalizedEmail = email.trim().toLowerCase();
+        const user = await User.findOne({ email: normalizedEmail }).select('+password');
 
         if (!user) {
-          return done(null, false, { message: 'User does not exist!' });
+          return done(null, false, { message: 'Invalid email or password.' });
         }
 
-        const isGoogleUser = user.auths?.some(
-          (provider) => provider.provider === 'google'
-        );
-        const isAppleUser = user.auths?.some(
-          (provider) => provider.provider === 'apple'
-        );
+        if (user.isDeleted || user.isActive === IsActiveUser.BLOCKED) {
+          return done(null, false, { message: 'This account is unavailable.' });
+        }
 
-        if (isGoogleUser) {
+        if (user.isActive === IsActiveUser.INACTIVE) {
+          return done(null, false, { message: 'This account is inactive.' });
+        }
+
+        if (!user.isVerified) {
+          return done(null, false, { message: 'Verify your email before signing in.' });
+        }
+
+        if (!user.password) {
+          const provider = user.auths?.find((auth) => auth.provider !== 'credentials')?.provider;
           return done(null, false, {
-            message:
-              'You are authenticate through Google. Try to login with Google',
+            message: provider
+              ? `Use ${provider} to sign in to this account.`
+              : 'Invalid email or password.',
           });
         }
 
-        if (isAppleUser) {
-          return done(null, false, {
-            message:
-              'You are authenticate through Apple. Try to login with Apple',
-          });
-        }
-
-        // Matching Password
-        const isMatchPassword = await bcrypt.compare(
-          password,
-          user.password as string
-        );
+        const isMatchPassword = await bcrypt.compare(password, user.password);
 
         if (!isMatchPassword) {
-          return done(null, false, { message: 'Password incorrect!' });
+          return done(null, false, { message: 'Invalid email or password.' });
         }
 
-        return done(null, user);
+        return done(null, user as unknown as Express.User);
       } catch (error: any) {
-        // authLogger.error({error}, 'Passport Local auth error');
-        console.log('Passport Local auth error');
-        done(error);
+        return done(error);
       }
     }
   )
@@ -104,9 +99,15 @@ passport.use(
               },
             ],
           });
+        } else {
+          user.isVerified = true;
+          if (!user.auths.some((auth) => auth.provider === 'google')) {
+            user.auths.push({ provider: 'google', providerId: profile.id });
+          }
+          await user.save();
         }
 
-        return done(null, user);
+        return done(null, user as unknown as Express.User);
       } catch (error: any) {
         // authLogger.error({error}, 'Google strategy error');
         console.log('Google strategy error');

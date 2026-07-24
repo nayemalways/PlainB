@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import type { Document, Types } from 'mongoose';
 
 export enum Role {
   USER = 'USER',
@@ -19,8 +19,9 @@ export interface IAuthProvider {
 export interface IUser extends Document {
   _id: Types.ObjectId;
   email: string;
-  otp?: number;
   password?: string;
+  profilePhoto?: string;
+  isVerified: boolean;
   auths: IAuthProvider[];
   isActive?: IsActiveUser;
   isDeleted?: boolean;

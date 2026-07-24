@@ -21,10 +21,10 @@ export const seedAdmin = async (): Promise<void> => {
         role: Role.ADMIN,
         isActive: IsActiveUser.ACTIVE,
         isDeleted: false,
+        isVerified: true,
       },
       $setOnInsert: {
         email,
-        otp: 0,
       },
     },
     { upsert: true, runValidators: true },

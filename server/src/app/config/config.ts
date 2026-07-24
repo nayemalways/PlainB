@@ -40,6 +40,11 @@ export interface IEnvironmentVariables {
   GOOGLE_OAUTH_ID: string;
   GOOGLE_OAUTH_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
+
+  REDIS_HOST: string;
+  REDIS_PORT: number;
+  REDIS_USERNAME?: string;
+  REDIS_PASSWORD?: string;
 }
 
 const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
@@ -81,6 +86,9 @@ const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
   'GOOGLE_OAUTH_ID',
   'GOOGLE_OAUTH_SECRET',
   'GOOGLE_CALLBACK_URL',
+
+  'REDIS_HOST',
+  'REDIS_PORT',
 ];
 
 const parsePositiveNumber = (value: string, fallback: number): number => {
@@ -122,6 +130,9 @@ export default function loadEnvironmentVariables(): IEnvironmentVariables {
     REQUEST_LIMIT_NUMBER: parsePositiveNumber(environment.REQUEST_LIMIT_NUMBER, 100),
     WEB_CACHE: environment.WEB_CACHE === 'true',
     URL_ENCODED: environment.URL_ENCODED === 'true',
+    REDIS_PORT: parsePositiveNumber(environment.REDIS_PORT, 6379),
+    REDIS_USERNAME: process.env.REDIS_USERNAME || undefined,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD || undefined,
   };
 }
 

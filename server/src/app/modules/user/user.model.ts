@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import { IAuthProvider, IsActiveUser, IUser, Role } from './user.interface.ts';
 
 
 const authProviderSchema = new mongoose.Schema<IAuthProvider>({
-    provider: { type: String, required: true },
+    provider: { type: String, enum: ['credentials', 'google', 'apple'], required: true },
     providerId: { type: String, required: true }
 }, {
     _id: false,
@@ -13,8 +14,9 @@ const authProviderSchema = new mongoose.Schema<IAuthProvider>({
 const userSchema = new mongoose.Schema<IUser>(
   {
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: {},
-    otp: { type: Number, default: 0 },
+    password: { type: String, select: false },
+    profilePhoto: { type: String },
+    isVerified: { type: Boolean, default: false },
     isActive: { type: String, enum: IsActiveUser, default: IsActiveUser.ACTIVE },
     role: { type: String, enum: Role, default: Role.USER },
     isDeleted: {type: Boolean, default: false},
@@ -44,6 +46,11 @@ const userSchema = new mongoose.Schema<IUser>(
 
   { timestamps: true, versionKey: false },
 );
+
+userSchema.pre('save', async function () {
+  if (!this.isModified('password') || !this.password) return;
+  this.password = await bcrypt.hash(this.password, 12);
+});
 
 const User = mongoose.model<IUser>('user', userSchema);
 

@@ -3,11 +3,21 @@ import { StatusCodes } from 'http-status-codes';
 import AppError from '../errorHelpers/appError.ts';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
-const EXEMPT_PATHS = new Set(['/api/v2/auth/login', '/api/v2/auth/verify']);
+const EXEMPT_PATHS = new Set([
+  '/api/v2/auth/login',
+  '/api/v2/user/register',
+  '/api/v2/user/verify-email',
+  '/api/v2/register',
+  '/api/v2/verify-email',
+]);
 
 export const csrfProtection = (req: Request, _res: Response, next: NextFunction) => {
-  const legacyLogout = req.method === 'GET' && req.path === '/api/v2/auth/logout';
-  if ((SAFE_METHODS.has(req.method) && !legacyLogout) || EXEMPT_PATHS.has(req.path)) {
+  const normalizedPath = req.path.replace(/\/+$/, '') || '/';
+  const legacyLogout = req.method === 'GET' && normalizedPath === '/api/v2/auth/logout';
+  if (
+    (SAFE_METHODS.has(req.method) && !legacyLogout) ||
+    EXEMPT_PATHS.has(normalizedPath)
+  ) {
     next();
     return;
   }

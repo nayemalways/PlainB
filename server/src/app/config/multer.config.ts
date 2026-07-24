@@ -45,6 +45,7 @@ export const productImageUpload = createImageUpload('plainb/products');
 export const brandImageUpload = createImageUpload('plainb/brands');
 export const categoryImageUpload = createImageUpload('plainb/categories');
 export const featureImageUpload = createImageUpload('plainb/features');
+export const userImageUpload = createImageUpload('plainb/users');
 
 export const cleanupCloudinaryUploadsOnError: ErrorRequestHandler = async (
   error,
