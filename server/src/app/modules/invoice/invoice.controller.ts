@@ -2,10 +2,12 @@ import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { SendResponse } from '../../utility/sendResponse.ts';
 import { invoiceServices } from './invoice.service.ts';
+import { JwtPayload } from 'jsonwebtoken';
 
 const getInvoiceList = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await invoiceServices.getInvoiceList(req.user.userId);
+    const { userId } = req.user as JwtPayload;
+    const result = await invoiceServices.getInvoiceList(userId);
     SendResponse(res, {
       success: true,
       statusCode: StatusCodes.OK,
@@ -19,9 +21,10 @@ const getInvoiceList = async (req: Request, res: Response, next: NextFunction) =
 
 const getInvoiceDetails = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { userId } = req.user as JwtPayload;
     const result = await invoiceServices.getInvoiceDetails(
       req.params.invoiceId as string,
-      req.user.userId,
+      userId,
     );
     SendResponse(res, {
       success: true,
@@ -36,8 +39,9 @@ const getInvoiceDetails = async (req: Request, res: Response, next: NextFunction
 
 const downloadInvoicePdf = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { userId } = req.user as JwtPayload;
     const invoiceId = req.params.invoiceId as string;
-    const pdf = await invoiceServices.generateInvoicePdf(invoiceId, req.user.userId);
+    const pdf = await invoiceServices.generateInvoicePdf(invoiceId, userId);
     res
       .status(StatusCodes.OK)
       .set({
