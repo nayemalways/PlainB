@@ -15,7 +15,7 @@ const smtpOptions: SMTPTransport.Options = {
   },
 };
 
-const transporter = nodemailer.createTransport(smtpOptions);
+export const transporter = nodemailer.createTransport(smtpOptions);
 
 export const sendEmail = async (payload: IEmailPayload): Promise<void> => {
   const templatePath = fileURLToPath(
