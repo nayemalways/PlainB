@@ -10,6 +10,7 @@ import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
 import { stripeWebhookHandler } from './app/modules/payment/payment.route.ts';
 import { csrfProtection } from './app/middlewares/csrfProtection.ts';
 import { env } from './app/config/config.ts';
+import { NotFound } from './app/middlewares/notFound.middleware.ts';
 
 /*------APP INSTANCE-------*/
 const app = express();
@@ -64,5 +65,6 @@ app.get('/', (req, res) => {
 app.use('/api/v2', globalRouter);
 
 app.use(globalErrorHandler);
+app.use(NotFound)
 
 export default app;
