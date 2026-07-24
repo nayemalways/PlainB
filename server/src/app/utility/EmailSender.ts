@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import ejs from 'ejs';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
-import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config.ts';
+import { EMAIL_FROM, EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config.ts';
 import type { IEmailPayload } from './email.interface.ts';
 
 const smtpOptions: SMTPTransport.Options = {
@@ -24,7 +24,7 @@ export const sendEmail = async (payload: IEmailPayload): Promise<void> => {
   const html = await ejs.renderFile(templatePath, payload.data);
 
   await transporter.sendMail({
-    from: `"PlainB" <${EMAIL_USER}>`,
+    from: `"PlainB" <${EMAIL_FROM}>`,
     to: payload.to,
     subject: payload.subject,
     text: payload.text,
