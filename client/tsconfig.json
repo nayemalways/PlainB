@@ -19,9 +19,8 @@
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "noUncheckedIndexedAccess": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "vite.config.ts"]
