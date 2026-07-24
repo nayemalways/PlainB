@@ -1,10 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { CLOUDINARY_API_KEY, CLOUDINARY_NAME, CLOUDINARY_SECRET } from './config.ts';
+import { env } from './config.ts';
+
 
 cloudinary.config({
-  cloud_name: CLOUDINARY_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_SECRET,
+  cloud_name: env.CLOUDINARY_NAME,
+  api_key: env.CLOUDINARY_API_KEY,
+  api_secret: env.CLOUDINARY_SECRET,
 });
 
 export const deleteImageFromCloudinary = async (url: string): Promise<void> => {

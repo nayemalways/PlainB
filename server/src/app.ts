@@ -4,24 +4,18 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-import {
-  REQUEST_LIMIT_NUMBER,
-  REQUEST_LIMIT_TIME,
-  WEB_CACHE,
-  URL_ENCODED,
-  MAX_JSON_SIZE,
-} from './app/config/config.ts';
 import { globalRouter } from './app/routes/index.ts';
 import { SendResponse } from './app/utility/sendResponse.ts';
 import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
 import { stripeWebhookHandler } from './app/modules/payment/payment.route.ts';
 import { csrfProtection } from './app/middlewares/csrfProtection.ts';
+import { env } from './app/config/config.ts';
 
 /*------APP INSTANCE-------*/
 const app = express();
 
 /*-------------APPLICATION GLOBAL MIDDLEWARES-----------*/
-app.set('etag', 'strong');
+// app.set('etag', 'strong');
 app.use(
   cors({
     origin: ['https://plainb.vercel.app', 'http://localhost:5173'],
@@ -37,16 +31,20 @@ app.post(
   express.raw({ type: 'application/json' }),
   stripeWebhookHandler,
 );
-app.use(express.json({ limit: MAX_JSON_SIZE }));
-app.use(express.urlencoded({ extended: URL_ENCODED }));
+app.use(express.json({ limit: env.MAX_JSON_SIZE }));
+app.use(express.urlencoded({ extended: env.URL_ENCODED }));
 app.use(csrfProtection);
 
 /*-------------RATE LIMIT-----------*/
-const limiter = rateLimit({ windowMs: REQUEST_LIMIT_TIME, max: REQUEST_LIMIT_NUMBER });
+const limiter = rateLimit({ windowMs: env.REQUEST_LIMIT_TIME, max: env.REQUEST_LIMIT_NUMBER });
 app.use(limiter);
 
 /*---------WEB CACHE-------*/
-app.set('etag', WEB_CACHE);
+if (env.WEB_CACHE) {
+  app.set('etag', 'strong');
+} else {
+  app.disable('etag');
+}
 
 /*--------PUBLIC STORAGE---------*/
 app.use(express.static('src/storage'));

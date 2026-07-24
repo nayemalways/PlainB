@@ -15,6 +15,7 @@ export interface IUser extends Document {
   _id: Types.ObjectId;
   email: string;
   otp: number;
+  password?: string;
   isActive?: IsActiveUser;
   isDeleted?: boolean;
   role?: Role;

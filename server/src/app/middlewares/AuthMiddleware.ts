@@ -5,7 +5,8 @@ import User from '../modules/user/user.model.ts';
 import { verifyToken } from '../utility/TokenHelper.ts';
 import { IsActiveUser, IUser, Role } from '../modules/user/user.interface.ts';
 import { JwtPayload } from 'jsonwebtoken';
-import { JWT_SECRET } from '../config/config.ts';
+import { env } from '../config/config.ts';
+
 
 export const checkAuth =
   (...restRole: string[]) =>
@@ -19,7 +20,7 @@ export const checkAuth =
       }
 
       // VERIFY USER
-      const verifyUser = verifyToken( accessToken as string, JWT_SECRET ) as JwtPayload;
+      const verifyUser = verifyToken( accessToken as string, env.JWT_SECRET ) as JwtPayload;
 
       // CHECK VERIFIED
       if (!verifyUser) {

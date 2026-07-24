@@ -1,19 +1,21 @@
 import mongoose from 'mongoose';
 import type { Server } from 'node:http';
-import { DATABASE_URL, PORT } from './app/config/config.ts';
 import app from './app.ts';
 import { seedAdmin } from './app/utility/seedAdmin.ts';
+import { env } from './app/config/config.ts';
 
 let server: Server | undefined;
 
 const bootstrap = async () => {
   try {
-    await mongoose.connect(DATABASE_URL);
+    await mongoose.connect(env.DATABASE_URL);
     console.log('Database Connected!');
 
     await seedAdmin();
 
-    server = app.listen(PORT, () => console.log(`App running on http://localhost:${PORT}`));
+    server = app.listen(env.PORT, () =>
+      console.log(`App running on http://localhost:${env.PORT}`),
+    );
     console.log('Server started');
   } catch (error) {
     console.log(error.message);

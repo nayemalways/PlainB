@@ -1,9 +1,5 @@
 import { Response } from 'express';
-import {
-  JWT_EXPIRATIONS_TIME,
-  JWT_REFRESH_EXPIRATION,
-  NODE_ENV,
-} from '../config/config.ts';
+import { env } from 'node:process';
 
 interface AuthTokenInfo {
   accessToken?: string;
@@ -19,7 +15,7 @@ const durationToMs = (value: string | undefined, fallback: number) => {
 };
 
 export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
-  const isProduction = NODE_ENV === 'production';
+  const isProduction = env.NODE_ENV === 'production';
 
   if (tokenInfo.accessToken) {
     res.cookie('accessToken', tokenInfo.accessToken, {
@@ -27,7 +23,7 @@ export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      maxAge: durationToMs(JWT_EXPIRATIONS_TIME, 60 * 60 * 1000),
+      maxAge: durationToMs(env.JWT_EXPIRATIONS_TIME, 60 * 60 * 1000),
     });
   }
 
@@ -37,7 +33,7 @@ export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       path: '/api/v2/auth',
-      maxAge: durationToMs(JWT_REFRESH_EXPIRATION, 7 * 24 * 60 * 60 * 1000),
+      maxAge: durationToMs(env.JWT_REFRESH_EXPIRATION, 7 * 24 * 60 * 60 * 1000),
     });
   }
 
@@ -47,7 +43,7 @@ export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      maxAge: durationToMs(JWT_REFRESH_EXPIRATION, 7 * 24 * 60 * 60 * 1000),
+      maxAge: durationToMs(env.JWT_REFRESH_EXPIRATION, 7 * 24 * 60 * 60 * 1000),
     });
   }
 };

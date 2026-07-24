@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 import Stripe from 'stripe';
 import { StatusCodes } from 'http-status-codes';
-import {
-  FRONTEND_URL,
-  STRIPE_CURRENCY,
-  STRIPE_SECRET_KEY,
-  STRIPE_WEBHOOK_SECRET,
-} from '../../config/config.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import CartModel from '../cart/cart.model.ts';
 import User from '../user/user.model.ts';
@@ -18,8 +12,9 @@ import type {
   ICheckoutResponse,
   IPaymentStatusResponse,
 } from './payment.interface.ts';
+import { env } from '../../config/config.ts';
 
-const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
+const stripe = env.STRIPE_SECRET_KEY ? new Stripe(env.STRIPE_SECRET_KEY) : null;
 
 const getStripe = (): Stripe => {
   if (!stripe) {
@@ -105,7 +100,7 @@ const createCheckoutSession = async (
         {
           quantity: 1,
           price_data: {
-            currency: STRIPE_CURRENCY,
+            currency: env.STRIPE_CURRENCY,
             unit_amount: Math.round(payable * 100),
             product_data: {
               name: `PlainB order ${transactionId}`,
@@ -119,8 +114,8 @@ const createCheckoutSession = async (
         transactionId,
         userId,
       },
-      success_url: `${FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${FRONTEND_URL}/payment/cancel?invoice_id=${invoice.id}`,
+      success_url: `${env.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.FRONTEND_URL}/payment/cancel?invoice_id=${invoice.id}`,
     });
 
     if (!session.url) {
@@ -145,7 +140,7 @@ const handleStripeWebhook = async (
   rawBody: Buffer,
   signature: string | string[] | undefined,
 ): Promise<void> => {
-  if (!STRIPE_WEBHOOK_SECRET) {
+  if (!env.STRIPE_WEBHOOK_SECRET) {
     throw new AppError(
       StatusCodes.INTERNAL_SERVER_ERROR,
       'Stripe is not configured. Set STRIPE_WEBHOOK_SECRET.',
@@ -157,7 +152,7 @@ const handleStripeWebhook = async (
 
   let event: Stripe.Event;
   try {
-    event = getStripe().webhooks.constructEvent(rawBody, signature, STRIPE_WEBHOOK_SECRET);
+    event = getStripe().webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
   } catch {
     throw new AppError(StatusCodes.BAD_REQUEST, 'Invalid Stripe webhook signature.');
   }
@@ -200,16 +195,16 @@ const handleStripeWebhook = async (
         await sendEmail({
           to: customer.email,
           subject: `Payment received — ${invoiceForEmail.tran_id}`,
-          text: `Your payment of ${invoiceForEmail.payable} ${STRIPE_CURRENCY.toUpperCase()} was successful. Transaction: ${invoiceForEmail.tran_id}.`,
+          text: `Your payment of ${invoiceForEmail.payable} ${env.STRIPE_CURRENCY.toUpperCase()} was successful. Transaction: ${invoiceForEmail.tran_id}.`,
           template: 'payment-success',
           data: {
             name: customer.cus_address?.cus_name,
             invoiceId: invoiceForEmail.id,
             transactionId: invoiceForEmail.tran_id,
             amount: Number(invoiceForEmail.payable).toFixed(2),
-            currency: STRIPE_CURRENCY.toUpperCase(),
+            currency: env.STRIPE_CURRENCY.toUpperCase(),
             paymentDate: new Date().toLocaleString('en-GB'),
-            orderUrl: `${FRONTEND_URL}/order/${invoiceForEmail.id}`,
+            orderUrl: `${env.FRONTEND_URL}/order/${invoiceForEmail.id}`,
           },
         });
 
@@ -265,7 +260,7 @@ const getPaymentStatus = async (
     transactionId: invoice.tran_id,
     status,
     amount: Number(invoice.payable),
-    currency: STRIPE_CURRENCY.toUpperCase(),
+    currency: env.STRIPE_CURRENCY.toUpperCase(),
   };
 };
 

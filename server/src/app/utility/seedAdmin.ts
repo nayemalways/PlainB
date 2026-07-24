@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { ADMIN_EMAIL } from '../config/config.ts';
 import User from '../modules/user/user.model.ts';
 import { IsActiveUser, Role } from '../modules/user/user.interface.ts';
+import { env } from '../config/config.ts';
 
 const adminEmailSchema = z.string().trim().toLowerCase().email();
 
 export const seedAdmin = async (): Promise<void> => {
-  const result = adminEmailSchema.safeParse(ADMIN_EMAIL);
+  const result = adminEmailSchema.safeParse(env.ADMIN_EMAIL);
 
   if (!result.success) {
     throw new Error('ADMIN_EMAIL must be set to a valid email address');

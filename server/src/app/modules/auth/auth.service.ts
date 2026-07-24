@@ -5,9 +5,9 @@ import AppError from '../../errorHelpers/appError.ts';
 import { sendEmail } from '../../utility/EmailSender.ts';
 import { createUserTokens } from '../../utility/generateAuthTokens.ts';
 import { verifyToken } from '../../utility/TokenHelper.ts';
-import { JWT_REFRESH_SECRET } from '../../config/config.ts';
 import User from '../user/user.model.ts';
 import RefreshSession from './refresh-session.model.ts';
+import { env } from '../../config/config.ts';
 
 const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
 const createCsrfToken = () => randomBytes(32).toString('hex');
@@ -26,7 +26,7 @@ const saveRefreshSession = async (
     throw new AppError(StatusCodes.UNAUTHORIZED, 'Refresh session has been revoked.');
   }
 
-  const payload = verifyToken(refreshToken, JWT_REFRESH_SECRET) as JwtPayload;
+  const payload = verifyToken(refreshToken, env.JWT_REFRESH_SECRET) as JwtPayload;
   await RefreshSession.create({
     userId,
     jti,
@@ -79,7 +79,7 @@ const refreshSession = async (refreshToken?: string) => {
 
   let payload: JwtPayload;
   try {
-    payload = verifyToken(refreshToken, JWT_REFRESH_SECRET) as JwtPayload;
+    payload = verifyToken(refreshToken, env.JWT_REFRESH_SECRET) as JwtPayload;
   } catch {
     throw new AppError(StatusCodes.UNAUTHORIZED, 'Refresh token is invalid or expired.');
   }
@@ -126,7 +126,7 @@ const refreshSession = async (refreshToken?: string) => {
 const revokeSession = async (refreshToken?: string) => {
   if (!refreshToken) return;
   try {
-    const payload = verifyToken(refreshToken, JWT_REFRESH_SECRET) as JwtPayload;
+    const payload = verifyToken(refreshToken, env.JWT_REFRESH_SECRET) as JwtPayload;
     if (payload.familyId) {
       await RefreshSession.updateMany(
         { familyId: payload.familyId, revokedAt: { $exists: false } },

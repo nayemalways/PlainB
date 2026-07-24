@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 import { handleDuplicateError } from '../helper/duplicate.error.ts';
@@ -6,15 +5,15 @@ import { zodErrorHandler } from '../helper/zod.error.ts';
 import { handleCastError } from '../helper/cast.error.ts';
 import { validationError } from '../helper/validation.error.ts';
 import AppError from './appError.ts';
-import { NODE_ENV } from '../config/config.ts';
 import { TErrorSources } from '../types/errorTypes.ts';
+import { env } from '../config/config.ts';
 
 // Error Handler
 export const globalErrorHandler = (
   err: any,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   let statusCode = 500;
   let message = `Something went wrong ${err.message}`;
@@ -64,7 +63,7 @@ export const globalErrorHandler = (
     message,
     // trace_id: req.id,
     errorSources,
-    err: NODE_ENV === 'development' ? err : null,
-    stack: NODE_ENV === 'development' ? err.stack : null,
+    err: env.NODE_ENV === 'development' ? err : null,
+    stack: env.NODE_ENV === 'development' ? err.stack : null,
   });
 };

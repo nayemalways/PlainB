@@ -4,6 +4,7 @@ import { IsActiveUser, IUser, Role } from './user.interface.ts';
 const userSchema = new mongoose.Schema<IUser>(
   {
     email: { type: String, required: true, unique: true, lowercase: true },
+    password: {},
     otp: { type: Number, default: 0 },
     isActive: { type: String, enum: IsActiveUser, default: IsActiveUser.ACTIVE },
     role: { type: String, enum: Role, default: Role.USER },

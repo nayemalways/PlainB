@@ -1,12 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import type { JwtPayload } from 'jsonwebtoken';
 import { generateToken } from './TokenHelper.ts';
-import {
-  JWT_EXPIRATIONS_TIME,
-  JWT_REFRESH_EXPIRATION,
-  JWT_REFRESH_SECRET,
-  JWT_SECRET,
-} from '../config/config.ts';
+import { env } from '../config/config.ts';
+
 
 export const createUserTokens = async (
   user: JwtPayload,
@@ -20,11 +16,11 @@ export const createUserTokens = async (
     role: user?.role,
   };
 
-  const accessToken = generateToken(jwtPayload, JWT_SECRET, JWT_EXPIRATIONS_TIME);
+  const accessToken = generateToken(jwtPayload, env.JWT_SECRET, env.JWT_EXPIRATION_TIME);
   const refreshToken = generateToken(
     { ...jwtPayload, familyId },
-    JWT_REFRESH_SECRET,
-    JWT_REFRESH_EXPIRATION,
+    env.JWT_REFRESH_SECRET,
+    env.JWT_REFRESH_EXPIRATION,
     { jwtid: jti },
   );
 

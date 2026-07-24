@@ -1,13 +1,95 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-const parsePositiveNumber = (value: string | undefined, fallback: number): number => {
+export interface IEnvironmentVariables {
+  DATABASE_URL: string;
+  NODE_ENV: string;
+  PORT: number;
+
+  JWT_SECRET: string;
+  JWT_EXPIRATION_TIME: string;
+  JWT_REFRESH_SECRET: string;
+  JWT_REFRESH_EXPIRATION: string;
+
+  CLOUDINARY_NAME: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_SECRET: string;
+
+  FRONTEND_URL: string;
+
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
+  STRIPE_CURRENCY: string;
+
+  EMAIL_HOST: string;
+  EMAIL_PORT: string;
+  EMAIL_PASSWORD: string;
+  EMAIL_USER: string;
+  EMAIL_FROM: string;
+  EMAIL_SECURITY: boolean;
+
+  ADMIN_EMAIL: string;
+
+  REQUEST_LIMIT_TIME: number;
+  REQUEST_LIMIT_NUMBER: number;
+
+  WEB_CACHE: boolean;
+  URL_ENCODED: boolean;
+  MAX_JSON_SIZE: string;
+
+  GOOGLE_OAUTH_ID: string;
+  GOOGLE_OAUTH_SECRET: string;
+  GOOGLE_CALLBACK_URL: string;
+}
+
+const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
+  'DATABASE_URL',
+  'NODE_ENV',
+  'PORT',
+
+  'JWT_SECRET',
+  'JWT_EXPIRATION_TIME',
+  'JWT_REFRESH_SECRET',
+  'JWT_REFRESH_EXPIRATION',
+
+  'CLOUDINARY_NAME',
+  'CLOUDINARY_API_KEY',
+  'CLOUDINARY_SECRET',
+
+  'FRONTEND_URL',
+
+  'STRIPE_SECRET_KEY',
+  'STRIPE_WEBHOOK_SECRET',
+  'STRIPE_CURRENCY',
+
+  'EMAIL_HOST',
+  'EMAIL_PORT',
+  'EMAIL_PASSWORD',
+  'EMAIL_USER',
+  'EMAIL_FROM',
+  'EMAIL_SECURITY',
+
+  'ADMIN_EMAIL',
+
+  'REQUEST_LIMIT_TIME',
+  'REQUEST_LIMIT_NUMBER',
+
+  'WEB_CACHE',
+  'URL_ENCODED',
+  'MAX_JSON_SIZE',
+
+  'GOOGLE_OAUTH_ID',
+  'GOOGLE_OAUTH_SECRET',
+  'GOOGLE_CALLBACK_URL',
+];
+
+const parsePositiveNumber = (value: string, fallback: number): number => {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
 
-const parseDuration = (value: string | undefined, fallback: number): number => {
-  const match = value?.trim().match(/^(\d+)(ms|s|m|h)?$/i);
+const parseDuration = (value: string, fallback: number): number => {
+  const match = value.trim().match(/^(\d+)(ms|s|m|h)?$/i);
   if (!match) return fallback;
 
   const multipliers = { ms: 1, s: 1000, m: 60_000, h: 3_600_000 };
@@ -15,55 +97,32 @@ const parseDuration = (value: string | undefined, fallback: number): number => {
   return Number(match[1]) * multipliers[unit];
 };
 
-// DATABASE INFO
-export const DATABASE_URL = process.env.DATABASE_URL;
-export const NODE_ENV = process.env.NODE_ENV;
+export default function loadEnvironmentVariables(): IEnvironmentVariables {
+  const environment = {} as Record<keyof IEnvironmentVariables, string>;
 
-//  JWT CONFIG
-export const JWT_SECRET = process.env.JWT_SECRET;
-export const JWT_EXPIRATIONS_TIME = process.env.JWT_EXPIRATION_TIME;
+  for (const key of ENVIRONMENT_KEYS) {
+    const value = process.env[key];
 
-export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-export const JWT_REFRESH_EXPIRATION = process.env.JWT_REFRESH_EXPIRATION;
+    if (!value) {
+      throw new Error(`${key} is missing`);
+    }
 
-export const CLOUDINARY_NAME = process.env.CLOUDINARY_NAME;
-export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
-export const CLOUDINARY_SECRET = process.env.CLOUDINARY_SECRET;
+    environment[key] = value;
+  }
 
-// Local Vite development runs over HTTP. Normalizing localhost prevents Stripe
-// Checkout sessions from being created with an unreachable HTTPS return URL.
-export const FRONTEND_URL = process.env.FRONTEND_URL
-  ?.replace(/^https:\/\/(localhost|127\.0\.0\.1)(?=[:/]|$)/i, 'http://$1')
-  .replace(/\/+$/, '');
+  return {
+    ...environment,
+    PORT: parsePositiveNumber(environment.PORT, 3000),
+    STRIPE_CURRENCY: environment.STRIPE_CURRENCY.toLowerCase(),
+    FRONTEND_URL: environment.FRONTEND_URL
+      .replace(/^https:\/\/(localhost|127\.0\.0\.1)(?=[:/]|$)/i, 'http://$1')
+      .replace(/\/+$/, ''),
+    EMAIL_SECURITY: environment.EMAIL_SECURITY === 'true',
+    REQUEST_LIMIT_TIME: parseDuration(environment.REQUEST_LIMIT_TIME, 60_000),
+    REQUEST_LIMIT_NUMBER: parsePositiveNumber(environment.REQUEST_LIMIT_NUMBER, 100),
+    WEB_CACHE: environment.WEB_CACHE === 'true',
+    URL_ENCODED: environment.URL_ENCODED === 'true',
+  };
+}
 
-// STRIPE
-export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-export const STRIPE_CURRENCY = (process.env.STRIPE_CURRENCY || 'bdt').toLowerCase();
-
-// EMAIL CONFIG
-export const EMAIL_HOST = process.env.EMAIL_HOST;
-export const EMAIL_PORT = process.env.EMAIL_PORT;
-export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
-export const EMAIL_USER = process.env.EMAIL_USER;
-export const EMAIL_FROM = process.env.EMAIL_FROM;
-export const EMAIL_SECURITY = false;
-
-// ADMIN CONFIG
-export const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-
-// RATE LIMITING
-export const REQUEST_LIMIT_TIME = parseDuration(process.env.REQUEST_LIMIT_TIME, 60_000);
-export const REQUEST_LIMIT_NUMBER = parsePositiveNumber(process.env.REQUEST_LIMIT_NUMBER, 100);
-
-// WEB CACHE
-export const WEB_CACHE = false;
-
-// URL ENCODE
-export const URL_ENCODED = process.env.URL_ENCODED === 'true';
-
-// MAXIMUM JSON SIZE
-export const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE;
-
-// PORT
-export const PORT = Number(process.env.PORT) || 3000;
+export const env = loadEnvironmentVariables();
