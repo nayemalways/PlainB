@@ -7,11 +7,16 @@ import { seedAdmin } from './app/utility/seedAdmin.ts';
 let server: Server | undefined;
 
 const bootstrap = async () => {
-  await mongoose.connect(DATABASE_URL);
-  console.log('Database Connected!');
-  await seedAdmin();
-  server = app.listen(PORT, () => console.log(`App running on http://localhost:${PORT}`));
-  console.log('Server started');
+  try {
+    await mongoose.connect(DATABASE_URL);
+    console.log('Database Connected!');
+    await seedAdmin();
+    server = app.listen(PORT, () => console.log(`App running on http://localhost:${PORT}`));
+    console.log('Server started');
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
 };
 
 bootstrap();
