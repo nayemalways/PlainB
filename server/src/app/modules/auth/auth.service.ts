@@ -39,7 +39,6 @@ const saveRefreshSession = async (
 const loginService = async (email: string) => {
   const code = Math.floor(100000 + Math.random() * 900000);
 
-  try {
     await sendEmail({
       to: email,
       subject: 'Your PlainB login code',
@@ -47,9 +46,6 @@ const loginService = async (email: string) => {
       template: 'otp',
       data: { otp: code },
     });
-  } catch {
-    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP could not be sent.');
-  }
 
   await User.updateOne({ email }, { $set: { otp: code } }, { upsert: true });
   return null;
