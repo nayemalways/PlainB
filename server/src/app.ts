@@ -15,6 +15,7 @@ import { globalRouter } from './app/routes/index.ts';
 import { SendResponse } from './app/utility/sendResponse.ts';
 import { globalErrorHandler } from './app/errorHelpers/globalErrorHandler.ts';
 import { stripeWebhookHandler } from './app/modules/payment/payment.route.ts';
+import { csrfProtection } from './app/middlewares/csrfProtection.ts';
 
 /*------APP INSTANCE-------*/
 const app = express();
@@ -38,6 +39,7 @@ app.post(
 );
 app.use(express.json({ limit: MAX_JSON_SIZE }));
 app.use(express.urlencoded({ extended: URL_ENCODED }));
+app.use(csrfProtection);
 
 /*-------------RATE LIMIT-----------*/
 const limiter = rateLimit({ windowMs: REQUEST_LIMIT_TIME, max: REQUEST_LIMIT_NUMBER });

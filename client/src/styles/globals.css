@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --color-brand-50: #effdf6;
+  --color-brand-100: #d9fbe9;
+  --color-brand-200: #b5f5d5;
+  --color-brand-300: #7de9b8;
+  --color-brand-400: #42d596;
+  --color-brand-500: #21bf73;
+  --color-brand-600: #15995a;
+  --color-brand-700: #137a4b;
+  --color-brand-800: #14613f;
+  --color-brand-900: #125035;
+  --color-navy-50: #f4f7fa;
+  --color-navy-100: #e6ecf2;
+  --color-navy-200: #cdd9e5;
+  --color-navy-300: #a5b9ce;
+  --color-navy-400: #7694b3;
+  --color-navy-500: #557696;
+  --color-navy-600: #415d7a;
+  --color-navy-700: #354b63;
+  --color-navy-800: #2d394f;
+  --color-navy-900: #192638;
+  --color-navy-950: #0f1826;
+  --shadow-market: 0 18px 50px -25px rgb(15 24 38 / 0.3);
+  --radius-card: 1.25rem;
+}
+
+:root {
+  color: #192638;
+  background: #f7f9fb;
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+.dark {
+  color: #e6ecf2;
+  background: #0f1826;
+}
+
+* {
+  border-color: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f7f9fb;
+}
+
+.dark body {
+  background: #0f1826;
+}
+
+button, a, input, select, textarea {
+  outline-color: #21bf73;
+  outline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: #b5f5d5;
+  color: #125035;
+}

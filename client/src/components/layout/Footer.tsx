@@ -1,70 +1,36 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import paymentPhoto from '../../assets/images/payment.png';
+import logo from '../../assets/images/plainb-logo.svg';
+import { PageContainer } from '../common/PageContainer.tsx';
 
-const Footer = () => {
+const groups: Array<{ title: string; links: Array<[string, string]> }> = [
+  { title: 'Shop', links: [['All products', '/search'], ['Cart', '/cart'], ['Wishlist', '/account/wishlist']] },
+  { title: 'Help', links: [['Support', '/support'], ['How to buy', '/how-to-buy'], ['FAQ', '/faq'], ['Complaints', '/complaints']] },
+  { title: 'Policies', links: [['Terms', '/terms'], ['Privacy', '/privacy'], ['Refund policy', '/refund'], ['About', '/about']] },
+];
+
+export function Footer() {
   return (
-    <div>
-      <div className="section-bottom shadow-sm bg-light">
-        <div className="container py-5">
-          <div className="row">
-            <div className="col-md-4">
-              <h1 className="bodyMedium">Legals</h1>
-              <p className="my-2">
-                <Link className="nav-link" to="/about">
-                  About
-                </Link>
-              </p>
-              <p className="my-2">
-                <Link className="nav-link" to="/refund">
-                  Refund Policy
-                </Link>
-              </p>
-              <p className="my-2">
-                <Link className="nav-link" to="/privacy">
-                  Privacy Policy
-                </Link>
-              </p>
-              <p className="my-2">
-                <Link className="nav-link" to="/terms">
-                  Terms
-                </Link>
-              </p>
-            </div>
-            <div className="col-md-4">
-              <h1 className="bodyMedium">Information</h1>
-              <p className="my-2">
-                <Link className="nav-link" to="/how-to-buy">
-                  How to buy
-                </Link>
-              </p>
-              <p className="my-2">
-                <Link className="nav-link" to="/contact">
-                  Contact
-                </Link>
-              </p>
-              <p className="my-2">
-                <Link className="nav-link" to="/complain">
-                  Complain
-                </Link>
-              </p>
-            </div>
-            <div className="col-md-4">
-              <h1 className="bodyMedium">About</h1>
-              <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum{' '}
-              </p>
-              <img className="w-75" src={paymentPhoto} />
-            </div>
+    <footer className="mt-20 bg-navy-950 text-navy-200">
+      <PageContainer className="grid gap-10 py-14 md:grid-cols-[1.4fr_2fr]">
+        <div>
+          <img src={logo} alt="PlainB" className="h-10 brightness-0 invert" />
+          <p className="mt-5 max-w-sm text-sm leading-7">A focused ecommerce experience for discovering products and managing orders. Verified company contact details are pending approval.</p>
+          <div className="mt-5 rounded-xl border border-navy-700 bg-navy-900 p-4 text-xs">
+            Payments are securely processed through the configured Stripe Checkout flow.
           </div>
         </div>
-      </div>
-      <div className="bg-dark py-3 text-center">
-        <p className="text-white bodySmall">All Rights Reserved </p>
-      </div>
-    </div>
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          {groups.map((group) => (
+            <div key={group.title}>
+              <h2 className="font-extrabold text-white">{group.title}</h2>
+              <ul className="mt-4 space-y-3 text-sm">
+                {group.links.map(([label, to]) => <li key={to}><Link className="hover:text-brand-400" to={to}>{label}</Link></li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </PageContainer>
+      <div className="border-t border-navy-800 py-5 text-center text-xs">© {new Date().getFullYear()} PlainB. All rights reserved.</div>
+    </footer>
   );
-};
-
-export default Footer;
+}

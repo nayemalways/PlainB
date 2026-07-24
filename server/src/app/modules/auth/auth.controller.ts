@@ -29,13 +29,44 @@ const VerifyLoginOTP = CatchAsync(async (req: Request, res: Response, next: Next
     message: 'Verified',
     data: null
   })
-})
+});
+
+const session = CatchAsync(async (req: Request, res: Response) => {
+  SendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Session retrieved successfully',
+    data: {
+      userId: req.user.userId,
+      email: req.user.email,
+      role: req.user.role,
+    },
+  });
+});
+
+const refresh = CatchAsync(async (req: Request, res: Response) => {
+  const result = await authService.refreshSession(req.cookies?.refreshToken);
+  SetCookies(res, result);
+  SendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Session refreshed successfully',
+    data: null,
+  });
+});
 
 // LOGOUT
 const userLogout = CatchAsync(async (req, res) => {
-  const cookieOptions = { expires: new Date(Date.now() - 24 * 60 * 60 * 1000), httpOnly: false };
-  res.clearCookie('accessToken', cookieOptions);
-  res.clearCookie('refreshToken', cookieOptions);
+  const isProduction = process.env.NODE_ENV === 'production';
+  const shared = { secure: isProduction, sameSite: isProduction ? 'none' : 'lax' } as const;
+  await authService.revokeSession(req.cookies?.refreshToken);
+  res.clearCookie('accessToken', { ...shared, httpOnly: true, path: '/' });
+  res.clearCookie('refreshToken', {
+    ...shared,
+    httpOnly: true,
+    path: '/api/v2/auth',
+  });
+  res.clearCookie('csrfToken', { ...shared, httpOnly: false, path: '/' });
 
   SendResponse(res, {
     success: true,
@@ -48,5 +79,7 @@ const userLogout = CatchAsync(async (req, res) => {
 export const authController = {
   login,
   VerifyLoginOTP,
-  userLogout
+  session,
+  refresh,
+  userLogout,
 };

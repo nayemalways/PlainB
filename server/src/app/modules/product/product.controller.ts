@@ -2,10 +2,79 @@ import type { NextFunction, Request, Response } from 'express';
 import { SendResponse } from '../../utility/sendResponse.ts';
 import { CatchAsync } from '../../utility/CatchAsync.ts';
 import { productServices } from './product.service.ts';
-import type { ICreateProductSlider, IProductFilter } from './product.interface.ts';
+import type {
+  ICreateProductSlider,
+  IProductFilter,
+  IProductQuery,
+  ProductSort,
+} from './product.interface.ts';
 import type { ICreateProduct } from './product.interface.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
+import ProductModel from './product.model.ts';
+
+type ProductResult = Record<string, unknown>;
+const SORTS = new Set<ProductSort>(['newest', 'price-asc', 'price-desc', 'rating']);
+
+const paginateProducts = async (items: ProductResult[], query: IProductQuery) => {
+  if (
+    query.page === undefined &&
+    query.limit === undefined &&
+    query.sort === undefined &&
+    query.priceMin === undefined &&
+    query.priceMax === undefined
+  ) return items;
+
+  const page = Math.max(1, Number.parseInt(query.page ?? '1', 10) || 1);
+  const limit = Math.min(48, Math.max(1, Number.parseInt(query.limit ?? '12', 10) || 12));
+  const sort = SORTS.has(query.sort as ProductSort) ? query.sort : 'newest';
+  const minimum = Number(query.priceMin);
+  const maximum = Number(query.priceMax);
+  const hasMinimum = query.priceMin !== undefined && query.priceMin !== '';
+  const hasMaximum = query.priceMax !== undefined && query.priceMax !== '';
+  const filteredItems = items.filter((item) => {
+    const price = Number(item.discount ? item.discountPrice : item.price);
+    return (
+      (!hasMinimum || !Number.isFinite(minimum) || price >= minimum) &&
+      (!hasMaximum || !Number.isFinite(maximum) || price <= maximum)
+    );
+  });
+  const totalItems = filteredItems.length;
+  const ids = filteredItems.map((item) => item._id).filter(Boolean);
+  const numericField =
+    sort === 'rating'
+      ? { sortValue: { $convert: { input: '$star', to: 'double', onError: 0, onNull: 0 } } }
+      : {
+          sortValue: {
+            $convert: {
+              input: { $cond: ['$discount', '$discountPrice', '$price'] },
+              to: 'double',
+              onError: 0,
+              onNull: 0,
+            },
+          },
+        };
+  const sortDirection = sort === 'price-asc' ? 1 : -1;
+  const sortedIds = await ProductModel.aggregate<{ _id: unknown }>([
+    { $match: { _id: { $in: ids } } },
+    ...(sort === 'newest'
+      ? []
+      : [{ $addFields: numericField }]),
+    { $sort: sort === 'newest' ? { createdAt: -1, _id: -1 } : { sortValue: sortDirection, _id: -1 } },
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+    { $project: { _id: 1 } },
+  ]);
+  const byId = new Map(filteredItems.map((item) => [String(item._id), item]));
+  const pagedItems = sortedIds
+    .map((item) => byId.get(String(item._id)))
+    .filter((item): item is ProductResult => Boolean(item));
+
+  return {
+    items: pagedItems,
+    meta: { page, limit, totalItems, totalPages: Math.max(1, Math.ceil(totalItems / limit)) },
+  };
+};
 
 const productCreate = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
@@ -57,7 +126,8 @@ const productSliderCreate = CatchAsync(
 const productListByBrand = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const brandId = String(req.params.brandId);
-    const result = await productServices.listByBrandService(brandId);
+    const products = await productServices.listByBrandService(brandId);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,
@@ -71,7 +141,8 @@ const productListByBrand = CatchAsync(
 const productListByCategory = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const categoryId = String(req.params.categoryId);
-    const result = await productServices.listByCategoryService(categoryId);
+    const products = await productServices.listByCategoryService(categoryId);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,
@@ -85,7 +156,8 @@ const productListByCategory = CatchAsync(
 const productListByRemark = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const remark = String(req.params.remark);
-    const result = await productServices.listByRemarkService(remark);
+    const products = await productServices.listByRemarkService(remark);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,
@@ -99,7 +171,8 @@ const productListByRemark = CatchAsync(
 const productListBySimilar = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const categoryId = String(req.params.categoryId);
-    const result = await productServices.listBySimilarService(categoryId);
+    const products = await productServices.listBySimilarService(categoryId);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,
@@ -113,7 +186,8 @@ const productListBySimilar = CatchAsync(
 const productListByKeyword = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const keyword = String(req.params.keyword);
-    const result = await productServices.listByKeywordService(keyword);
+    const products = await productServices.listByKeywordService(keyword);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,
@@ -141,7 +215,8 @@ const productDetails = CatchAsync(
 const productFilter = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
     const payload = req.body as IProductFilter;
-    const result = await productServices.productFilterService(payload);
+    const products = await productServices.productFilterService(payload);
+    const result = await paginateProducts(products, req.query as IProductQuery);
 
     SendResponse(res, {
       success: true,

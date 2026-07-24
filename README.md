@@ -1,75 +1,29 @@
-# PlainB Ecommerce Application
-PlainB is a full-stack MERN ecommerce application with Stripe Checkout payments.
+# PlainB
 
-## Features
-### Products
-- Product create
-- Product read
-- Product update
-- Product delete
-- Product filtering
+PlainB is a full-stack TypeScript ecommerce application with a React/Vite storefront, Tailwind design system, Zustand feature stores, Express/MongoDB backend, and Stripe Checkout.
 
-### User
-- User register
-- User login
-- Product add to cart
-- Product add to wishlist
-- Product checkout and payments
-- Profile read & update
+## Run locally
 
-
-## Technology used:
-- Frontend: React.js and Bootstrap
-- Backend: Node.js, Express.js, MongoDB and Mongoose
-- State Management: Zustand for better state management
-  
-## How to install
-1. Clone repository
-```
-git clone git@github.com:nayemalways/PlainB.git
-```
-
-2. Install dependency
-```
+```text
+cd server
 npm install
-```
-
-3. Add .env variables
-```
-
-DATABASE_URL= 
-DATABASE_USERNAME=
-DATABASE_PASSWORD= 
-
-JWT_SECRET= 
-JWT_EXPIRATION_TIME=
-
-EMAIL_HOST= 
-EMAIL_PORT= 
-EMAIL_USER= 
-EMAIL_PASSWORD=
-EMAIL_SECURITY=
-
-REQUEST_LIMIT_TIME=
-REQUEST_LIMIT_NUMBER=
-
-WEB_CACHE=
-
-URL_ENCODED=
-
-MAX_JSON_SIZE=
-
-PORT=
-
-```
-
-### Start applicatin
-#### backend:
-```
-npm run start
-```
-#### frontend:
-```
+copy .env.example .env
 npm run dev
 ```
 
+In another terminal:
+
+```text
+cd client
+npm install
+copy .env.example .env
+npm run dev
+```
+
+The examples expect the API at `http://localhost:5001/api/v2` and the client at `http://localhost:5173`.
+
+## Quality checks
+
+Both projects provide `typecheck`, `lint`, and `build` scripts. The client also provides Vitest through `npm test`.
+
+See [MIGRATION.md](MIGRATION.md) for architecture changes, generated assets, verification steps, regression coverage, and remaining business dependencies.

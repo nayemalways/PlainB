@@ -1,17 +1,16 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'react-loading-skeleton/dist/skeleton.css';
-
-import './assets/css/index.css';
-import './assets/css/animate.css';
-
 import App from './App.tsx';
+import { ThemeProvider } from './app/providers/ThemeProvider.tsx';
+import './styles/globals.css';
 
-createRoot(document.getElementById('root')).render(
+const root = document.getElementById('root');
+if (!root) throw new Error('Root element not found');
+
+createRoot(root).render(
   <StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </StrictMode>,
 );
