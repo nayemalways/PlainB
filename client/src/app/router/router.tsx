@@ -16,7 +16,8 @@ const OrderDetails = lazy(() => import('../../pages/OrderDetailsPage.tsx'));
 const Profile = lazy(() => import('../../pages/ProfilePage.tsx'));
 const Payment = lazy(() => import('../../pages/PaymentPage.tsx'));
 const Login = lazy(() => import('../../pages/LoginPage.tsx'));
-const Otp = lazy(() => import('../../pages/OtpPage.tsx'));
+const Register = lazy(() => import('../../pages/RegisterPage.tsx'));
+const VerifyEmail = lazy(() => import('../../pages/VerifyEmailPage.tsx'));
 const Information = lazy(() => import('../../pages/InformationPage.tsx'));
 const NotFound = lazy(() => import('../../pages/NotFoundPage.tsx'));
 const RouteError = lazy(() => import('../../pages/RouteErrorPage.tsx'));
@@ -58,7 +59,8 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: '/login', element: <Lazy><Login /></Lazy> },
-      { path: '/otp-verify', element: <Lazy><Otp /></Lazy> },
+      { path: '/register', element: <Lazy><Register /></Lazy> },
+      { path: '/verify-email', element: <Lazy><VerifyEmail /></Lazy> },
     ],
   },
 ]);

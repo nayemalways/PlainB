@@ -28,4 +28,5 @@ export interface CartState {
   add: (input: AddCartInput) => Promise<void>;
   remove: (productId: string) => Promise<void>;
   checkout: () => Promise<void>;
+  reset: () => void;
 }

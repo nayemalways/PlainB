@@ -10,18 +10,35 @@ import AppError from '../../errorHelpers/appError.ts';
 import { JwtPayload } from 'jsonwebtoken';
 import { env } from '../../config/config.ts';
 import passport from 'passport';
+import User from '../user/user.model.ts';
+
+// GET CSRF TOKEN
+const csrfToken = CatchAsync(async (req: Request, res: Response) => {
+  SendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'CSRF token retrieved.',
+    data: { csrfToken: req.cookies?.csrfToken ?? null },
+  });
+});
 
 // SESSION MANAGEMENT
 const session = CatchAsync(async (req: Request, res: Response) => {
-  const user = req.user as JwtPayload;
+  const user = await User.findById(req.user.userId).select('+password');
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
   SendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'Session retrieved successfully',
     data: {
-      userId: user.userId,
+      userId: user._id.toString(),
       email: user.email,
       role: user.role,
+      name: user.cus_address?.cus_name ?? '',
+      profilePhoto: user.profilePhoto ?? null,
+      canChangePassword:
+        Boolean(user.password) && user.auths.some((auth) => auth.provider === 'credentials'),
+      csrfToken: req.cookies?.csrfToken ?? null,
     },
   });
 });
@@ -34,7 +51,7 @@ const refresh = CatchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'Session refreshed successfully',
-    data: null,
+    data: { csrfToken: result.csrfToken },
   });
 });
 
@@ -49,7 +66,7 @@ const userLogout = CatchAsync(async (req, res) => {
     httpOnly: true,
     path: '/api/v2/auth',
   });
-  res.clearCookie('csrfToken', { ...shared, httpOnly: false, path: '/' });
+  res.clearCookie('csrfToken', { ...shared, httpOnly: true, path: '/' });
 
   SendResponse(res, {
     success: true,
@@ -76,10 +93,7 @@ const googleRegister = CatchAsync(
 //  GOOGLE CALLBACK
 const googleCallback = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    let redirectTo = req.query.state ? (req.query.state as string) : '';
-    if (redirectTo.startsWith('/')) {
-      redirectTo = redirectTo.slice(1);
-    }
+    const redirectTo = req.query.state ? (req.query.state as string) : '/';
 
     const user = req.user as JwtPayload;
     if (!user) throw new AppError(StatusCodes.BAD_REQUEST, 'User not found');
@@ -88,9 +102,10 @@ const googleCallback = CatchAsync(
     // Set cookies
     SetCookies(res, tokens);
 
-    res.redirect(
-        `${env.FRONTEND_URL}${redirectTo}`
-      );
+    const safePath = redirectTo.startsWith('/') && !redirectTo.startsWith('//')
+      ? redirectTo
+      : '/';
+    res.redirect(new URL(safePath, `${env.FRONTEND_URL}/`).toString());
   }
 );
 
@@ -113,7 +128,7 @@ const credentialsLogin = CatchAsync(
           success: true,
           statusCode: StatusCodes.OK,
           message: 'Login successful',
-          data: null,
+          data: { csrfToken: tokens.csrfToken },
         });
       } catch (error) {
         next(error);
@@ -124,6 +139,7 @@ const credentialsLogin = CatchAsync(
 
 
 export const authController = {
+  csrfToken,
   session,
   refresh,
   userLogout,

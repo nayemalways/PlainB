@@ -39,7 +39,7 @@ export const SetCookies = (res: Response, tokenInfo: AuthTokenInfo) => {
 
   if (tokenInfo.csrfToken) {
     res.cookie('csrfToken', tokenInfo.csrfToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'none' : 'lax',
       path: '/',

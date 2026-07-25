@@ -8,11 +8,12 @@ import passport from 'passport';
 const router = express.Router();
 
 // CREDENTIAL LOGIN
+router.get('/csrf-token', authController.csrfToken);
 router.post('/login', authController.credentialsLogin);
 router.get('/session', checkAuth(Role.USER, Role.ADMIN), authController.session);
 router.post('/refresh', authController.refresh);
 router.post('/logout', authController.userLogout);
-router.get('/logout', authController.userLogout);
+
 
 // GOOGLE LOGIN
 router.get('/google', authController.googleRegister);

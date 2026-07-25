@@ -3,13 +3,23 @@ import type { ApiError } from '../../types/api.ts';
 
 const baseURL = import.meta.env.VITE_BASE_V2_URL as string;
 
-const readCookie = (name: string) =>
-  document.cookie
-    .split('; ')
-    .find((entry) => entry.startsWith(`${name}=`))
-    ?.split('=')
-    .slice(1)
-    .join('=');
+let csrfToken: string | null = null;
+
+export const setCsrfToken = (token?: string | null) => {
+  csrfToken = token || null;
+};
+
+export const clearCsrfToken = () => {
+  csrfToken = null;
+};
+
+export const syncCsrfToken = async () => {
+  const response = await axios.get<{ data: { csrfToken: string | null } }>(
+    `${baseURL}/auth/csrf-token`,
+    { withCredentials: true },
+  );
+  setCsrfToken(response.data.data.csrfToken);
+};
 
 export const api = axios.create({
   baseURL,
@@ -27,8 +37,7 @@ export const setAuthFailureHandler = (handler: () => void) => {
 const addCsrfHeader = (config: InternalAxiosRequestConfig) => {
   const method = config.method?.toUpperCase();
   if (method && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
-    const token = readCookie('csrfToken');
-    if (token) config.headers.set('X-CSRF-Token', decodeURIComponent(token));
+    if (csrfToken) config.headers.set('X-CSRF-Token', csrfToken);
   }
   return config;
 };
@@ -39,7 +48,13 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiError>) => {
     const request = error.config as (InternalAxiosRequestConfig & { _retried?: boolean }) | undefined;
-    const refreshExcluded = ['/auth/login', '/auth/verify', '/auth/refresh', '/auth/logout'].some(
+    const refreshExcluded = [
+      '/auth/login',
+      '/auth/refresh',
+      '/auth/logout',
+      '/user/register',
+      '/user/verify-email',
+    ].some(
       (path) => request?.url?.includes(path),
     );
     if (error.response?.status !== 401 || !request || request._retried || refreshExcluded) {
@@ -47,12 +62,18 @@ api.interceptors.response.use(
     }
 
     request._retried = true;
-    refreshPromise ??= axios
-      .post(`${baseURL}/auth/refresh`, undefined, {
+    refreshPromise ??= (async () => {
+      if (!csrfToken) await syncCsrfToken();
+      const response = await axios.post<{ data: { csrfToken: string } }>(
+        `${baseURL}/auth/refresh`,
+        undefined,
+        {
         withCredentials: true,
-        headers: { 'X-CSRF-Token': decodeURIComponent(readCookie('csrfToken') ?? '') },
-      })
-      .then(() => undefined)
+          headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
+        },
+      );
+      setCsrfToken(response.data.data.csrfToken);
+    })()
       .finally(() => {
         refreshPromise = null;
       });

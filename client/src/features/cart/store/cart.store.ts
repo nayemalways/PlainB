@@ -44,4 +44,12 @@ export const useCartStore = create<CartState>((set, get) => ({
       set({ checkoutStatus: 'error', error: getErrorMessage(error, 'Checkout could not start.') });
     }
   },
+  reset: () =>
+    set({
+      items: [],
+      count: 0,
+      status: 'idle',
+      checkoutStatus: 'idle',
+      error: null,
+    }),
 }));

@@ -89,6 +89,7 @@ passport.use(
             cus_address: {
                 cus_name: profile.displayName
             },
+            profilePhoto: profile.photos?.[0]?.value,
             email,
             role: Role.USER,
             isVerified: true,
@@ -101,6 +102,12 @@ passport.use(
           });
         } else {
           user.isVerified = true;
+          if (!user.cus_address?.cus_name) {
+            user.set('cus_address.cus_name', profile.displayName);
+          }
+          if (!user.profilePhoto && profile.photos?.[0]?.value) {
+            user.profilePhoto = profile.photos[0].value;
+          }
           if (!user.auths.some((auth) => auth.provider === 'google')) {
             user.auths.push({ provider: 'google', providerId: profile.id });
           }

@@ -3,6 +3,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   ChevronDown,
   Heart,
+  LogOut,
   Menu,
   Package,
   Search,
@@ -16,6 +17,7 @@ import logo from '../../assets/images/plainb-logo.svg';
 import { useAuthStore } from '../../features/auth/store/auth.store.ts';
 import { useCartStore } from '../../features/cart/store/cart.store.ts';
 import { useWishlistStore } from '../../features/wishlist/store/wishlist.store.ts';
+import { useProfileStore } from '../../features/profile/store/profile.store.ts';
 import { cn } from '../../lib/utils/cn.ts';
 import { PageContainer } from '../common/PageContainer.tsx';
 import { ThemeSwitcher } from '../common/ThemeSwitcher.tsx';
@@ -60,12 +62,29 @@ function SearchForm() {
 }
 
 export function Header() {
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const cartCount = useCartStore((state) => state.count);
   const loadCartCount = useCartStore((state) => state.loadCount);
   const wishCount = useWishlistStore((state) => state.count);
   const loadWishCount = useWishlistStore((state) => state.loadCount);
+  const resetCart = useCartStore((state) => state.reset);
+  const resetWishlist = useWishlistStore((state) => state.reset);
+  const resetProfile = useProfileStore((state) => state.reset);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      // Local session state is still cleared when the server session is unavailable.
+    } finally {
+      resetCart();
+      resetWishlist();
+      resetProfile();
+      navigate('/', { replace: true });
+    }
+  };
 
   useEffect(() => {
     if (user) void Promise.all([loadCartCount(), loadWishCount()]);
@@ -128,8 +147,19 @@ export function Header() {
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <Button variant="outline" className="ml-1 rounded-full">
-                  <span className="grid size-7 place-items-center rounded-full bg-brand-100 text-xs text-brand-800">{user.email.slice(0, 1).toUpperCase()}</span>
-                  <span className="hidden max-w-28 truncate sm:inline">{user.email}</span>
+                  {user.profilePhoto ? (
+                    <img
+                      src={user.profilePhoto}
+                      alt=""
+                      referrerPolicy="no-referrer"
+                      className="size-7 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="grid size-7 place-items-center rounded-full bg-brand-100 text-xs text-brand-800">
+                      {(user.name || user.email).slice(0, 1).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="hidden max-w-28 truncate sm:inline">{user.name || user.email}</span>
                   <ChevronDown className="size-4" />
                 </Button>
               </DropdownMenu.Trigger>
@@ -138,7 +168,12 @@ export function Header() {
                   <DropdownMenu.Item asChild><Link className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm outline-none hover:bg-navy-50 dark:hover:bg-navy-800" to="/account/profile"><UserRound className="size-4" />Profile & addresses</Link></DropdownMenu.Item>
                   <DropdownMenu.Item asChild><Link className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm outline-none hover:bg-navy-50 dark:hover:bg-navy-800" to="/account/orders"><Package className="size-4" />Orders</Link></DropdownMenu.Item>
                   <DropdownMenu.Separator className="my-2 border-t" />
-                  <DropdownMenu.Item className="cursor-pointer rounded-lg px-3 py-2 text-sm font-bold text-red-600 outline-none hover:bg-red-50" onSelect={() => void logout()}>Log out</DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold text-red-600 outline-none hover:bg-red-50"
+                    onSelect={() => void handleLogout()}
+                  >
+                    <LogOut className="size-4" />Log out
+                  </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>

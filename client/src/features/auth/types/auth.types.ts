@@ -4,6 +4,10 @@ export interface SessionUser {
   userId: string;
   email: string;
   role: 'USER' | 'ADMIN';
+  name: string;
+  profilePhoto: string | null;
+  canChangePassword: boolean;
+  csrfToken: string | null;
 }
 
 export interface AuthState {
@@ -13,8 +17,14 @@ export interface AuthState {
   error: string | null;
   pendingEmail: string;
   initialize: () => Promise<void>;
-  requestOtp: (email: string) => Promise<void>;
-  verifyOtp: (otp: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  registerAccount: (input: {
+    name: string;
+    email: string;
+    password: string;
+    file?: File;
+  }) => Promise<void>;
+  verifyEmail: (otp: string) => Promise<void>;
   logout: () => Promise<void>;
   clearSession: () => void;
 }

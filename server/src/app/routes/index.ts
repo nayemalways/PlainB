@@ -1,5 +1,5 @@
 import { authRouter } from '../modules/auth/auth.route.ts';
-import { userRouter } from '../modules/user/user.route.ts';
+import { legacyUserRouter, userRouter } from '../modules/user/user.route.ts';
 import { productRouter } from '../modules/product/product.route.ts';
 import { cartRouter } from '../modules/cart/cart.route.ts';
 import { wishlistRouter } from '../modules/wishlist/wishlist.route.ts';
@@ -62,7 +62,7 @@ const modules = [
 
 // Preserve the original endpoint URLs while clients migrate to module-prefixed routes.
 const legacyModules = [
-  userRouter,
+  legacyUserRouter,
   productRouter,
   brandRouter,
   categoryRouter,

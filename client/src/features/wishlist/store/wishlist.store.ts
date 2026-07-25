@@ -14,6 +14,7 @@ interface WishlistState {
   loadCount: () => Promise<void>;
   add: (productId: string) => Promise<void>;
   remove: (productId: string) => Promise<void>;
+  reset: () => void;
 }
 
 export const useWishlistStore = create<WishlistState>((set, get) => ({
@@ -46,4 +47,5 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     await api.delete(`/wishlist/${productId}`);
     await get().load();
   },
+  reset: () => set({ items: [], count: 0, status: 'idle', error: null }),
 }));

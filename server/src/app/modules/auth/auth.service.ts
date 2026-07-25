@@ -11,6 +11,7 @@ import { env } from '../../config/config.ts';
 const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
 const createCsrfToken = () => randomBytes(32).toString('hex');
 
+// SAVE REFRESH TOKEN SESSION
 const saveRefreshSession = async (
   userId: string,
   refreshToken: string,
@@ -35,6 +36,7 @@ const saveRefreshSession = async (
   });
 };
 
+// CREATE AUTH SESSION
 const createAuthSession = async (user: JwtPayload) => {
   const userTokens = await createUserTokens(user);
   await saveRefreshSession(
@@ -47,6 +49,7 @@ const createAuthSession = async (user: JwtPayload) => {
   return { ...userTokens, csrfToken: createCsrfToken() };
 };
 
+// REFRESH SESSION
 const refreshSession = async (refreshToken?: string) => {
   if (!refreshToken) {
     throw new AppError(StatusCodes.UNAUTHORIZED, 'Refresh token is required.');
@@ -98,6 +101,7 @@ const refreshSession = async (refreshToken?: string) => {
   return { ...tokens, csrfToken: createCsrfToken() };
 };
 
+// REVOKE SESSION
 const revokeSession = async (refreshToken?: string) => {
   if (!refreshToken) return;
   try {
@@ -113,8 +117,17 @@ const revokeSession = async (refreshToken?: string) => {
   }
 };
 
+// REVOKE USER ALL SESSION
+const revokeAllSessions = async (userId: string) => {
+  await RefreshSession.updateMany(
+    { userId, revokedAt: { $exists: false } },
+    { $set: { revokedAt: new Date() } },
+  );
+};
+
 export const authService = {
   createAuthSession,
   refreshSession,
   revokeSession,
+  revokeAllSessions,
 };
