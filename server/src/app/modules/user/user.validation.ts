@@ -23,10 +23,54 @@ const verifyEmailSchema = z
   })
   .strict();
 
+const optionalText = z.string().trim().max(200).optional();
+const customerAddressSchema = z
+  .object({
+    cus_address: optionalText,
+    cus_city: optionalText,
+    cus_country: optionalText,
+    cus_fax: optionalText,
+    cus_name: z.string().trim().min(1, 'Name is required').max(100).optional(),
+    cus_phone: optionalText,
+    cus_postcode: optionalText,
+    cus_state: optionalText,
+  })
+  .strict();
+
+const shippingAddressSchema = z
+  .object({
+    ship_address: optionalText,
+    ship_city: optionalText,
+    ship_country: optionalText,
+    ship_name: optionalText,
+    ship_phone: optionalText,
+    ship_postcode: optionalText,
+    ship_state: optionalText,
+  })
+  .strict();
+
+const updateProfileSchema = z
+  .object({
+    cus_address: customerAddressSchema.optional(),
+    ship_address: shippingAddressSchema.optional(),
+  })
+  .strict();
+
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Current password is required'),
+    newPassword: passwordSchema,
+  })
+  .strict();
+
 export type ICreateUserInput = z.infer<typeof createUserSchema>;
 export type IVerifyEmailInput = z.infer<typeof verifyEmailSchema>;
+export type IUpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type IChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export const userValidation = {
   createUserSchema,
   verifyEmailSchema,
+  updateProfileSchema,
+  changePasswordSchema,
 };

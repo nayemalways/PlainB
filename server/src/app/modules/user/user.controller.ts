@@ -24,19 +24,30 @@ const verifyEmail = CatchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'Email verified successfully.',
-    data: null,
+    data: { csrfToken: tokens.csrfToken },
   });
 });
 
 const saveProfile = CatchAsync( async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.user;
   const payload  = req.body;
-  const result = await userService.saveProfileService(userId, payload);
+  const result = await userService.saveProfileService(userId, payload, req.file?.path);
   SendResponse(res, {
     success: true,
     statusCode: 200,
     message: 'Profile saved',
     data: result,
+  });
+});
+
+const changePassword = CatchAsync(async (req: Request, res: Response) => {
+  const tokens = await userService.changePassword(req.user.userId, req.body);
+  SetCookies(res, tokens);
+  SendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Password changed successfully.',
+    data: { csrfToken: tokens.csrfToken },
   });
 });
 
@@ -55,5 +66,6 @@ export const userControllers = {
   registerUser,
   verifyEmail,
   saveProfile,
-  readProfile
+  readProfile,
+  changePassword,
 }

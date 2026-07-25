@@ -1,4 +1,5 @@
 import { createHmac, randomInt } from 'node:crypto';
+import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 import { IUser } from './user.interface.ts';
 import User from './user.model.ts';
@@ -8,11 +9,19 @@ import { redis } from '../../config/redis.config.ts';
 import { sendEmail } from '../../utility/EmailSender.ts';
 import { authService } from '../auth/auth.service.ts';
 import type { ICreateUserInput, IVerifyEmailInput } from './user.validation.ts';
+import type {
+  IChangePasswordInput,
+  IUpdateProfileInput,
+} from './user.validation.ts';
+import { deleteImageFromCloudinary } from '../../config/cloudinary.config.ts';
+
 
 const OTP_TTL_SECONDS = 10 * 60;
 const otpKey = (email: string) => `plainb:email-verification:${email}`;
 const hashOtp = (email: string, otp: string) =>
   createHmac('sha256', env.JWT_SECRET).update(`${email}:${otp}`).digest('hex');
+
+
 
 // REGISTER USER
 const registerUser = async (payload: ICreateUserInput, profilePhoto?: string) => {
@@ -89,22 +98,80 @@ const verifyEmail = async (payload: IVerifyEmailInput) => {
   return authService.createAuthSession(user);
 };
 
+const toProfileDto = (user: IUser) => ({
+  email: user.email,
+  profilePhoto: user.profilePhoto ?? null,
+  cus_address: user.cus_address ?? {},
+  ship_address: user.ship_address ?? {},
+});
+
 // UPDATE USER PROFILE
-const saveProfileService = async (userId: string, payload: Partial<IUser>) => {
-   await User.updateOne({ _id: userId }, { $set: payload }, { upsert: true });
-   return null;
+const saveProfileService = async (
+  userId: string,
+  payload: IUpdateProfileInput,
+  profilePhoto?: string,
+) => {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, 'User not found.');
+
+  const previousPhoto = user.profilePhoto;
+  const currentProfile = user.toObject();
+  if (payload.cus_address) {
+    user.set('cus_address', {
+      ...(currentProfile.cus_address ?? {}),
+      ...payload.cus_address,
+    });
+  }
+  if (payload.ship_address) {
+    user.set('ship_address', {
+      ...(currentProfile.ship_address ?? {}),
+      ...payload.ship_address,
+    });
+  }
+  if (profilePhoto) user.profilePhoto = profilePhoto;
+  await user.save();
+
+  if (profilePhoto && previousPhoto && previousPhoto !== profilePhoto) {
+    await deleteImageFromCloudinary(previousPhoto).catch(() => undefined);
+  }
+  return toProfileDto(user);
 };
 
 // GET USER PROFILE
 const readProfileService = async (userId: string) => {
-   const data = await User.findById(userId);
-   return data;
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, 'User not found.');
+  return toProfileDto(user);
 };
 
+// CHANGE PASSWORD
+const changePassword = async (userId: string, payload: IChangePasswordInput) => {
+  const user = await User.findById(userId).select('+password');
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, 'User not found.');
+
+  const hasCredentials = user.auths.some((auth) => auth.provider === 'credentials');
+  if (!hasCredentials || !user.password) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      'Password changes are unavailable for this account.',
+    );
+  }
+
+  const matches = await bcrypt.compare(payload.currentPassword, user.password);
+  if (!matches) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'Current password is incorrect.');
+  }
+
+  user.password = payload.newPassword;
+  await user.save();
+  await authService.revokeAllSessions(userId);
+  return authService.createAuthSession(user);
+};
 
 export const userService = {
   registerUser,
   verifyEmail,
   saveProfileService,
-  readProfileService
+  readProfileService,
+  changePassword,
 }
