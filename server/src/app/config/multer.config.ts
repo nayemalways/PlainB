@@ -5,12 +5,18 @@ import { cloudinaryUpload, deleteImageFromCloudinary } from './cloudinary.config
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/avif']);
 
+export interface UploadedImageFile {
+  originalname: string;
+  mimetype: string;
+  path: string;
+}
+
 const createImageUpload = (folder: string) => {
   const params = {
     folder,
     resource_type: 'image',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
-    public_id: (_req: Express.Request, file: Express.Multer.File) => {
+    public_id: (_req: Express.Request, file: UploadedImageFile) => {
       const name =
         file.originalname
           .replace(/\.[^/.]+$/, '')
@@ -53,7 +59,7 @@ export const cleanupCloudinaryUploadsOnError: ErrorRequestHandler = async (
   _res,
   next,
 ) => {
-  const files = ((req.files as Express.Multer.File[] | undefined) ?? []).map((file) => file.path);
+  const files = ((req.files as UploadedImageFile[] | undefined) ?? []).map((file) => file.path);
   if (req.file?.path) files.push(req.file.path);
 
   await Promise.allSettled(files.map(deleteImageFromCloudinary));

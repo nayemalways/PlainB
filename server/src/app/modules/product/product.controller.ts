@@ -12,6 +12,7 @@ import type { ICreateProduct } from './product.interface.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
 import ProductModel from './product.model.ts';
+import type { UploadedImageFile } from '../../config/multer.config.ts';
 
 type ProductResult = Record<string, unknown>;
 const SORTS = new Set<ProductSort>(['newest', 'price-asc', 'price-desc', 'rating']);
@@ -78,7 +79,7 @@ const paginateProducts = async (items: ProductResult[], query: IProductQuery) =>
 
 const productCreate = CatchAsync(
   async (req: Request, res: Response, _next: NextFunction) => {
-    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const files = (req.files as UploadedImageFile[] | undefined) ?? [];
     const images = files.map((file) => file.path);
     if (images.length === 0) {
       throw new AppError(StatusCodes.BAD_REQUEST, 'At least one product image is required');
