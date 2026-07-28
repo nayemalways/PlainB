@@ -6,6 +6,7 @@ import { categoryServices } from './category.service.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { StatusCodes } from 'http-status-codes';
 
+// GET CATEGORY LIST
 const getCategoryList = CatchAsync(async (_req: Request, res: Response, _next: NextFunction) => {
   const result = await categoryServices.getCategoryList();
 
@@ -17,6 +18,7 @@ const getCategoryList = CatchAsync(async (_req: Request, res: Response, _next: N
   });
 });
 
+// CREATE CATEGORY
 const createCategory = CatchAsync(async (req: Request, res: Response, _next: NextFunction) => {
   const image = req.file?.path;
   if (!image) throw new AppError(StatusCodes.BAD_REQUEST, 'Category image is required');

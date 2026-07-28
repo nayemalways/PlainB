@@ -29,6 +29,7 @@ export interface IEnvironmentVariables {
   EMAIL_SECURITY: boolean;
 
   ADMIN_EMAIL: string;
+  ADMIN_PASSWORD: string;
 
   REQUEST_LIMIT_TIME: number;
   REQUEST_LIMIT_NUMBER: number;
@@ -75,6 +76,7 @@ const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
   'EMAIL_SECURITY',
 
   'ADMIN_EMAIL',
+  'ADMIN_PASSWORD',
 
   'REQUEST_LIMIT_TIME',
   'REQUEST_LIMIT_NUMBER',
