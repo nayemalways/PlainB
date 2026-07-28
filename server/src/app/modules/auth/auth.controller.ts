@@ -14,13 +14,15 @@ import User from '../user/user.model.ts';
 
 // GET CSRF TOKEN
 const csrfToken = CatchAsync(async (req: Request, res: Response) => {
-  res.header('Cache-Control', 'no-cache');
-  
+  const token = req.cookies?.csrfToken ?? authService.createCsrfToken();
+  if (!req.cookies?.csrfToken) SetCookies(res, { csrfToken: token });
+  res.header('Cache-Control', 'no-store');
+
   SendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'CSRF token retrieved.',
-    data: { csrfToken: req.cookies?.csrfToken ?? null },
+    data: { csrfToken: token },
   });
 });
 

@@ -126,6 +126,7 @@ const revokeAllSessions = async (userId: string) => {
 };
 
 export const authService = {
+  createCsrfToken,
   createAuthSession,
   refreshSession,
   revokeSession,
