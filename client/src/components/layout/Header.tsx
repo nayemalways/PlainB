@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   ChevronDown,
   Heart,
@@ -7,6 +6,7 @@ import {
   Menu,
   Package,
   Search,
+  Settings,
   ShoppingBag,
   UserRound,
   X,
@@ -20,8 +20,15 @@ import { useWishlistStore } from '../../features/wishlist/store/wishlist.store.t
 import { useProfileStore } from '../../features/profile/store/profile.store.ts';
 import { cn } from '../../lib/utils/cn.ts';
 import { PageContainer } from '../common/PageContainer.tsx';
-import { ThemeSwitcher } from '../common/ThemeSwitcher.tsx';
 import { Button } from '../ui/button.tsx';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu.tsx';
 
 const links = [
   ['Home', '/'],
@@ -91,7 +98,7 @@ export function Header() {
   }, [loadCartCount, loadWishCount, user]);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur dark:bg-navy-950/95">
+    <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur">
       <div className="bg-navy-950 py-2 text-center text-xs font-semibold text-white">
         <PageContainer>PlainB marketplace • Business contact details pending approval</PageContainer>
       </div>
@@ -104,18 +111,18 @@ export function Header() {
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 z-50 bg-navy-950/60" />
-            <Dialog.Content className="fixed inset-y-0 left-0 z-50 w-[min(88vw,360px)] bg-white p-6 shadow-2xl dark:bg-navy-950">
+            <Dialog.Content className="fixed inset-y-0 left-0 z-50 w-[min(88vw,360px)] bg-white p-6 shadow-2xl">
               <div className="flex items-center justify-between">
                 <Dialog.Title className="font-extrabold">Browse PlainB</Dialog.Title>
                 <Dialog.Close asChild><Button variant="ghost" size="icon" aria-label="Close navigation"><X /></Button></Dialog.Close>
               </div>
-              <nav className="mt-8 grid gap-2">{links.map(([label, to]) => <Dialog.Close asChild key={to}><NavLink className="rounded-xl px-4 py-3 font-bold hover:bg-brand-50 dark:hover:bg-navy-800" to={to}>{label}</NavLink></Dialog.Close>)}</nav>
+              <nav className="mt-8 grid gap-2">{links.map(([label, to]) => <Dialog.Close asChild key={to}><NavLink className="rounded-xl px-4 py-3 font-bold hover:bg-brand-50" to={to}>{label}</NavLink></Dialog.Close>)}</nav>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
 
         <Link to="/" aria-label="PlainB home" className="shrink-0">
-          <img src={logo} alt="PlainB" className="h-9 w-auto dark:brightness-0 dark:invert" />
+          <img src={logo} alt="PlainB" className="h-9 w-auto" />
         </Link>
         <nav className="hidden items-center gap-5 lg:flex">
           {links.map(([label, to]) => (
@@ -126,7 +133,6 @@ export function Header() {
         </nav>
         <div className="hidden max-w-xl flex-1 md:block"><SearchForm /></div>
         <div className="ml-auto flex items-center gap-1">
-          <ThemeSwitcher />
           {user && (
             <>
               <Button asChild variant="ghost" size="icon">
@@ -144,9 +150,13 @@ export function Header() {
             </>
           )}
           {user ? (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <Button variant="outline" className="ml-1 rounded-full">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="group ml-1 rounded-full hover:border-brand-500 hover:bg-brand-50 focus-visible:ring-2 focus-visible:ring-brand-500"
+                  aria-label={`Open account menu for ${user.name || user.email}`}
+                >
                   {user.profilePhoto ? (
                     <img
                       src={user.profilePhoto}
@@ -160,23 +170,32 @@ export function Header() {
                     </span>
                   )}
                   <span className="hidden max-w-28 truncate sm:inline">{user.name || user.email}</span>
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
                 </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content sideOffset={10} align="end" className="z-50 min-w-56 rounded-xl border bg-white p-2 shadow-xl dark:bg-navy-900">
-                  <DropdownMenu.Item asChild><Link className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm outline-none hover:bg-navy-50 dark:hover:bg-navy-800" to="/account/profile"><UserRound className="size-4" />Profile & addresses</Link></DropdownMenu.Item>
-                  <DropdownMenu.Item asChild><Link className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm outline-none hover:bg-navy-50 dark:hover:bg-navy-800" to="/account/orders"><Package className="size-4" />Orders</Link></DropdownMenu.Item>
-                  <DropdownMenu.Separator className="my-2 border-t" />
-                  <DropdownMenu.Item
-                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm font-bold text-red-600 outline-none hover:bg-red-50"
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                sideOffset={10}
+                align="end"
+                collisionPadding={12}
+                className="min-w-64"
+              >
+                  <DropdownMenuLabel className="border-b py-3">
+                    <p className="truncate text-sm font-extrabold">{user.name || 'PlainB customer'}</p>
+                    <p className="mt-0.5 truncate text-xs text-navy-500">{user.email}</p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem asChild><Link className="mt-1" to="/account/profile"><UserRound className="size-4" />Profile & addresses</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/account/profile#security"><Settings className="size-4" />Settings</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/account/orders"><Package className="size-4" />Orders</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link to="/account/wishlist"><Heart className="size-4" />Wishlist</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="font-bold text-red-600 focus:bg-red-50"
                     onSelect={() => void handleLogout()}
                   >
                     <LogOut className="size-4" />Log out
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
+                  </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : <Button asChild className="ml-1"><Link to="/login">Sign in</Link></Button>}
         </div>
       </PageContainer>

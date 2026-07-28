@@ -126,7 +126,7 @@ export default function ProfilePage() {
         </Button>
       </form>
 
-      <Card className="mt-8 p-6">
+      <Card id="security" className="mt-8 scroll-mt-32 p-6">
         <h2 className="text-xl font-black">Security</h2>
         {user?.canChangePassword ? (
           <form

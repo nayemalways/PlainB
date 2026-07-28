@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import logo from '../../assets/images/plainb-logo.svg';
-import { ThemeSwitcher } from '../../components/common/ThemeSwitcher.tsx';
 
 export function AuthLayout() {
   return (
@@ -11,7 +10,6 @@ export function AuthLayout() {
         <p className="text-sm text-navy-300">PlainB uses one-time email codes and secure server-managed sessions.</p>
       </section>
       <section className="relative grid place-items-center p-5">
-        <div className="absolute right-5 top-5"><ThemeSwitcher /></div>
         <Outlet />
       </section>
     </main>

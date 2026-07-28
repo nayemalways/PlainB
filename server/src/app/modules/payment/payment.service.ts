@@ -140,6 +140,9 @@ const handleStripeWebhook = async (
   rawBody: Buffer,
   signature: string | string[] | undefined,
 ): Promise<void> => {
+
+  console.log("I am reached webhook")
+
   if (!env.STRIPE_WEBHOOK_SECRET) {
     throw new AppError(
       StatusCodes.INTERNAL_SERVER_ERROR,
