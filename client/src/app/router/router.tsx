@@ -5,6 +5,8 @@ import { PublicLayout } from '../layouts/PublicLayout.tsx';
 import { AuthGuard } from '../../features/auth/components/AuthGuard.tsx';
 import { LegacyOrderRedirect, LegacyProductRedirect, LegacySearchRedirect } from './LegacyRedirect.tsx';
 import { LazyBoundary as Lazy } from '../../components/feedback/LazyBoundary.tsx';
+import { AdminGuard } from '../../features/admin/AdminGuard.tsx';
+import { AdminLayout } from '../layouts/AdminLayout.tsx';
 
 const Home = lazy(() => import('../../pages/HomePage.tsx'));
 const Catalog = lazy(() => import('../../pages/CatalogPage.tsx'));
@@ -21,6 +23,15 @@ const VerifyEmail = lazy(() => import('../../pages/VerifyEmailPage.tsx'));
 const Information = lazy(() => import('../../pages/InformationPage.tsx'));
 const NotFound = lazy(() => import('../../pages/NotFoundPage.tsx'));
 const RouteError = lazy(() => import('../../pages/RouteErrorPage.tsx'));
+const AdminLogin = lazy(() => import('../../pages/admin/AdminLoginPage.tsx'));
+const AdminOverview = lazy(() => import('../../pages/admin/AdminOverviewPage.tsx'));
+const AdminProducts = lazy(() => import('../../pages/admin/AdminProductsPage.tsx'));
+const AdminInventory = lazy(() => import('../../pages/admin/AdminInventoryPage.tsx'));
+const AdminPayments = lazy(() => import('../../pages/admin/AdminPaymentsPage.tsx'));
+const AdminUsers = lazy(() => import('../../pages/admin/AdminUsersPage.tsx'));
+const AdminBrands = lazy(() => import('../../pages/admin/AdminBrandsPage.tsx'));
+const AdminCategories = lazy(() => import('../../pages/admin/AdminCategoriesPage.tsx'));
+const AdminSettings = lazy(() => import('../../pages/admin/AdminSettingsPage.tsx'));
 
 export const router = createBrowserRouter([
   {
@@ -62,5 +73,24 @@ export const router = createBrowserRouter([
       { path: '/register', element: <Lazy><Register /></Lazy> },
       { path: '/verify-email', element: <Lazy><VerifyEmail /></Lazy> },
     ],
+  },
+  { path: '/admin/login', element: <Lazy><AdminLogin /></Lazy> },
+  {
+    element: <AdminGuard />,
+    children: [{
+      path: '/admin',
+      element: <AdminLayout />,
+      errorElement: <Lazy><RouteError /></Lazy>,
+      children: [
+        { index: true, element: <Lazy><AdminOverview /></Lazy> },
+        { path: 'products', element: <Lazy><AdminProducts /></Lazy> },
+        { path: 'inventory', element: <Lazy><AdminInventory /></Lazy> },
+        { path: 'payments', element: <Lazy><AdminPayments /></Lazy> },
+        { path: 'users', element: <Lazy><AdminUsers /></Lazy> },
+        { path: 'brands', element: <Lazy><AdminBrands /></Lazy> },
+        { path: 'categories', element: <Lazy><AdminCategories /></Lazy> },
+        { path: 'settings', element: <Lazy><AdminSettings /></Lazy> },
+      ],
+    }],
   },
 ]);

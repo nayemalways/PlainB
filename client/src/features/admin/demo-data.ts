@@ -1,0 +1,103 @@
+import type { AdminPayment, AdminSettings, AdminUser } from './types.ts';
+
+export const demoPayments: AdminPayment[] = [
+  {
+    id: 'pay_1048',
+    transaction: 'TXN-91K8Q2',
+    customer: 'Ariana Rahman',
+    email: 'ariana@example.com',
+    amount: 8420,
+    status: 'paid',
+    date: '2026-07-27',
+  },
+  {
+    id: 'pay_1047',
+    transaction: 'TXN-73L2M4',
+    customer: 'Fahim Ahmed',
+    email: 'fahim@example.com',
+    amount: 3250,
+    status: 'pending',
+    date: '2026-07-27',
+  },
+  {
+    id: 'pay_1046',
+    transaction: 'TXN-62P9D1',
+    customer: 'Nusrat Jahan',
+    email: 'nusrat@example.com',
+    amount: 11780,
+    status: 'paid',
+    date: '2026-07-26',
+  },
+  {
+    id: 'pay_1045',
+    transaction: 'TXN-48C7A5',
+    customer: 'Samiul Hasan',
+    email: 'samiul@example.com',
+    amount: 2190,
+    status: 'failed',
+    date: '2026-07-25',
+  },
+  {
+    id: 'pay_1044',
+    transaction: 'TXN-30V6X8',
+    customer: 'Maliha Noor',
+    email: 'maliha@example.com',
+    amount: 6540,
+    status: 'paid',
+    date: '2026-07-24',
+  },
+];
+export const demoUsers: AdminUser[] = [
+  {
+    id: 'usr_201',
+    name: 'Ariana Rahman',
+    email: 'ariana@example.com',
+    status: 'active',
+    joined: '2026-06-12',
+    orders: 8,
+    spent: 28400,
+  },
+  {
+    id: 'usr_202',
+    name: 'Fahim Ahmed',
+    email: 'fahim@example.com',
+    status: 'active',
+    joined: '2026-06-18',
+    orders: 3,
+    spent: 9250,
+  },
+  {
+    id: 'usr_203',
+    name: 'Nusrat Jahan',
+    email: 'nusrat@example.com',
+    status: 'active',
+    joined: '2026-07-01',
+    orders: 5,
+    spent: 19300,
+  },
+  {
+    id: 'usr_204',
+    name: 'Samiul Hasan',
+    email: 'samiul@example.com',
+    status: 'blocked',
+    joined: '2026-07-09',
+    orders: 1,
+    spent: 2190,
+  },
+];
+export const demoSettings: AdminSettings = {
+  storeName: 'PlainB',
+  supportEmail: 'support@plainb.example',
+  currency: 'BDT',
+  lowStockThreshold: 8,
+  emailPayments: true,
+  emailStock: true,
+};
+export const revenueSeries = [
+  { month: 'Feb', revenue: 86000 },
+  { month: 'Mar', revenue: 103000 },
+  { month: 'Apr', revenue: 97000 },
+  { month: 'May', revenue: 126000 },
+  { month: 'Jun', revenue: 142000 },
+  { month: 'Jul', revenue: 168000 },
+];
