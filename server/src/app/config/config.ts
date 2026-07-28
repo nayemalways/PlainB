@@ -42,10 +42,7 @@ export interface IEnvironmentVariables {
   GOOGLE_OAUTH_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
 
-  REDIS_HOST: string;
-  REDIS_PORT: number;
-  REDIS_USERNAME?: string;
-  REDIS_PASSWORD?: string;
+  REDIS_URL: string;
 }
 
 const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
@@ -89,8 +86,7 @@ const ENVIRONMENT_KEYS: (keyof IEnvironmentVariables)[] = [
   'GOOGLE_OAUTH_SECRET',
   'GOOGLE_CALLBACK_URL',
 
-  'REDIS_HOST',
-  'REDIS_PORT',
+  'REDIS_URL'
 ];
 
 const parsePositiveNumber = (value: string, fallback: number): number => {
@@ -105,6 +101,21 @@ const parseDuration = (value: string, fallback: number): number => {
   const multipliers = { ms: 1, s: 1000, m: 60_000, h: 3_600_000 };
   const unit = (match[2]?.toLowerCase() ?? 'ms') as keyof typeof multipliers;
   return Number(match[1]) * multipliers[unit];
+};
+
+const parseRedisUrl = (value: string): string => {
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error('REDIS_URL must be a valid Redis connection URL');
+  }
+
+  if (url.protocol !== 'redis:' && url.protocol !== 'rediss:') {
+    throw new Error('REDIS_URL must use redis:// or rediss://');
+  }
+
+  return value;
 };
 
 export default function loadEnvironmentVariables(): IEnvironmentVariables {
@@ -132,9 +143,7 @@ export default function loadEnvironmentVariables(): IEnvironmentVariables {
     REQUEST_LIMIT_NUMBER: parsePositiveNumber(environment.REQUEST_LIMIT_NUMBER, 100),
     WEB_CACHE: environment.WEB_CACHE === 'true',
     URL_ENCODED: environment.URL_ENCODED === 'true',
-    REDIS_PORT: parsePositiveNumber(environment.REDIS_PORT, 6379),
-    REDIS_USERNAME: process.env.REDIS_USERNAME || undefined,
-    REDIS_PASSWORD: process.env.REDIS_PASSWORD || undefined,
+    REDIS_URL: parseRedisUrl(environment.REDIS_URL),
   };
 }
 
