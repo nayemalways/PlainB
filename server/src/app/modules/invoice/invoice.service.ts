@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import puppeteer from 'puppeteer';
+import PDFDocument from 'pdfkit';
 import { StatusCodes } from 'http-status-codes';
 import AppError from '../../errorHelpers/appError.ts';
 import InvoiceModel from './invoice.model.ts';
@@ -73,13 +73,12 @@ const getInvoiceDetails = async (
   };
 };
 
-const escapeHtml = (value: unknown): string =>
-  String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+const text = (value: unknown): string => String(value ?? '').trim();
+const money = (value: unknown): string =>
+  `BDT ${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
 const generateInvoicePdf = async (invoiceId: string, userId: string): Promise<Uint8Array> => {
   const [details, user] = await Promise.all([
@@ -95,128 +94,206 @@ const generateInvoicePdf = async (invoiceId: string, userId: string): Promise<Ui
   const customer = user.cus_address;
   const shipping = user.ship_address;
   const issuedAt = invoice.createdAt ? new Date(invoice.createdAt) : new Date();
-  const productRows = products
-    .map((item, index) => {
-      const lineTotal = Number(item.price) * Number(item.qty);
-      return `
-        <tr>
-          <td>${index + 1}</td>
-          <td>
-            <strong>${escapeHtml(item.product.title)}</strong>
-            <div class="muted">${escapeHtml(item.color)} · ${escapeHtml(item.size)}</div>
-          </td>
-          <td class="number">${escapeHtml(item.qty)}</td>
-          <td class="number">৳${Number(item.price).toFixed(2)}</td>
-          <td class="number">৳${lineTotal.toFixed(2)}</td>
-        </tr>`;
-    })
-    .join('');
 
-  const html = `<!doctype html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; color: #172033; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
-        .page { padding: 34px 40px 28px; }
-        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1f9d68; padding-bottom: 20px; }
-        .brand { font-size: 31px; font-weight: 800; letter-spacing: -1px; color: #172033; }
-        .brand span { color: #1f9d68; }
-        .tagline { color: #667085; margin-top: 4px; }
-        .invoice-title { text-align: right; }
-        .invoice-title h1 { margin: 0 0 7px; font-size: 25px; letter-spacing: 1.5px; }
-        .status { display: inline-block; padding: 6px 11px; border-radius: 20px; background: #e8f7f0; color: #137a50; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-        .meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin: 24px 0; }
-        .meta-card { background: #f6f8fb; border: 1px solid #e7eaf0; border-radius: 8px; padding: 13px; }
-        .label { color: #667085; font-size: 9px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
-        .value { font-weight: 700; margin-top: 5px; word-break: break-word; }
-        .addresses { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 25px; }
-        .address h3 { margin: 0 0 10px; color: #1f9d68; font-size: 11px; letter-spacing: .8px; text-transform: uppercase; }
-        .address p { margin: 3px 0; line-height: 1.45; }
-        table { width: 100%; border-collapse: collapse; }
-        thead { background: #172033; color: white; }
-        th { padding: 11px 9px; font-size: 9px; letter-spacing: .5px; text-align: left; text-transform: uppercase; }
-        td { border-bottom: 1px solid #e7eaf0; padding: 12px 9px; vertical-align: top; }
-        .number { text-align: right; white-space: nowrap; }
-        .muted { color: #667085; font-size: 10px; margin-top: 4px; }
-        .summary { width: 280px; margin: 20px 0 25px auto; }
-        .summary-row { display: flex; justify-content: space-between; padding: 7px 4px; }
-        .summary-row.total { border-top: 2px solid #172033; margin-top: 5px; padding-top: 11px; font-size: 15px; font-weight: 800; }
-        .footer { border-top: 1px solid #d9dee8; margin-top: 25px; padding-top: 16px; display: flex; justify-content: space-between; color: #667085; font-size: 10px; line-height: 1.5; }
-        .thanks { color: #1f9d68; font-weight: 700; font-size: 12px; }
-      </style>
-    </head>
-    <body>
-      <main class="page">
-        <header class="header">
-          <div>
-            <div class="brand">Plain<span>B</span></div>
-            <div class="tagline">Quality products, delivered simply.</div>
-          </div>
-          <div class="invoice-title">
-            <h1>INVOICE</h1>
-            <span class="status">${escapeHtml(invoice.payment_status)}</span>
-          </div>
-        </header>
-
-        <section class="meta">
-          <div class="meta-card"><div class="label">Invoice number</div><div class="value">${escapeHtml(invoice._id)}</div></div>
-          <div class="meta-card"><div class="label">Transaction ID</div><div class="value">${escapeHtml(invoice.tran_id)}</div></div>
-          <div class="meta-card"><div class="label">Issued</div><div class="value">${issuedAt.toLocaleDateString('en-GB')}</div></div>
-        </section>
-
-        <section class="addresses">
-          <div class="address">
-            <h3>Bill to</h3>
-            <p><strong>${escapeHtml(customer?.cus_name)}</strong></p>
-            <p>${escapeHtml(user.email)}</p>
-            <p>${escapeHtml(customer?.cus_phone)}</p>
-            <p>${escapeHtml(customer?.cus_address)}</p>
-            <p>${escapeHtml([customer?.cus_city, customer?.cus_state, customer?.cus_postcode].filter(Boolean).join(', '))}</p>
-            <p>${escapeHtml(customer?.cus_country)}</p>
-          </div>
-          <div class="address">
-            <h3>Ship to</h3>
-            <p><strong>${escapeHtml(shipping?.ship_name)}</strong></p>
-            <p>${escapeHtml(shipping?.ship_phone)}</p>
-            <p>${escapeHtml(shipping?.ship_address)}</p>
-            <p>${escapeHtml([shipping?.ship_city, shipping?.ship_state, shipping?.ship_postcode].filter(Boolean).join(', '))}</p>
-            <p>${escapeHtml(shipping?.ship_country)}</p>
-          </div>
-        </section>
-
-        <table>
-          <thead><tr><th>#</th><th>Item</th><th class="number">Qty</th><th class="number">Unit price</th><th class="number">Amount</th></tr></thead>
-          <tbody>${productRows}</tbody>
-        </table>
-
-        <section class="summary">
-          <div class="summary-row"><span>Subtotal</span><strong>৳${Number(invoice.total).toFixed(2)}</strong></div>
-          <div class="summary-row"><span>VAT (5%)</span><strong>৳${Number(invoice.vat).toFixed(2)}</strong></div>
-          <div class="summary-row total"><span>Total</span><span>৳${Number(invoice.payable).toFixed(2)}</span></div>
-        </section>
-
-        <footer class="footer">
-          <div><div class="thanks">Thank you for shopping with PlainB.</div><div>This invoice was generated electronically and requires no signature.</div></div>
-          <div style="text-align:right">Payment: ${escapeHtml(invoice.payment_status)}<br/>Delivery: ${escapeHtml(invoice.delivery_status)}</div>
-        </footer>
-      </main>
-    </body>
-  </html>`;
-
-  const browser = await puppeteer.launch({ headless: true });
-  try {
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'load' });
-    return await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: { top: '12mm', right: '10mm', bottom: '12mm', left: '10mm' },
+  return new Promise<Uint8Array>((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: 'A4',
+      margins: { top: 40, right: 40, bottom: 48, left: 40 },
+      bufferPages: true,
+      info: {
+        Title: `Invoice ${invoice._id}`,
+        Author: 'PlainB',
+        Subject: `Invoice for transaction ${invoice.tran_id}`,
+      },
     });
-  } finally {
-    await browser.close();
-  }
+    const chunks: Buffer[] = [];
+    doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+    doc.on('error', reject);
+    doc.on('end', () => resolve(new Uint8Array(Buffer.concat(chunks))));
+
+    const green = '#1f9d68';
+    const navy = '#172033';
+    const muted = '#667085';
+    const pale = '#f6f8fb';
+    const line = '#e1e6ee';
+    const left = 40;
+    const pageWidth = 515;
+
+    const drawHeader = () => {
+      doc.font('Helvetica-Bold').fontSize(29).fillColor(navy).text('Plain', left, 40, {
+        continued: true,
+      });
+      doc.fillColor(green).text('B');
+      doc.font('Helvetica').fontSize(9).fillColor(muted).text(
+        'Quality products, delivered simply.',
+        left,
+        74,
+      );
+      doc.font('Helvetica-Bold').fontSize(23).fillColor(navy).text('INVOICE', 390, 40, {
+        width: 165,
+        align: 'right',
+      });
+      doc.roundedRect(457, 70, 98, 20, 10).fill('#e8f7f0');
+      doc.fontSize(8).fillColor('#137a50').text(text(invoice.payment_status).toUpperCase(), 462, 77, {
+        width: 88,
+        align: 'center',
+      });
+      doc.moveTo(left, 102).lineTo(555, 102).lineWidth(3).strokeColor(green).stroke();
+    };
+
+    const drawTableHeader = (y: number): number => {
+      doc.rect(left, y, pageWidth, 27).fill(navy);
+      doc.font('Helvetica-Bold').fontSize(8).fillColor('#ffffff');
+      doc.text('#', 48, y + 9, { width: 22 });
+      doc.text('ITEM', 75, y + 9, { width: 220 });
+      doc.text('QTY', 305, y + 9, { width: 40, align: 'right' });
+      doc.text('UNIT PRICE', 355, y + 9, { width: 80, align: 'right' });
+      doc.text('AMOUNT', 445, y + 9, { width: 100, align: 'right' });
+      return y + 27;
+    };
+
+    const addContinuationPage = (): number => {
+      doc.addPage();
+      doc.font('Helvetica-Bold').fontSize(16).fillColor(navy).text('Plain', left, 40, {
+        continued: true,
+      });
+      doc.fillColor(green).text('B');
+      doc.font('Helvetica').fontSize(9).fillColor(muted).text(
+        `Invoice ${invoice._id} - continued`,
+        280,
+        45,
+        { width: 275, align: 'right' },
+      );
+      doc.moveTo(left, 70).lineTo(555, 70).lineWidth(2).strokeColor(green).stroke();
+      return drawTableHeader(88);
+    };
+
+    drawHeader();
+
+    const meta = [
+      ['INVOICE NUMBER', text(invoice._id)],
+      ['TRANSACTION ID', text(invoice.tran_id)],
+      ['ISSUED', issuedAt.toLocaleDateString('en-GB')],
+    ];
+    meta.forEach(([label, value], index) => {
+      const x = left + index * 175;
+      doc.roundedRect(x, 122, 165, 55, 6).fillAndStroke(pale, line);
+      doc.font('Helvetica-Bold').fontSize(7).fillColor(muted).text(label, x + 10, 134);
+      doc.fontSize(9).fillColor(navy).text(value, x + 10, 150, {
+        width: 145,
+        ellipsis: true,
+      });
+    });
+
+    const billingLines = [
+      text(customer?.cus_name),
+      text(user.email),
+      text(customer?.cus_phone),
+      text(customer?.cus_address),
+      text([customer?.cus_city, customer?.cus_state, customer?.cus_postcode].filter(Boolean).join(', ')),
+      text(customer?.cus_country),
+    ].filter(Boolean);
+    const shippingLines = [
+      text(shipping?.ship_name),
+      text(shipping?.ship_phone),
+      text(shipping?.ship_address),
+      text([shipping?.ship_city, shipping?.ship_state, shipping?.ship_postcode].filter(Boolean).join(', ')),
+      text(shipping?.ship_country),
+    ].filter(Boolean);
+
+    const drawAddress = (title: string, lines: string[], x: number) => {
+      doc.font('Helvetica-Bold').fontSize(9).fillColor(green).text(title, x, 201);
+      lines.forEach((value, index) => {
+        doc
+          .font(index === 0 ? 'Helvetica-Bold' : 'Helvetica')
+          .fontSize(index === 0 ? 10 : 9)
+          .fillColor(index === 0 ? navy : muted)
+          .text(value, x, 220 + index * 14, { width: 235, ellipsis: true });
+      });
+    };
+    drawAddress('BILL TO', billingLines, left);
+    drawAddress('SHIP TO', shippingLines, 320);
+
+    let y = drawTableHeader(318);
+    products.forEach((item, index) => {
+      const detail = [text(item.color), text(item.size)].filter(Boolean).join(' / ');
+      doc.font('Helvetica-Bold').fontSize(9);
+      const titleHeight = doc.heightOfString(text(item.product.title), { width: 215 });
+      const rowHeight = Math.max(39, titleHeight + (detail ? 15 : 0) + 14);
+      if (y + rowHeight > 735) y = addContinuationPage();
+
+      doc.font('Helvetica').fontSize(9).fillColor(navy).text(String(index + 1), 48, y + 11, {
+        width: 22,
+      });
+      doc.font('Helvetica-Bold').text(text(item.product.title), 75, y + 9, { width: 215 });
+      if (detail) {
+        doc.font('Helvetica').fontSize(8).fillColor(muted).text(
+          detail,
+          75,
+          y + 11 + titleHeight,
+          { width: 215 },
+        );
+      }
+      doc.font('Helvetica').fontSize(9).fillColor(navy);
+      doc.text(text(item.qty), 305, y + 11, { width: 40, align: 'right' });
+      doc.text(money(item.price), 350, y + 11, { width: 85, align: 'right' });
+      doc.text(money(Number(item.price) * Number(item.qty)), 440, y + 11, {
+        width: 105,
+        align: 'right',
+      });
+      doc.moveTo(left, y + rowHeight).lineTo(555, y + rowHeight).lineWidth(0.7).strokeColor(line).stroke();
+      y += rowHeight;
+    });
+
+    if (y + 150 > 735) {
+      doc.addPage();
+      y = 65;
+    } else {
+      y += 18;
+    }
+
+    const summaryX = 330;
+    const summaryRow = (label: string, value: string, top: number, bold = false) => {
+      doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(bold ? 12 : 9).fillColor(navy);
+      doc.text(label, summaryX, top, { width: 90 });
+      doc.text(value, 420, top, { width: 135, align: 'right' });
+    };
+    summaryRow('Subtotal', money(invoice.total), y);
+    summaryRow('VAT (5%)', money(invoice.vat), y + 21);
+    doc.moveTo(summaryX, y + 43).lineTo(555, y + 43).lineWidth(1.5).strokeColor(navy).stroke();
+    summaryRow('Total', money(invoice.payable), y + 54, true);
+
+    const footerY = Math.max(y + 105, 700);
+    doc.moveTo(left, footerY).lineTo(555, footerY).lineWidth(0.7).strokeColor(line).stroke();
+    doc.font('Helvetica-Bold').fontSize(10).fillColor(green).text(
+      'Thank you for shopping with PlainB.',
+      left,
+      footerY + 12,
+    );
+    doc.font('Helvetica').fontSize(8).fillColor(muted).text(
+      'This invoice was generated electronically and requires no signature.',
+      left,
+      footerY + 28,
+    );
+    doc.text(
+      `Payment: ${text(invoice.payment_status)}\nDelivery: ${text(invoice.delivery_status)}`,
+      365,
+      footerY + 12,
+      { width: 190, align: 'right' },
+    );
+
+    const pageRange = doc.bufferedPageRange();
+    for (let pageIndex = 0; pageIndex < pageRange.count; pageIndex += 1) {
+      doc.switchToPage(pageIndex);
+      doc.font('Helvetica').fontSize(7).fillColor(muted).text(
+        `Page ${pageIndex + 1} of ${pageRange.count}`,
+        40,
+        810,
+        { width: 515, align: 'center', lineBreak: false },
+      );
+    }
+    doc.end();
+  });
 };
 
 export const invoiceServices = {
