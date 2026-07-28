@@ -14,6 +14,8 @@ import User from '../user/user.model.ts';
 
 // GET CSRF TOKEN
 const csrfToken = CatchAsync(async (req: Request, res: Response) => {
+  res.header('Cache-Control', 'no-cache');
+  
   SendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
