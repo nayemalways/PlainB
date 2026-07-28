@@ -44,7 +44,7 @@ const limiter = rateLimit({ windowMs: env.REQUEST_LIMIT_TIME, max: env.REQUEST_L
 app.use(limiter);
 
 /*---------WEB CACHE-------*/
-if (env.WEB_CACHE) {
+if (env.WEB_CACHE === true) {
   app.set('etag', 'strong');
 } else {
   app.disable('etag');

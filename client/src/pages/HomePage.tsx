@@ -30,7 +30,17 @@ const faqs = [
 ] as const;
 
 export default function HomePage() {
-  const { loadHome, loadByRemark, products, categories, sliders, status, error, activeRemark } = useProductStore();
+  const {
+    loadHome,
+    loadByRemark,
+    products,
+    brands,
+    categories,
+    sliders,
+    status,
+    error,
+    activeRemark,
+  } = useProductStore();
   useEffect(() => { void loadHome(); }, [loadHome]);
 
   return (
@@ -69,6 +79,50 @@ export default function HomePage() {
           {categories.map((category) => <Link key={category._id} to={`/categories/${category._id}`} className="group w-28 shrink-0 snap-start text-center"><div className="mx-auto grid aspect-square place-items-center overflow-hidden rounded-full border-4 border-white bg-brand-50 shadow-lg transition group-hover:-translate-y-1 group-hover:border-brand-400 dark:border-navy-800 dark:bg-navy-800">{category.categoryImg ? <img src={category.categoryImg} alt="" className="size-full object-cover" /> : <span className="text-2xl font-black text-brand-700">{category.categoryName.slice(0, 1)}</span>}</div><span className="mt-3 block text-sm font-bold">{category.categoryName}</span></Link>)}
         </div>
       </PageContainer>
+
+      {brands.length > 0 && (
+        <section className="border-y bg-white py-14">
+          <PageContainer>
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-extrabold tracking-widest text-brand-700">
+                  FEATURED BRANDS
+                </p>
+                <h2 className="mt-2 text-3xl font-black">Shop by brand</h2>
+              </div>
+              <Link className="text-sm font-bold text-brand-700 hover:text-brand-600" to="/search">
+                Browse all products
+              </Link>
+            </div>
+
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {brands.map((brand) => (
+                <Link
+                  key={brand._id}
+                  to={`/brands/${brand._id}`}
+                  className="group flex min-h-28 flex-col items-center justify-center rounded-xl border bg-white px-4 py-5 text-center transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+                >
+                  {brand.brandImg ? (
+                    <img
+                      src={brand.brandImg}
+                      alt=""
+                      loading="lazy"
+                      className="h-12 w-full object-contain"
+                    />
+                  ) : (
+                    <span className="grid size-12 place-items-center rounded-full bg-brand-50 text-lg font-black text-brand-700">
+                      {brand.brandName.slice(0, 1).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="mt-3 line-clamp-1 text-sm font-extrabold text-navy-800 group-hover:text-brand-700">
+                    {brand.brandName}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </PageContainer>
+        </section>
+      )}
 
       <section className="border-y bg-white py-16 dark:bg-navy-900/45">
         <PageContainer>
