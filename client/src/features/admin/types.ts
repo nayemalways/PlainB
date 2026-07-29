@@ -11,13 +11,28 @@ export interface AdminPayment {
   date: string;
 }
 export interface dashboardOverview {
-        totalProducts: number,
-        payment: {
-            _id: null,
-            totalRevenue: number,
-            totalPaidTransactions: number
-        },
-        totalUser: number
+  totalProducts: number;
+  payment: {
+    _id: null;
+    totalRevenue: number;
+    totalPaidTransactions: number;
+  };
+  totalUser: number;
+}
+
+export interface ITransactionsItems {
+  id: string;
+  transaction: string;
+  customer: string;
+  email: string;
+  amount: number;
+  status: string;
+  date: string;
+}
+
+export interface ITransactionsList {
+  items: ITransactionsItems[] ;
+  meta: PaginationMeta 
 }
 export interface AdminUser {
   id: string;
@@ -60,17 +75,19 @@ export interface AdminState {
   products: Product[];
   brands: Brand[];
   categories: Category[];
+  transactions: ITransactionsList;
   meta: PaginationMeta;
   inventory: InventoryItem[];
   payments: AdminPayment[];
-  revenueSeries: { month: string, revenue: number }[]
-  dashboardOverview: dashboardOverview ;
+  revenueSeries: { month: string; revenue: number }[];
+  dashboardOverview: dashboardOverview;
   settings: AdminSettings;
   status: RequestStatus;
   error: string | null;
   loaded: boolean;
   dashboardAnalytics: () => Promise<void>;
   revenueTrends: () => Promise<void>;
+  transactionsHistory: (page?: number, limit?: number, status?: string) => Promise<void>;
   loadCatalog: () => Promise<void>;
   createProduct: (input: ProductInput) => Promise<void>;
   createBrand: (name: string, file: File) => Promise<void>;

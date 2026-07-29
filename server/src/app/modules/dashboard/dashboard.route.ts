@@ -11,6 +11,11 @@ router.get(
   checkAuth(Role.ADMIN),
   dashboardControllers.getRevenueTrends,
 );
+router.get(
+  '/transactions',
+  checkAuth(Role.ADMIN),
+  dashboardControllers.getTransactionHistory,
+);
 
 
 export const dashboardRouter = router;

@@ -4,6 +4,7 @@ import { CatchAsync } from "../../utility/CatchAsync.ts";
 import { dashboardServices } from "./dashboard.service.ts";
 import { SendResponse } from "../../utility/sendResponse.ts";
 import { StatusCodes } from "http-status-codes";
+import type { TransactionHistoryQuery } from "./dashboard.interface.ts";
 
 
 const dashboardAnalytics = CatchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -28,7 +29,21 @@ const getRevenueTrends = CatchAsync(async (_req: Request, res: Response) => {
     })
 });
 
+const getTransactionHistory = CatchAsync(async (req: Request, res: Response) => {
+    const result = await dashboardServices.getTransactionHistory(
+      req.query as TransactionHistoryQuery,
+    );
+
+    SendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Transaction history fetched successfully",
+        data: result
+    })
+});
+
 export const dashboardControllers = {
     dashboardAnalytics,
-    getRevenueTrends
+    getRevenueTrends,
+    getTransactionHistory
 }

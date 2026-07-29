@@ -1,4 +1,5 @@
 import { ArrowUpRight, Boxes, CreditCard, Package, Users } from 'lucide-react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Area,
@@ -19,13 +20,20 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table.tsx';
-import { DemoBadge, PageTitle, Panel } from '../../features/admin/AdminUi.tsx';
+import { PageTitle, Panel } from '../../features/admin/AdminUi.tsx';
 import { statusTone } from '../../features/admin/admin-utils.ts';
 import { useAdminStore } from '../../features/admin/admin.store.ts';
 import { formatPrice } from '../../lib/utils/format.ts';
 
+
+
 export default function AdminOverviewPage() {
-  const { products, inventory, payments, dashboardOverview, revenueSeries } = useAdminStore();
+  const { products, inventory, transactions, dashboardOverview, revenueSeries } = useAdminStore();
+  const transactionsHistory = useAdminStore((state) => state.transactionsHistory);
+
+  useEffect(() => {
+    void transactionsHistory(1, 5, 'all');
+  }, [transactionsHistory]);
 
   const metrics = [
     ['Total users', dashboardOverview?.totalUser, Users, false],
@@ -40,7 +48,6 @@ export default function AdminOverviewPage() {
       <PageTitle
         title="Business overview"
         description="A focused view of store performance and operational priorities."
-        action={<DemoBadge />}
       />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(([label, value, Icon, demo]) => (
@@ -140,7 +147,7 @@ export default function AdminOverviewPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {payments.slice(0, 4).map((payment) => (
+            {transactions?.items.map((payment) => (
               <TableRow key={payment.id}>
                 <TableCell className="font-bold">{payment.transaction}</TableCell>
                 <TableCell>{payment.customer}</TableCell>

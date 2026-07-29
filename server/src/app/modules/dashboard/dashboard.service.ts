@@ -1,7 +1,14 @@
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errorHelpers/appError.ts';
 import { PaymentStatus } from '../invoice/invoice.interface.ts';
 import InvoiceModel from '../invoice/invoice.model.ts';
 import ProductModel from '../product/product.model.ts';
 import User from '../user/user.model.ts';
+import type {
+  TransactionHistoryItem,
+  TransactionHistoryQuery,
+  TransactionHistoryResult,
+} from './dashboard.interface.ts';
 
 interface MonthlyRevenue {
   month: string;
@@ -14,6 +21,11 @@ interface RevenueAggregationResult {
     month: number;
   };
   revenue: number;
+}
+
+interface TransactionAggregationResult {
+  items: TransactionHistoryItem[];
+  total: Array<{ count: number }>;
 }
 
 // DASHBOARD ANALYTICS
@@ -113,7 +125,98 @@ const getRevenueTrends = async (): Promise<MonthlyRevenue[]> => {
   });
 };
 
+// ADMIN TRANSACTION HISTORY
+const getTransactionHistory = async (
+  query: TransactionHistoryQuery,
+): Promise<TransactionHistoryResult> => {
+  const page = Math.max(1, Number.parseInt(query.page ?? '1', 10) || 1);
+  const requestedLimit = Number.parseInt(query.limit ?? '10', 10) || 10;
+  const limit = Math.min(100, Math.max(1, requestedLimit));
+  const skip = (page - 1) * limit;
+
+  // Accept "cancel" for client convenience while keeping the stored enum value canonical.
+  const requestedStatus = query.status?.trim().toLowerCase();
+  const normalizedStatus = requestedStatus === 'cancel' ? PaymentStatus.CANCELLED : requestedStatus;
+  const allowedStatuses = new Set<string>([
+    PaymentStatus.PAID,
+    PaymentStatus.PENDING,
+    PaymentStatus.CANCELLED,
+  ]);
+
+  if (normalizedStatus && normalizedStatus !== 'all' && !allowedStatuses.has(normalizedStatus)) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      'Invalid payment status. Use paid, pending, cancelled, or all.',
+    );
+  }
+
+  const match =
+    normalizedStatus && normalizedStatus !== 'all'
+      ? { payment_status: normalizedStatus }
+      : { payment_status: { $in: [...allowedStatuses] } };
+
+  // Faceting returns the requested page and its total count from one database operation.
+  const [result] = await InvoiceModel.aggregate<TransactionAggregationResult>([
+    { $match: match },
+    { $sort: { createdAt: -1, _id: -1 } },
+    {
+      $facet: {
+        items: [
+          { $skip: skip },
+          { $limit: limit },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'userID',
+              foreignField: '_id',
+              as: 'user',
+              pipeline: [
+                {
+                  $project: {
+                    _id: 0,
+                    email: 1,
+                    customerName: '$cus_address.cus_name',
+                  },
+                },
+              ],
+            },
+          },
+          { $set: { user: { $first: '$user' } } },
+          {
+            $project: {
+              _id: 0,
+              id: { $toString: '$_id' },
+              transaction: '$tran_id',
+              customer: { $ifNull: ['$user.customerName', 'Unknown customer'] },
+              email: { $ifNull: ['$user.email', ''] },
+              amount: {
+                $convert: { input: '$payable', to: 'double', onError: 0, onNull: 0 },
+              },
+              status: '$payment_status',
+              date: '$createdAt',
+            },
+          },
+        ],
+        total: [{ $count: 'count' }],
+      },
+    },
+  ]);
+
+  const totalItems = result?.total[0]?.count ?? 0;
+
+  return {
+    items: result?.items ?? [],
+    meta: {
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / limit)),
+    },
+  };
+};
+
 export const dashboardServices = {
   dashboardAnalytics,
   getRevenueTrends,
+  getTransactionHistory,
 };

@@ -15,11 +15,17 @@ const dashboardOverview = {
   totalUser: 0,
 };
 
+const defaultTransactionData = {
+  items: [],
+  meta: { page: 1, limit: 40, totalItems: 0, totalPages: 1 },
+};
+
 export const useAdminStore = create<AdminState>((set, _get) => ({
   products: [],
   brands: [],
   categories: [],
   inventory: [],
+  transactions: defaultTransactionData,
   payments: demoPayments,
   dashboardOverview: dashboardOverview,
   revenueSeries: [],
@@ -46,6 +52,21 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
       set({ revenueSeries: data?.data });
     } catch (error) {
       set({ revenueSeries: [], status: 'error', error: getErrorMessage(error) });
+    }
+  },
+
+  transactionsHistory: async (page = 1, limit = 10, status = 'all') => {
+    set({ status: 'loading', error: null });
+    try {
+      const queryString = new URLSearchParams({
+        status,
+        limit: String(limit),
+        page: String(page),
+      }).toString();
+      const { data } = await api.get(`/dashboard/transactions?${queryString}`);
+      set({ transactions: data?.data, status: 'success' });
+    } catch (error) {
+      set({ transactions: defaultTransactionData, status: 'error', error: getErrorMessage(error) });
     }
   },
 
