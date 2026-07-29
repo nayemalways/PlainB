@@ -54,6 +54,11 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
 
     set({
       products: page.items,
+      inventory: page.items.map((product) => ({
+        productId: product._id,
+        quantity: product.stock ? 12 : 0,
+        available: product.stock,
+      })),
       meta: page.meta,
       brands,
       categories,
