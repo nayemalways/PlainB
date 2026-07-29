@@ -31,8 +31,8 @@ export interface ITransactionsItems {
 }
 
 export interface ITransactionsList {
-  items: ITransactionsItems[] ;
-  meta: PaginationMeta 
+  items: ITransactionsItems[];
+  meta: PaginationMeta;
 }
 export interface AdminUser {
   id: string;
@@ -71,11 +71,24 @@ export interface ProductInput {
   brandId: string;
   images: File[];
 }
+
+export interface IUsers {
+  _id: string;
+  name: string;
+  email: string;
+  profilePhoto: string | null;
+  isVerified: boolean;
+  isActive: string;
+  createdAt: Date;
+  orders: number;
+  spent: number;
+}
 export interface AdminState {
   products: Product[];
   brands: Brand[];
   categories: Category[];
   transactions: ITransactionsList;
+  usersList: { items: IUsers[]; meta: PaginationMeta };
   meta: PaginationMeta;
   inventory: InventoryItem[];
   payments: AdminPayment[];
@@ -88,6 +101,7 @@ export interface AdminState {
   dashboardAnalytics: () => Promise<void>;
   revenueTrends: () => Promise<void>;
   transactionsHistory: (page?: number, limit?: number, status?: string) => Promise<void>;
+  usersListQuery: (page?: number, limit?: number, search?: string) => Promise<void>;
   loadCatalog: () => Promise<void>;
   createProduct: (input: ProductInput) => Promise<void>;
   createBrand: (name: string, file: File) => Promise<void>;

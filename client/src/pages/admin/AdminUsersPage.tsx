@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Eye, Search, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '../../components/ui/badge.tsx';
 import { Button } from '../../components/ui/button.tsx';
 import { Input } from '../../components/ui/input.tsx';
@@ -12,26 +12,34 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table.tsx';
-import { DemoBadge, PageTitle, Panel } from '../../features/admin/AdminUi.tsx';
+import { PageTitle, Panel } from '../../features/admin/AdminUi.tsx';
 import { statusTone } from '../../features/admin/admin-utils.ts';
 import { useAdminStore } from '../../features/admin/admin.store.ts';
-import type { AdminUser } from '../../features/admin/types.ts';
+import type { IUsers } from '../../features/admin/types.ts';
 import { formatPrice } from '../../lib/utils/format.ts';
+
+
+
 export default function AdminUsersPage() {
-  const users = useAdminStore((state) => state.users);
+  const { usersListQuery, usersList} = useAdminStore();
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<AdminUser | null>(null);
+  const [selected, setSelected] = useState<IUsers | null>(null);
   const rows = useMemo(
-    () => users.filter((u) => `${u.name} ${u.email}`.toLowerCase().includes(query.toLowerCase())),
-    [query, users],
+    () => usersList.items.filter((u: IUsers) => `${u?.name} ${u?.email}`.toLowerCase().includes(query.toLowerCase())),
+    [query, usersList.items],
   );
+
+
+  console.log('rows: ', usersList.items)
+
+  useEffect(() => {
+    void usersListQuery();
+  },[query, usersListQuery]);
+
+
   return (
     <>
-      <PageTitle
-        title="Users"
-        description="Customer directory and account summaries."
-        action={<DemoBadge />}
-      />
+      <PageTitle title="Users" description="Customer directory and account summaries." />
       <Panel>
         <div className="relative mb-5 max-w-sm">
           <Search className="absolute left-3 top-3 size-4 text-navy-400" />
@@ -54,17 +62,17 @@ export default function AdminUsersPage() {
             </tr>
           </TableHeader>
           <TableBody>
-            {rows.map((u) => (
-              <TableRow key={u.id}>
+            {rows.map((u: IUsers) => (
+              <TableRow key={u._id}>
                 <TableCell>
-                  <p className="font-bold">{u.name}</p>
+                  <p className="font-bold">{u.name || 'Unknown'}</p>
                   <p className="text-xs text-navy-500">{u.email}</p>
                 </TableCell>
-                <TableCell>{new Date(u.joined).toLocaleDateString('en-BD')}</TableCell>
+                <TableCell>{new Date(u.createdAt).toLocaleDateString('en-BD')}</TableCell>
                 <TableCell>{u.orders}</TableCell>
                 <TableCell className="font-bold">{formatPrice(u.spent)}</TableCell>
                 <TableCell>
-                  <Badge className={statusTone(u.status)}>{u.status}</Badge>
+                  <Badge className={statusTone(u.isActive.toLowerCase())}>{u.isActive}</Badge>
                 </TableCell>
                 <TableCell className="text-right">
                   <Button
@@ -102,8 +110,8 @@ export default function AdminUsersPage() {
                 <p className="text-sm text-navy-500">{selected.email}</p>
                 <dl className="mt-7 grid grid-cols-2 gap-4">
                   {[
-                    ['Account status', selected.status],
-                    ['Joined', new Date(selected.joined).toLocaleDateString('en-BD')],
+                    ['Account status', selected.isActive],
+                    ['Joined', new Date(selected.createdAt).toLocaleDateString('en-BD')],
                     ['Orders', selected.orders],
                     ['Lifetime spend', formatPrice(selected.spent)],
                   ].map(([label, value]) => (
@@ -113,9 +121,6 @@ export default function AdminUsersPage() {
                     </div>
                   ))}
                 </dl>
-                <p className="mt-6 rounded-lg bg-amber-50 p-3 text-xs text-amber-800">
-                  This profile uses demonstration data until the admin user API is available.
-                </p>
               </div>
             )}
           </Dialog.Content>

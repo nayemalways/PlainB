@@ -15,9 +15,9 @@ const dashboardOverview = {
   totalUser: 0,
 };
 
-const defaultTransactionData = {
+const defaultData = {
   items: [],
-  meta: { page: 1, limit: 40, totalItems: 0, totalPages: 1 },
+  meta: { page: 1, limit: 20, totalItems: 0, totalPages: 1 },
 };
 
 export const useAdminStore = create<AdminState>((set, _get) => ({
@@ -25,10 +25,11 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
   brands: [],
   categories: [],
   inventory: [],
-  transactions: defaultTransactionData,
+  transactions: defaultData,
   payments: demoPayments,
   dashboardOverview: dashboardOverview,
   revenueSeries: [],
+  usersList: defaultData,
   settings: demoSettings,
   meta: { page: 1, limit: 48, totalItems: 0, totalPages: 1 },
   status: 'idle',
@@ -66,7 +67,22 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
       const { data } = await api.get(`/dashboard/transactions?${queryString}`);
       set({ transactions: data?.data, status: 'success' });
     } catch (error) {
-      set({ transactions: defaultTransactionData, status: 'error', error: getErrorMessage(error) });
+      set({ transactions: defaultData, status: 'error', error: getErrorMessage(error) });
+    }
+  },
+
+  usersListQuery: async (page = 1, limit = 10, search = '') => {
+    set({ status: 'loading', error: null });
+    try {
+      const queryString = new URLSearchParams({
+        search,
+        limit: String(limit),
+        page: String(page),
+      }).toString();
+      const { data } = await api.get(`/dashboard/users?${queryString}`);
+      set({ usersList: data?.data, status: 'success' });
+    } catch (error) {
+      set({ usersList: defaultData, status: 'error', error: getErrorMessage(error) });
     }
   },
 

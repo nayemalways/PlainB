@@ -26,6 +26,8 @@ export interface IUser extends Document {
   isActive?: IsActiveUser;
   isDeleted?: boolean;
   role?: Role;
+  createdAt: Date;
+  updatedAt: Date;
 
   cus_address: {
     cus_address: string;
@@ -47,4 +49,22 @@ export interface IUser extends Document {
     ship_postcode: string;
     ship_state: string;
   };
+}
+
+export interface IUserListQuery {
+  page?: string;
+  limit?: string;
+  search?: string;
+}
+
+export interface IUserListItem {
+  _id: string;
+  name: string;
+  email: string;
+  profilePhoto: string | null;
+  isVerified: boolean;
+  isActive: IsActiveUser;
+  createdAt: Date;
+  orders: number;
+  spent: number;
 }

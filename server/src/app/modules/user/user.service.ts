@@ -1,7 +1,12 @@
 import { createHmac, randomInt } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
-import { IUser } from './user.interface.ts';
+import {
+  IsActiveUser,
+  Role,
+  type IUser,
+  type IUserListItem,
+} from './user.interface.ts';
 import User from './user.model.ts';
 import AppError from '../../errorHelpers/appError.ts';
 import { env } from '../../config/config.ts';
@@ -144,6 +149,100 @@ const readProfileService = async (userId: string) => {
   return toProfileDto(user);
 };
 
+// GET PAGINATED USER LIST FOR ADMIN
+const listUsersForAdmin = async (page: number, limit: number, search?: string) => {
+  const filter: Record<string, unknown> = {
+    role: Role.USER,
+    isDeleted: { $ne: true },
+  };
+
+  const normalizedSearch = search?.trim();
+  if (normalizedSearch) {
+    const escapedSearch = normalizedSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const searchExpression = new RegExp(escapedSearch, 'i');
+    filter.$or = [
+      { email: searchExpression },
+      { 'cus_address.cus_name': searchExpression },
+    ];
+  }
+
+  const [result] = await User.aggregate<{
+    items: IUserListItem[];
+    total: Array<{ count: number }>;
+  }>([
+    { $match: filter },
+    { $sort: { createdAt: -1, _id: -1 } },
+    {
+      $facet: {
+        items: [
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $lookup: {
+              from: 'invoices',
+              let: { userId: '$_id' },
+              pipeline: [
+                { $match: { $expr: { $eq: ['$userID', '$$userId'] } } },
+                {
+                  $group: {
+                    _id: null,
+                    orders: { $sum: 1 },
+                    spent: {
+                      $sum: {
+                        $cond: [
+                          { $eq: ['$payment_status', 'paid'] },
+                          {
+                            $convert: {
+                              input: '$payable',
+                              to: 'double',
+                              onError: 0,
+                              onNull: 0,
+                            },
+                          },
+                          0,
+                        ],
+                      },
+                    },
+                  },
+                },
+              ],
+              as: 'orderSummary',
+            },
+          },
+          { $set: { orderSummary: { $first: '$orderSummary' } } },
+          {
+            $project: {
+              _id: { $toString: '$_id' },
+              name: { $ifNull: ['$cus_address.cus_name', ''] },
+              email: 1,
+              profilePhoto: { $ifNull: ['$profilePhoto', null] },
+              isVerified: 1,
+              isActive: { $ifNull: ['$isActive', IsActiveUser.ACTIVE] },
+              createdAt: 1,
+              orders: { $ifNull: ['$orderSummary.orders', 0] },
+              spent: { $ifNull: ['$orderSummary.spent', 0] },
+            },
+          },
+        ],
+        total: [{ $count: 'count' }],
+      },
+    },
+  ]);
+
+  const items = result?.items ?? [];
+  const totalItems = result?.total[0]?.count ?? 0;
+
+  return {
+    items,
+    meta: {
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / limit)),
+    },
+  };
+};
+
 // CHANGE PASSWORD
 const changePassword = async (userId: string, payload: IChangePasswordInput) => {
   const user = await User.findById(userId).select('+password');
@@ -173,5 +272,6 @@ export const userService = {
   verifyEmail,
   saveProfileService,
   readProfileService,
+  listUsersForAdmin,
   changePassword,
 }
