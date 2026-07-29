@@ -10,6 +10,7 @@ import { categoryRouter } from '../modules/category/category.route.ts';
 import { paymentRouter } from '../modules/payment/payment.route.ts';
 import { reviewRouter } from '../modules/review/review.route.ts';
 import express from 'express';
+import { dashboardRouter } from '../modules/dashboard/dashboard.route.ts';
 
 const router = express.Router();
 
@@ -57,6 +58,10 @@ const modules = [
   {
     path: '/review',
     module: reviewRouter,
+  },
+  {
+    path: '/dashboard',
+    module: dashboardRouter,
   },
 ];
 

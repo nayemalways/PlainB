@@ -1,5 +1,12 @@
 import type { Types } from 'mongoose';
 
+export enum PaymentStatus {
+  PAID = 'paid',
+  PENDING = 'pending',
+  CANCELLED = 'cancelled',
+  FAILED = 'failed'
+}
+
 export interface IInvoice {
   userID: Types.ObjectId;
   payable: string;
@@ -8,7 +15,7 @@ export interface IInvoice {
   tran_id: string;
   val_id: string;
   delivery_status: string;
-  payment_status: string;
+  payment_status: PaymentStatus;
   stripe_session_id?: string | null;
   stripe_payment_intent_id?: string | null;
   payment_email_status: 'pending' | 'sending' | 'sent' | 'failed';

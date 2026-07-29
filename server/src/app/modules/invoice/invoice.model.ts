@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import type { IInvoice } from './invoice.interface.ts';
+import { PaymentStatus, type IInvoice } from './invoice.interface.ts';
 
 const DataSchema = new mongoose.Schema<IInvoice>(
   {
@@ -10,7 +10,7 @@ const DataSchema = new mongoose.Schema<IInvoice>(
     tran_id: { type: String, required: true },
     val_id: { type: String, required: true },
     delivery_status: { type: String, required: true },
-    payment_status: { type: String, required: true },
+    payment_status: { type: String, enum: PaymentStatus, default: PaymentStatus.PENDING, required: true },
     stripe_session_id: { type: String, default: null, index: true },
     stripe_payment_intent_id: { type: String, default: null },
     payment_email_status: {

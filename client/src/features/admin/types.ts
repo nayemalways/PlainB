@@ -10,6 +10,15 @@ export interface AdminPayment {
   status: 'paid' | 'pending' | 'failed';
   date: string;
 }
+export interface dashboardOverview {
+        totalProducts: number,
+        payment: {
+            _id: null,
+            totalRevenue: number,
+            totalPaidTransactions: number
+        },
+        totalUser: number
+}
 export interface AdminUser {
   id: string;
   name: string;
@@ -54,12 +63,12 @@ export interface AdminState {
   meta: PaginationMeta;
   inventory: InventoryItem[];
   payments: AdminPayment[];
-  users: AdminUser[];
+  dashboardOverview: dashboardOverview ;
   settings: AdminSettings;
   status: RequestStatus;
   error: string | null;
   loaded: boolean;
-  load: () => Promise<void>;
+  dashboardAnalytics: () => Promise<void>;
   createProduct: (input: ProductInput) => Promise<void>;
   createBrand: (name: string, file: File) => Promise<void>;
   createCategory: (name: string, file: File) => Promise<void>;

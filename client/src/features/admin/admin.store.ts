@@ -1,49 +1,43 @@
 import { create } from 'zustand';
 import { getErrorMessage } from '../../lib/utils/format.ts';
 import { adminApi } from './admin.api.ts';
-import { demoPayments, demoSettings, demoUsers } from './demo-data.ts';
+import { demoPayments, demoSettings } from './demo-data.ts';
 import type { AdminState } from './types.ts';
+import { api } from '@/lib/api/client.ts';
 
-let loadPromise: Promise<void> | null = null;
-export const useAdminStore = create<AdminState>((set, get) => ({
+const dashboardOverview = {
+        totalProducts: 0,
+        payment: {
+            _id: null,
+            totalRevenue: 0,
+            totalPaidTransactions: 0
+        },
+        totalUser: 0
+    }
+
+export const useAdminStore = create<AdminState>((set, _get) => ({
   products: [],
   brands: [],
   categories: [],
   inventory: [],
   payments: demoPayments,
-  users: demoUsers,
+  dashboardOverview: dashboardOverview,
   settings: demoSettings,
   meta: { page: 1, limit: 48, totalItems: 0, totalPages: 1 },
   status: 'idle',
   error: null,
   loaded: false,
-  load: async () => {
-    if (get().loaded) return;
-    if (loadPromise) return loadPromise;
+
+  dashboardAnalytics: async () => {
     set({ status: 'loading', error: null });
-    loadPromise = adminApi
-      .catalog()
-      .then(({ page, brands, categories }) => {
-        set({
-          products: page.items,
-          brands,
-          categories,
-          meta: page.meta,
-          inventory: page.items.map((product, index) => ({
-            productId: product._id,
-            quantity: product.stock ? 4 + ((index * 7) % 38) : 0,
-            available: product.stock,
-          })),
-          status: 'success',
-          loaded: true,
-        });
-      })
-      .catch((error) => set({ status: 'error', error: getErrorMessage(error) }))
-      .finally(() => {
-        loadPromise = null;
-      });
-    return loadPromise;
+    try {
+      const { data } = await api.get('/dashboard');
+      set({ dashboardOverview: data?.data });
+    } catch (error) {
+      set({ dashboardOverview: dashboardOverview, status: 'error', error: getErrorMessage(error) });
+    }
   },
+
   createProduct: async (input) => {
     set({ status: 'loading', error: null });
     try {

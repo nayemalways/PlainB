@@ -13,6 +13,7 @@ import type {
   IPaymentStatusResponse,
 } from './payment.interface.ts';
 import { env } from '../../config/config.ts';
+import { PaymentStatus } from '../invoice/invoice.interface.ts';
 
 const stripe = env.STRIPE_SECRET_KEY ? new Stripe(env.STRIPE_SECRET_KEY) : null;
 
@@ -168,11 +169,11 @@ const handleStripeWebhook = async (
     event.type === 'checkout.session.completed' ||
     event.type === 'checkout.session.async_payment_succeeded'
   ) {
-    if (session.payment_status !== 'paid') return;
+    if (session.payment_status !== PaymentStatus.PAID) return;
     await InvoiceModel.updateOne(
-      { _id: invoiceId, payment_status: { $ne: 'paid' } },
+      { _id: invoiceId, payment_status: { $ne: PaymentStatus.PAID } },
       {
-        payment_status: 'paid',
+        payment_status: PaymentStatus.PAID,
         stripe_payment_intent_id:
           typeof session.payment_intent === 'string' ? session.payment_intent : null,
       },
@@ -218,7 +219,7 @@ const handleStripeWebhook = async (
       } catch (error) {
         await InvoiceModel.updateOne(
           { _id: invoiceForEmail._id },
-          { payment_email_status: 'failed' },
+          { payment_email_status: PaymentStatus.FAILED },
         );
         throw error;
       }
@@ -228,11 +229,11 @@ const handleStripeWebhook = async (
       await CartModel.deleteMany({ userId: session.metadata.userId });
     }
   } else if (event.type === 'checkout.session.async_payment_failed') {
-    await InvoiceModel.updateOne({ _id: invoiceId }, { payment_status: 'failed' });
+    await InvoiceModel.updateOne({ _id: invoiceId }, { payment_status: PaymentStatus.FAILED });
   } else if (event.type === 'checkout.session.expired') {
     await InvoiceModel.updateOne(
-      { _id: invoiceId, payment_status: 'pending' },
-      { payment_status: 'cancelled' },
+      { _id: invoiceId, payment_status: PaymentStatus.PENDING },
+      { payment_status: PaymentStatus.CANCELLED },
     );
   }
 };
@@ -252,10 +253,10 @@ const getPaymentStatus = async (
   }
 
   let status: IPaymentStatusResponse['status'] = 'pending';
-  if (invoice.payment_status === 'paid' || invoice.payment_status === 'success') status = 'paid';
-  if (invoice.payment_status === 'failed') status = 'failed';
-  if (invoice.payment_status === 'cancelled' || invoice.payment_status === 'cancel') {
-    status = 'cancelled';
+  if (invoice.payment_status === PaymentStatus.PAID ) status = 'paid';
+  if (invoice.payment_status === PaymentStatus.FAILED) status = 'failed';
+  if (invoice.payment_status === PaymentStatus.CANCELLED) {
+    status = PaymentStatus.CANCELLED;
   }
 
   return {

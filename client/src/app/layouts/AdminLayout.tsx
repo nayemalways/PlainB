@@ -25,7 +25,7 @@ function Sidebar({ close }: { close?: () => void }) {
 }
 
 export function AdminLayout() {
-  const load = useAdminStore((state) => state.load);
+  const load = useAdminStore((state) => state.dashboardAnalytics);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();

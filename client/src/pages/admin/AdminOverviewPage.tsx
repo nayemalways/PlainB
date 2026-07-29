@@ -26,16 +26,15 @@ import { revenueSeries } from '../../features/admin/demo-data.ts';
 import { formatPrice } from '../../lib/utils/format.ts';
 
 export default function AdminOverviewPage() {
-  const { products, inventory, payments, users } = useAdminStore();
-  const revenue = payments
-    .filter((item) => item.status === 'paid')
-    .reduce((sum, item) => sum + item.amount, 0);
+  const { products, inventory, payments, dashboardOverview } = useAdminStore();
+
   const metrics = [
-    ['Total users', users.length, Users, true],
-    ['Total products', products.length, Package, false],
-    ['Revenue', formatPrice(revenue), ArrowUpRight, true],
-    ['Payments', payments.length, CreditCard, true],
+    ['Total users', dashboardOverview?.totalUser, Users, false],
+    ['Total products', dashboardOverview?.totalProducts, Package, false],
+    ['Revenue', formatPrice(dashboardOverview?.payment?.totalRevenue), ArrowUpRight, false],
+    ['Payments', dashboardOverview?.payment?.totalPaidTransactions, CreditCard, false],
   ] as const;
+
   const low = inventory.filter((item) => item.quantity <= 8);
   return (
     <>
