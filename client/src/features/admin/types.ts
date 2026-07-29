@@ -63,12 +63,15 @@ export interface AdminState {
   meta: PaginationMeta;
   inventory: InventoryItem[];
   payments: AdminPayment[];
+  revenueSeries: { month: string, revenue: number }[]
   dashboardOverview: dashboardOverview ;
   settings: AdminSettings;
   status: RequestStatus;
   error: string | null;
   loaded: boolean;
   dashboardAnalytics: () => Promise<void>;
+  revenueTrends: () => Promise<void>;
+  loadCatalog: () => Promise<void>;
   createProduct: (input: ProductInput) => Promise<void>;
   createBrand: (name: string, file: File) => Promise<void>;
   createCategory: (name: string, file: File) => Promise<void>;

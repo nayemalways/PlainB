@@ -93,11 +93,4 @@ export const demoSettings: AdminSettings = {
   emailPayments: true,
   emailStock: true,
 };
-export const revenueSeries = [
-  { month: 'Feb', revenue: 86000 },
-  { month: 'Mar', revenue: 103000 },
-  { month: 'Apr', revenue: 97000 },
-  { month: 'May', revenue: 126000 },
-  { month: 'Jun', revenue: 142000 },
-  { month: 'Jul', revenue: 168000 },
-];
+

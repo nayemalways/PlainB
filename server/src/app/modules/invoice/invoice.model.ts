@@ -25,6 +25,9 @@ const DataSchema = new mongoose.Schema<IInvoice>(
   { timestamps: true, versionKey: false },
 );
 
+// Supports admin revenue queries that filter paid invoices within a date range.
+DataSchema.index({ payment_status: 1, createdAt: 1 });
+
 const InvoiceModel = mongoose.model<IInvoice>('invoices', DataSchema);
 
 // Export Data Model

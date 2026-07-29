@@ -22,11 +22,10 @@ import {
 import { DemoBadge, PageTitle, Panel } from '../../features/admin/AdminUi.tsx';
 import { statusTone } from '../../features/admin/admin-utils.ts';
 import { useAdminStore } from '../../features/admin/admin.store.ts';
-import { revenueSeries } from '../../features/admin/demo-data.ts';
 import { formatPrice } from '../../lib/utils/format.ts';
 
 export default function AdminOverviewPage() {
-  const { products, inventory, payments, dashboardOverview } = useAdminStore();
+  const { products, inventory, payments, dashboardOverview, revenueSeries } = useAdminStore();
 
   const metrics = [
     ['Total users', dashboardOverview?.totalUser, Users, false],
@@ -64,7 +63,6 @@ export default function AdminOverviewPage() {
               <h3 className="font-black">Revenue trend</h3>
               <p className="text-xs text-navy-500">Six-month demonstration</p>
             </div>
-            <DemoBadge />
           </div>
           <div className="mt-5 h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -77,7 +75,7 @@ export default function AdminOverviewPage() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="month" tickLine={false} />
-                <YAxis tickLine={false} width={55} />
+                <YAxis tickLine={false} width={70} />
                 <Tooltip formatter={(value) => formatPrice(Number(value))} />
                 <Area
                   type="monotone"

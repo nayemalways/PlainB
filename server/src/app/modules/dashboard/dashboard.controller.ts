@@ -17,8 +17,18 @@ const dashboardAnalytics = CatchAsync(async (req: Request, res: Response, next: 
     })
 });
 
+const getRevenueTrends = CatchAsync(async (_req: Request, res: Response) => {
+    const result = await dashboardServices.getRevenueTrends();
 
+    SendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Revenue trends fetched successfully",
+        data: result
+    })
+});
 
 export const dashboardControllers = {
-    dashboardAnalytics
+    dashboardAnalytics,
+    getRevenueTrends
 }

@@ -6,14 +6,14 @@ import type { AdminState } from './types.ts';
 import { api } from '@/lib/api/client.ts';
 
 const dashboardOverview = {
-        totalProducts: 0,
-        payment: {
-            _id: null,
-            totalRevenue: 0,
-            totalPaidTransactions: 0
-        },
-        totalUser: 0
-    }
+  totalProducts: 0,
+  payment: {
+    _id: null,
+    totalRevenue: 0,
+    totalPaidTransactions: 0,
+  },
+  totalUser: 0,
+};
 
 export const useAdminStore = create<AdminState>((set, _get) => ({
   products: [],
@@ -22,6 +22,7 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
   inventory: [],
   payments: demoPayments,
   dashboardOverview: dashboardOverview,
+  revenueSeries: [],
   settings: demoSettings,
   meta: { page: 1, limit: 48, totalItems: 0, totalPages: 1 },
   status: 'idle',
@@ -36,6 +37,28 @@ export const useAdminStore = create<AdminState>((set, _get) => ({
     } catch (error) {
       set({ dashboardOverview: dashboardOverview, status: 'error', error: getErrorMessage(error) });
     }
+  },
+
+  revenueTrends: async () => {
+    set({ status: 'loading', error: null });
+    try {
+      const { data } = await api.get('/dashboard/revenue-trends');
+      set({ revenueSeries: data?.data });
+    } catch (error) {
+      set({ revenueSeries: [], status: 'error', error: getErrorMessage(error) });
+    }
+  },
+
+  loadCatalog: async () => {
+    const { page, brands, categories } = await adminApi.catalog();
+
+    set({
+      products: page.items,
+      meta: page.meta,
+      brands,
+      categories,
+      loaded: true,
+    });
   },
 
   createProduct: async (input) => {

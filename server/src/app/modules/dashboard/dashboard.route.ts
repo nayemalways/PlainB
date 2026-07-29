@@ -6,6 +6,11 @@ import { dashboardControllers } from "./dashboard.controller.ts";
 const router = Router();
 
 router.get('/', checkAuth(Role.ADMIN), dashboardControllers.dashboardAnalytics);
+router.get(
+  '/revenue-trends',
+  checkAuth(Role.ADMIN),
+  dashboardControllers.getRevenueTrends,
+);
 
 
 export const dashboardRouter = router;
